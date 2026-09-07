@@ -21,6 +21,14 @@ function ready(pet: "jew" | "bo" = "jew", random = () => 0.1) {
   return m;
 }
 describe("coordinated companion behavior", () => {
+  it("responds to the first greeting while an already visible pet is arriving", () => {
+    const cat = new CompanionMachine("jew");
+    const dog = new CompanionMachine("bo");
+    expect(cat.engage("tap", "head", { x: 0, y: 0 })).toBe(true);
+    expect(cat.getSnapshot().state).toBe("blink");
+    expect(dog.engage("tap", "paw", { x: 0, y: 0 })).toBe(true);
+    expect(dog.getSnapshot().state).toBe("paw");
+  });
   it("occasionally bites, releases, and enforces a cooldown across more hunting attempts", () => {
     const m = ready(),
       events: Behavior[] = [];

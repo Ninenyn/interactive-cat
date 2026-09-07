@@ -1,15 +1,16 @@
 "use client";
 import dynamic from "next/dynamic";
-import Link from "next/link";
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
   useSyncExternalStore,
   type KeyboardEvent,
 } from "react";
-import { type Behavior } from "@/interactions/companionStateMachine";
-import { RoomRuntime } from "@/interactions/roomRuntime";
+import { type Companion } from "@/interactions/companionStateMachine";
+import { RoomRuntime, companions } from "@/interactions/roomRuntime";
+import { groundToScreen } from "@/interactions/roomCoordinates";
 import { connectPointerEngine } from "@/interactions/pointerEngine";
 import {
   chooseMessage,
@@ -87,42 +88,7 @@ function Icon({ name, size = 20 }: { name: string; size?: number }) {
     </svg>
   );
 }
-const jewStatus: Partial<Record<Behavior, string>> = {
-  watching: "You have his attention.",
-  curious: "Something caught his eye.",
-  petting: "That is the spot.",
-  happy: "A little closer now.",
-  annoyed: "The tail has opinions.",
-  hunting: "A very serious little hunter.",
-  pounce: "Almost got you.",
-  bite: "A tiny nibble. All affection.",
-  release: "Your finger is free.",
-  sleeping: "You can be quiet together.",
-  digging: "Wait… what is under here?",
-  "heart-note": "Jew found something for you.",
-  paw: "A paw, just for you.",
-  groom: "A little moment to himself.",
-  stretch: "Room for a good stretch.",
-  blink: "A slow blink means you are welcome.",
-};
-const boStatus: Partial<Record<Behavior, string>> = {
-  watching: "Where you go, he follows.",
-  curious: "The very best kind of curious.",
-  petting: "His whole day just got better.",
-  happy: "Happy you are here.",
-  hunting: "Ready, set…",
-  pounce: "Coming to say hello!",
-  boop: "Boop. You have been found.",
-  lick: "A little kiss from Bo.",
-  release: "Still right here.",
-  sleeping: "A little nap. Good company.",
-  digging: "He is onto something…",
-  "heart-note": "Bo brought you a little warmth.",
-  paw: "Take his paw.",
-  groom: "Getting comfortable.",
-  stretch: "A big stretch for a little friend.",
-  blink: "Hello, favorite human.",
-};
+
 export default function CompanionRoom() {
   const { preferences, store } = useRoomPreferences();
   const osDark = useMedia("(prefers-color-scheme: dark)"),
@@ -130,25 +96,35 @@ export default function CompanionRoom() {
     visible = useVisible();
   const theme = preferences.theme ?? (osDark ? "dark" : "light");
   const [runtime] = useState(() => new RoomRuntime());
-  const snapshot = useSyncExternalStore(
-    runtime.machine.subscribe,
-    runtime.machine.getSnapshot,
-    runtime.machine.getSnapshot,
+  const jew = useSyncExternalStore(
+    runtime.pets.jew.machine.subscribe,
+    runtime.pets.jew.machine.getSnapshot,
+    runtime.pets.jew.machine.getSnapshot,
   );
-  const cat = snapshot.pet === "jew",
-    name = cat ? "Jew" : "Bo";
+  const bo = useSyncExternalStore(
+    runtime.pets.bo.machine.subscribe,
+    runtime.pets.bo.machine.getSnapshot,
+    runtime.pets.bo.machine.getSnapshot,
+  );
+  const snapshots = { jew, bo };
+  const [active, setActive] = useState<Companion>("jew");
   const [menu, setMenu] = useState(false),
     [panel, setPanel] = useState<"notes" | "about" | null>(null),
     [savedOnly, setSavedOnly] = useState(false);
   const [found, setFound] = useState<HeartMessage | null>(null),
     [noteOpen, setNoteOpen] = useState(false);
-  const noteClose = useRef<HTMLButtonElement>(null);
   const stage = useRef<HTMLDivElement>(null),
     dialog = useRef<HTMLDialogElement>(null),
     menuRef = useRef<HTMLDivElement>(null),
-    menuButton = useRef<HTMLButtonElement>(null);
+    menuButton = useRef<HTMLButtonElement>(null),
+    noteClose = useRef<HTMLButtonElement>(null);
+  const [stageSize, setStageSize] = useState({ width: 390, height: 844 });
   const [breathPhase, setBreathPhase] = useState("Breathe in");
-  const [stageSize, setStageSize] = useState({ width: 390, height: 500 });
+  const snapshot = snapshots[active];
+  const select = (pet: Companion) => {
+    runtime.select(pet);
+    setActive(pet);
+  };
   useEffect(() => {
     if (!stage.current) return;
     const observer = new ResizeObserver((entries) => {
@@ -158,19 +134,24 @@ export default function CompanionRoom() {
     observer.observe(stage.current);
     return () => observer.disconnect();
   }, []);
-  const sceneZoom = Math.min(stageSize.width / 3.9, stageSize.height / 3.6);
+  const notePoint = groundToScreen(
+    runtime.noteGround.x,
+    runtime.noteGround.z,
+    stageSize.width,
+    stageSize.height,
+  );
   const notePosition = {
-    left: 50 + ((0.95 * sceneZoom) / stageSize.width) * 100 + "%",
-    top: 50 + ((1.17 * sceneZoom) / stageSize.height) * 100 + "%",
+    left: Math.max(35, Math.min(stageSize.width - 35, notePoint.x)) + "px",
+    top: Math.max(50, Math.min(stageSize.height - 65, notePoint.y)) + "px",
   };
   useEffect(() => {
-    runtime.initialize(!store.getSnapshot().welcomed, (state) => {
-      runtime.audio.play(state, runtime.machine.getSnapshot().pet);
+    runtime.initialize(!store.getSnapshot().welcomed, (state, pet) => {
+      runtime.audio.play(state, pet);
       if (["bite", "paw", "boop", "heart-note"].includes(state))
         haptic(state === "bite" ? 18 : 10);
       if (state === "heart-note") {
         const current = store.getSnapshot(),
-          note = chooseMessage(runtime.machine.getSnapshot().pet, current.seen);
+          note = chooseMessage(pet, current.seen);
         store.update({
           seen: [...current.seen.filter((id) => id !== note.id), note.id],
         });
@@ -180,16 +161,7 @@ export default function CompanionRoom() {
       }
     });
     const timer = setInterval(() => {
-      if (document.hidden || runtime.paused) return;
-      runtime.machine.advance(100);
-      if (
-        runtime.scheduler.advance(
-          100,
-          runtime.machine.engagement,
-          runtime.machine.canDiscover() && !runtime.hasNote,
-        )
-      )
-        runtime.machine.dig();
+      if (!document.hidden) runtime.advance(100);
     }, 100);
     return () => {
       clearInterval(timer);
@@ -197,22 +169,19 @@ export default function CompanionRoom() {
     };
   }, [runtime, store]);
   useEffect(() => {
-    runtime.setPaused(panel !== null);
+    runtime.setPaused(panel !== null || noteOpen);
     if (panel) {
-      runtime.machine.cancelPointer();
+      runtime.cancelPointers();
       if (!dialog.current?.open) dialog.current?.showModal();
     } else if (dialog.current?.open) dialog.current.close();
-  }, [panel, runtime]);
+  }, [panel, noteOpen, runtime]);
   useEffect(() => {
     if (noteOpen) noteClose.current?.focus({ preventScroll: true });
   }, [noteOpen, panel]);
   useEffect(() => {
-    const desired = theme === "dark" ? "jew" : "bo";
-    runtime.machine.switchPet(desired);
-  }, [theme, runtime]);
-  useEffect(() => {
     if (!stage.current) return;
-    return connectPointerEngine(stage.current, runtime.machine, () => {
+    return connectPointerEngine(stage.current, runtime, (pet) => {
+      setActive(pet);
       store.update({ welcomed: true });
       if (store.getSnapshot().sound) runtime.audio.setEnabled(true);
       setMenu(false);
@@ -259,185 +228,195 @@ export default function CompanionRoom() {
     return () => clearInterval(timer);
   }, [snapshot.state, runtime]);
   const toggleTheme = () => {
-    if (found) {
-      setFound(null);
-      setNoteOpen(false);
-      runtime.setHasNote(false);
-      runtime.machine.dismissNote();
-    }
     store.update({ theme: theme === "dark" ? "light" : "dark" });
     setMenu(false);
   };
-  const closeNote = () => {
+  const closeNote = useCallback(() => {
     setFound(null);
     setNoteOpen(false);
-    runtime.setHasNote(false);
-    runtime.machine.dismissNote();
-    stage.current?.focus({ preventScroll: true });
-  };
+    runtime.dismissNote();
+    runtime.pets[runtime.active].anchor?.focus({ preventScroll: true });
+  }, [runtime]);
+  useEffect(() => {
+    if (!noteOpen || panel || menu) return;
+    const key = (event: globalThis.KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeNote();
+      }
+    };
+    window.addEventListener("keydown", key);
+    return () => window.removeEventListener("keydown", key);
+  }, [noteOpen, panel, menu, closeNote]);
   const favorite = (id: string) =>
     store.update({
       favorites: preferences.favorites.includes(id)
         ? preferences.favorites.filter((value) => value !== id)
         : [...preferences.favorites, id],
     });
+  const petPoint = (pet: Companion) => {
+    const h = runtime.pets[pet].hits.find((hit) => hit.zone === "head");
+    return h
+      ? {
+          x: (h.x / stageSize.width) * 2 - 1,
+          y: 1 - (h.y / stageSize.height) * 2,
+        }
+      : { x: 0, y: 0 };
+  };
+  const petTap = (pet: Companion) => {
+    select(pet);
+    runtime.pets[pet].motion.pause(3);
+    runtime.pets[pet].machine.engage("tap", "head", petPoint(pet));
+    store.update({ welcomed: true });
+    if (preferences.sound) runtime.audio.setEnabled(true);
+  };
   const keyboard = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.target !== e.currentTarget) return;
-    if (e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      runtime.machine.engage("tap", "head", { x: 0, y: 0.3 });
-      store.update({ welcomed: true });
-    } else if (e.key.toLowerCase() === "p") {
-      runtime.machine.engage("tap", "paw", { x: -0.2, y: -0.4 });
-      store.update({ welcomed: true });
-    } else if (e.key.toLowerCase() === "h") {
-      runtime.machine.track({ x: 0.28, y: 0.15 }, 0.7, true);
-      store.update({ welcomed: true });
-    } else if (e.key.toLowerCase() === "b") runtime.machine.rest();
-    else if (e.key.startsWith("Arrow")) {
-      e.preventDefault();
-      const p = runtime.machine.target;
-      runtime.machine.track({
+    if (
+      e.target !== e.currentTarget &&
+      !(e.target as HTMLElement).closest(".pet-target")
+    )
+      return;
+    const selected = (e.target as HTMLElement).getAttribute(
+      "data-pet",
+    ) as Companion | null;
+    const pet = selected ?? active,
+      machine = runtime.pets[pet].machine;
+    const key = e.key.toLowerCase();
+    if (
+      ![
+        " ",
+        "enter",
+        "p",
+        "h",
+        "b",
+        "escape",
+        "arrowleft",
+        "arrowright",
+        "arrowup",
+        "arrowdown",
+      ].includes(key)
+    )
+      return;
+    e.preventDefault();
+    select(pet);
+    runtime.pets[pet].motion.pause(3);
+    const point = petPoint(pet);
+    if (key === " " || key === "enter") petTap(pet);
+    else if (key === "p") machine.engage("tap", "paw", point);
+    else if (key === "h") machine.track(point, 0.7, true);
+    else if (key === "b") machine.rest();
+    else if (key === "escape") machine.cancelPointer();
+    else
+      machine.track({
         x: Math.max(
-          -0.8,
+          -0.85,
           Math.min(
-            0.8,
-            p.x +
-              (e.key === "ArrowRight"
-                ? 0.12
-                : e.key === "ArrowLeft"
-                  ? -0.12
-                  : 0),
+            0.85,
+            machine.target.x +
+              (key === "arrowright" ? 0.12 : key === "arrowleft" ? -0.12 : 0),
           ),
         ),
         y: Math.max(
-          -0.8,
+          -0.85,
           Math.min(
-            0.8,
-            p.y +
-              (e.key === "ArrowUp" ? 0.12 : e.key === "ArrowDown" ? -0.12 : 0),
+            0.85,
+            machine.target.y +
+              (key === "arrowup" ? 0.12 : key === "arrowdown" ? -0.12 : 0),
           ),
         ),
       });
-    } else if (e.key === "Escape") runtime.machine.cancelPointer();
+    store.update({ welcomed: true });
     if (preferences.sound) runtime.audio.setEnabled(true);
   };
   const status =
     snapshot.state === "breathing"
       ? breathPhase
-      : ((cat ? jewStatus : boStatus)[snapshot.state] ??
-        (cat
-          ? "No rush. He is right here."
-          : "A little sunshine, just for you."));
-  const noteIds = savedOnly ? preferences.favorites : preferences.seen;
-  const collected = noteIds
+      : snapshot.state === "bite"
+        ? "Jew gives a playful nibble."
+        : snapshot.state === "boop"
+          ? "Bo gives you a nose boop."
+          : snapshot.state === "lick"
+            ? "A little kiss from Bo."
+            : snapshot.state === "paw"
+              ? (active === "jew" ? "Jew" : "Bo") + " offers a paw."
+              : snapshot.state === "petting"
+                ? (active === "jew" ? "Jew" : "Bo") + " is enjoying that."
+                : "";
+  const collected = (savedOnly ? preferences.favorites : preferences.seen)
     .map((id) => messages.find((n) => n.id === id))
     .filter((n): n is HeartMessage => Boolean(n))
     .reverse();
-  const contact = ["bite", "boop", "lick"].includes(snapshot.state);
   return (
     <main
       className="room"
-      data-theme={cat ? "dark" : "light"}
+      data-theme={theme}
+      data-companion="both"
       data-behavior={snapshot.state}
-      data-companion={snapshot.pet}
       data-reduced-motion={reduced}
     >
-      <div className="room-light" aria-hidden="true" />
-      <div className="window-light" aria-hidden="true">
-        <i />
-        <i />
-      </div>
-      <div className="sky-object" aria-hidden="true" />
-      <div className="floor" aria-hidden="true" />
-      <header className="room-header">
-        <Link href="/" className="wordmark" aria-label="Jew and Bo home">
-          Jew <span>&</span> Bo<span className="wordmark-dot">.</span>
-        </Link>
-        <button
-          className="theme-toggle"
-          onClick={toggleTheme}
-          aria-label={
-            cat
-              ? "Switch to light mode and meet Bo"
-              : "Switch to dark mode and meet Jew"
-          }
-        >
-          <Icon name={cat ? "sun" : "moon"} />
-          <span>Meet {cat ? "Bo" : "Jew"}</span>
-        </button>
-      </header>
-      <div className="room-intro" aria-hidden="true">
-        <p className="eyebrow">{cat ? "THE QUIET HOURS" : "A LITTLE WARMTH"}</p>
-        <h1>
-          {cat ? (
-            <>
-              Stay a little.
-              <br />
-              <em>The world can wait.</em>
-            </>
-          ) : (
-            <>
-              Hello, you.
-              <br />
-              <em>There is room for you.</em>
-            </>
-          )}
-        </h1>
-      </div>
+      <h1 className="sr-only">Jew & Bo</h1>
       <div
         ref={stage}
         className="companion-stage"
         role="group"
-        aria-roledescription="interactive companion"
-        aria-label={
-          name +
-          " the " +
-          (cat ? "black cat" : "golden retriever") +
-          ". Touch to pet, drag to play, or hold to rest. Keyboard: Space to pet, P for paw, H to play, B to breathe, arrow keys to look."
-        }
-        tabIndex={0}
+        aria-label="Jew and Bo’s room"
+        aria-describedby="room-instructions"
+        tabIndex={-1}
         onKeyDown={keyboard}
       >
         <Scene
-          machine={runtime.machine}
-          snapshot={snapshot}
+          runtime={runtime}
           reduced={reduced}
-          visible={visible && !panel}
+          visible={visible && !panel && !noteOpen}
+          dark={theme === "dark"}
         />
-        {snapshot.state === "sleeping" && (
-          <span className="sleep-marks" aria-hidden="true">
-            z <small>z</small>
-          </span>
+        {companions.map((pet) => (
+          <button
+            key={pet}
+            ref={(node) => runtime.bindAnchor(pet, node)}
+            className="pet-target"
+            data-pet={pet}
+            data-state={snapshots[pet].state}
+            aria-label={
+              pet === "jew"
+                ? "Pet Jew, the black cat"
+                : "Pet Bo, the golden retriever"
+            }
+            onFocus={() => select(pet)}
+            onClick={() => petTap(pet)}
+          />
+        ))}
+        {companions.map(
+          (pet) =>
+            ["bite", "boop", "lick"].includes(snapshots[pet].state) && (
+              <span
+                key={pet}
+                className={
+                  "contact-effect " + (pet === "jew" ? "nibble" : "boop")
+                }
+                style={{
+                  left: (runtime.pets[pet].machine.target.x + 1) * 50 + "%",
+                  top: (1 - runtime.pets[pet].machine.target.y) * 50 + "%",
+                }}
+                aria-hidden="true"
+              >
+                {pet === "jew" ? (
+                  <>
+                    <i />
+                    <i />
+                  </>
+                ) : (
+                  <Icon name="heart" size={24} />
+                )}
+              </span>
+            ),
         )}
-        {snapshot.state === "breathing" && (
-          <div className="breathing-orbit" aria-hidden="true" />
-        )}
-        {snapshot.state === "digging" && (
+        {(jew.state === "digging" || bo.state === "digging") && (
           <div className="dig-dust" style={notePosition} aria-hidden="true">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <i key={i} style={{ "--i": i } as React.CSSProperties} />
             ))}
           </div>
-        )}
-        {contact && (
-          <span
-            className={"contact-effect " + (cat ? "nibble" : "boop")}
-            style={{
-              left: (runtime.machine.target.x + 1) * 50 + "%",
-              top: (1 - runtime.machine.target.y) * 50 + "%",
-            }}
-            aria-hidden="true"
-          >
-            {cat ? (
-              <>
-                <i />
-                <i />
-              </>
-            ) : (
-              <Icon name="heart" size={27} />
-            )}
-          </span>
         )}
         {found && !noteOpen && (
           <button
@@ -447,41 +426,41 @@ export default function CompanionRoom() {
             onClick={() => {
               setNoteOpen(true);
               haptic();
-              runtime.audio.play("heart-note", snapshot.pet);
+              runtime.audio.play("heart-note", found.pet);
             }}
           >
             <svg viewBox="0 0 100 100" aria-hidden="true">
               <path
                 d="M50 87 13 49C-9 17 30 3 50 27 70 3 109 17 87 49Z"
-                fill="#e8c9ad"
+                fill="#d8a99d"
               />
-              <path d="m50 27 0 60 37-38C109 17 70 3 50 27Z" fill="#d8b49e" />
+              <path d="m50 27 0 60 37-38C109 17 70 3 50 27Z" fill="#c5968b" />
               <path
                 d="m14 49 36 14 36-14M50 27v60"
-                stroke="#c19a89"
+                stroke="#b9867e"
                 fill="none"
               />
-              <circle cx="50" cy="60" r="8" fill="#bb807d" />
-              <path
-                d="M50 64s-6-3-5-6c1-3 5-2 5 0 1-2 5-3 6 0 0 3-6 6-6 6"
-                fill="#f3d9c4"
-              />
             </svg>
-            <span>A little something</span>
           </button>
         )}
       </div>
+      <p id="room-instructions" className="sr-only">
+        Two little friends, sharing a quiet room. Touch a pet to say hello,
+        stroke to pet, or hold to breathe together. Tap the floor to invite a
+        walk. Keyboard: Tab to choose a pet. Space to pet, P for a paw, H to
+        play, B to breathe, and arrow keys to look.
+      </p>
+      <p className="sr-only" role="status" aria-live="polite">
+        {status}
+      </p>
       {found && noteOpen && (
         <section
           className="open-note"
           aria-label="Heart note"
           aria-live="polite"
-          onKeyDown={(e) => {
-            if (e.key === "Escape") closeNote();
-          }}
         >
           <div className="note-top">
-            <span>A LITTLE NOTE FROM {found.pet === "jew" ? "JEW" : "BO"}</span>
+            <span>From {found.pet === "jew" ? "Jew" : "Bo"}</span>
             <button
               ref={noteClose}
               className="icon-button"
@@ -492,117 +471,91 @@ export default function CompanionRoom() {
             </button>
           </div>
           <p>{found.text}</p>
-          <div className="note-bottom">
-            <span>With you, softly.</span>
-            <button
-              className="save-note"
-              aria-label={
-                preferences.favorites.includes(found.id)
-                  ? "Unsave this note"
-                  : "Save this note"
-              }
-              aria-pressed={preferences.favorites.includes(found.id)}
-              onClick={() => favorite(found.id)}
-            >
-              <Icon name="heart" size={18} />
-              {preferences.favorites.includes(found.id) ? "Saved" : "Keep this"}
-            </button>
-          </div>
+          <button
+            className="save-note icon-button"
+            aria-label={
+              preferences.favorites.includes(found.id)
+                ? "Unsave this note"
+                : "Save this note"
+            }
+            aria-pressed={preferences.favorites.includes(found.id)}
+            onClick={() => favorite(found.id)}
+          >
+            <Icon name="heart" size={20} />
+          </button>
         </section>
       )}
-      <div
-        className={"companion-caption " + (noteOpen ? "caption-hidden" : "")}
-      >
-        <span className="name-label">
-          {name}
-          <span>
-            {cat ? "your night companion" : "your sunshine companion"}
-          </span>
-        </span>
-        <p className="status-text" role="status" aria-live="polite">
-          {preferences.welcomed ? status : cat ? "Touch Jew." : "Say hi to Bo."}
-        </p>
-        {!preferences.welcomed && (
-          <span className="touch-hint" aria-hidden="true">
-            <span />
-          </span>
-        )}
-      </div>
-      <footer className="room-footer">
-        <span className="quiet-signature">
-          a little company. <span>nothing to earn.</span>
-        </span>
-        <div className="room-controls">
-          {menu && (
-            <div
-              ref={menuRef}
-              className="settings-popover"
-              aria-label="Room settings"
-            >
-              <button onClick={toggleTheme}>
-                <Icon name={cat ? "sun" : "moon"} />
-                <span>{cat ? "Morning with Bo" : "Night with Jew"}</span>
-              </button>
-              <button
-                onClick={() => {
-                  const value = !preferences.sound;
-                  store.update({ sound: value });
-                  runtime.audio.setEnabled(value);
-                  if (value) runtime.audio.play("happy", snapshot.pet);
-                }}
-                aria-pressed={preferences.sound}
-              >
-                <Icon name={preferences.sound ? "sound" : "mute"} />
-                <span>Sound</span>
-                <small>{preferences.sound ? "On" : "Off"}</small>
-              </button>
-              <button
-                onClick={() => {
-                  setPanel("notes");
-                  setMenu(false);
-                }}
-              >
-                <Icon name="heart" />
-                <span>Heart Notes</span>
-                {preferences.seen.length > 0 && (
-                  <small>{preferences.seen.length}</small>
-                )}
-              </button>
-              <button
-                disabled={["leaving", "digging", "heart-note"].includes(
-                  snapshot.state,
-                )}
-                onClick={() => {
-                  runtime.machine.rest();
-                  setMenu(false);
-                  store.update({ welcomed: true });
-                }}
-              >
-                <Icon name="breath" />
-                <span>Breathe together</span>
-              </button>
-              <button
-                onClick={() => {
-                  setPanel("about");
-                  setMenu(false);
-                }}
-              >
-                <Icon name="info" />
-                <span>About this little room</span>
-              </button>
-            </div>
-          )}
-          <button
-            ref={menuButton}
-            className="menu-button"
+      <div className="room-controls">
+        {menu && (
+          <div
+            ref={menuRef}
+            className="settings-popover"
             aria-label="Room settings"
-            aria-expanded={menu}
-            onClick={() => setMenu(!menu)}
           >
-            <Icon name={menu ? "close" : "more"} />
-          </button>
-        </div>
-      </footer>
+            <button onClick={toggleTheme}>
+              <Icon name={theme === "dark" ? "sun" : "moon"} />
+              <span>{theme === "dark" ? "Daylight" : "Moonlight"}</span>
+            </button>
+            <button
+              onClick={() => {
+                const value = !preferences.sound;
+                store.update({ sound: value });
+                runtime.audio.setEnabled(value);
+                if (value) runtime.audio.play("happy", active);
+              }}
+              aria-pressed={preferences.sound}
+            >
+              <Icon name={preferences.sound ? "sound" : "mute"} />
+              <span>Sound</span>
+              <small>{preferences.sound ? "On" : "Off"}</small>
+            </button>
+            <button
+              onClick={() => {
+                setPanel("notes");
+                setMenu(false);
+              }}
+            >
+              <Icon name="heart" />
+              <span>Heart Notes</span>
+              {preferences.seen.length > 0 && (
+                <small>{preferences.seen.length}</small>
+              )}
+            </button>
+            <button
+              disabled={["digging", "heart-note"].includes(snapshot.state)}
+              onClick={() => {
+                for (const pet of companions) {
+                  runtime.pets[pet].motion.pause(17);
+                  runtime.pets[pet].machine.rest();
+                }
+                setMenu(false);
+                store.update({ welcomed: true });
+              }}
+            >
+              <Icon name="breath" />
+              <span>Breathe together</span>
+            </button>
+            <button
+              onClick={() => {
+                setPanel("about");
+                setMenu(false);
+              }}
+            >
+              <Icon name="info" />
+              <span>Help</span>
+            </button>
+          </div>
+        )}
+        <button
+          ref={menuButton}
+          className="menu-button"
+          aria-label="Room settings"
+          aria-expanded={menu}
+          onClick={() => setMenu(!menu)}
+        >
+          <Icon name={menu ? "close" : "more"} />
+        </button>
+      </div>
       <dialog
         ref={dialog}
         className="collection-dialog"
@@ -622,16 +575,9 @@ export default function CompanionRoom() {
         aria-labelledby="panel-title"
       >
         <div className="panel-header">
-          <div>
-            <p className="eyebrow">
-              {panel === "notes"
-                ? "SMALL THINGS, SAFELY KEPT"
-                : "A PLACE TO PAUSE"}
-            </p>
-            <h2 id="panel-title">
-              {panel === "notes" ? "Heart Notes" : "Jew & Bo"}
-            </h2>
-          </div>
+          <h2 id="panel-title">
+            {panel === "notes" ? "Heart Notes" : "Jew & Bo"}
+          </h2>
           <button
             className="icon-button"
             aria-label="Close panel"
@@ -642,13 +588,12 @@ export default function CompanionRoom() {
         </div>
         {panel === "notes" ? (
           <>
-            <p className="panel-lead">Little words. A little warmth.</p>
             <div className="collection-tabs">
               <button
                 aria-pressed={!savedOnly}
                 onClick={() => setSavedOnly(false)}
               >
-                All found <span>{preferences.seen.length}</span>
+                Found <span>{preferences.seen.length}</span>
               </button>
               <button
                 aria-pressed={savedOnly}
@@ -660,16 +605,16 @@ export default function CompanionRoom() {
             <div className="collected-notes">
               {collected.length === 0 ? (
                 <div className="empty-collection">
-                  <Icon name="heart" size={34} />
+                  <Icon name="heart" size={30} />
                   <p>
                     {savedOnly
-                      ? "Keep a note that feels like yours."
-                      : "Some lovely things take a little time."}
+                      ? "Keep a little warmth."
+                      : "Good things take a moment."}
                   </p>
                   <span>
                     {savedOnly
-                      ? "Tap the heart on an open note."
-                      : "Spend a moment with Jew or Bo. They sometimes find something for you."}
+                      ? "Tap the heart on a note to save it."
+                      : "Spend time together. They may find something for you."}
                   </span>
                 </div>
               ) : (
@@ -699,22 +644,17 @@ export default function CompanionRoom() {
         ) : (
           <div className="about-copy">
             <p>
-              A black cat for the quiet hours. A golden retriever for a little
-              sunshine. No scores, no streaks. Just a small companion, happy to
-              share a moment.
-            </p>
-            <h3>Get a little closer</h3>
-            <p>
-              Tap their head to say hello. Stroke slowly to pet them, or touch a
-              paw. Move quickly nearby to invite a little mischief. Hold still
-              with a finger down to breathe together.
+              Jew, a black cat. Bo, a golden retriever. A little company, at
+              their own pace.
             </p>
             <p>
-              Jew occasionally gives a playful nibble. Bo prefers a nose-boop or
-              a little kiss. Sometimes, they find a Heart Note hidden in the
-              floor.
+              Tap to say hello. Stroke to pet. Touch a paw, or hold still to
+              breathe together. Tap the floor to invite a walk.
             </p>
-            <h3>Make yourself comfortable</h3>
+            <p>
+              Jew sometimes gives a tiny nibble; Bo prefers a boop.
+              Occasionally, they dig up a note for you.
+            </p>
             <button
               className="system-theme"
               onClick={() => {
@@ -722,19 +662,18 @@ export default function CompanionRoom() {
                 setPanel(null);
               }}
             >
-              Follow my device’s day / night setting
+              Use my device’s appearance
             </button>
             <p className="keyboard-help">
-              Keyboard: focus your companion, then <kbd>Space</kbd> to pet,{" "}
+              Keyboard: <kbd>Tab</kbd> to choose a pet, <kbd>Space</kbd> to pet,{" "}
               <kbd>P</kbd> for a paw, <kbd>H</kbd> to play, <kbd>B</kbd> to
-              breathe, and arrow keys to look around.
+              breathe, and arrows to look.
             </p>
             <p>
-              Your notes and preferences stay in this browser. No account or
-              tracking.{" "}
+              Your notes stay in this browser.{" "}
               {store.persistent
                 ? "Clearing browser data clears your collection."
-                : "This browser is not allowing saves; your collection will last for this visit."}
+                : "Saving is unavailable; notes will stay for this visit."}
             </p>
           </div>
         )}

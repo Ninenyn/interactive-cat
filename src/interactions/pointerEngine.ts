@@ -1,16 +1,13 @@
-import {
-  classifyGesture,
-  hitZone,
-  screenToPoint,
-  type Zone,
-} from "./gestureClassifier";
-import { CompanionMachine } from "./companionStateMachine";
+import { classifyGesture, screenToPoint, type Zone } from "./gestureClassifier";
+import { RoomRuntime } from "./roomRuntime";
+import type { Companion } from "./companionStateMachine";
 export function connectPointerEngine(
   element: HTMLElement,
-  machine: CompanionMachine,
-  onEngaged: () => void,
+  runtime: RoomRuntime,
+  onEngaged: (pet: Companion) => void,
 ) {
-  let pointer: number | null = null;
+  let pointer: number | null = null,
+    selected: Companion | null = null;
   let start = 0,
     lastTime = 0,
     x = 0,
@@ -23,8 +20,8 @@ export function connectPointerEngine(
   let hoverTime = 0,
     hoverX = 0,
     hoverY = 0;
-  let zone: Zone = "air";
-  let held = false;
+  let zone: Zone = "air",
+    held = false;
   let holdTimer: ReturnType<typeof setTimeout> | undefined;
   const stopHold = () => {
     if (holdTimer) clearTimeout(holdTimer);
@@ -34,6 +31,7 @@ export function connectPointerEngine(
     screenToPoint(e.clientX, e.clientY, element.getBoundingClientRect());
   const down = (e: PointerEvent) => {
     if (
+      runtime.paused ||
       !e.isPrimary ||
       (e.pointerType === "mouse" && e.button !== 0) ||
       (e.target as HTMLElement).closest("button,a,dialog")
@@ -46,24 +44,32 @@ export function connectPointerEngine(
     distance = maxSpeed = reversals = direction = 0;
     held = false;
     const rect = element.getBoundingClientRect(),
-      p = point(e);
-    zone = hitZone(p, rect.width, rect.height);
+      p = point(e),
+      hit = runtime.hit(p, rect.width, rect.height);
+    selected = hit?.pet ?? null;
+    zone = hit?.zone ?? "air";
     element.setPointerCapture(e.pointerId);
-    onEngaged();
-    machine.track(p);
+    if (!selected) return;
+    const pet = runtime.pets[selected];
+    runtime.select(selected);
+    pet.motion.pause(3);
+    onEngaged(selected);
+    pet.machine.track(p);
     holdTimer = setTimeout(() => {
-      if (pointer !== null && distance < 18) {
+      if (pointer !== null && selected && distance < 18) {
         held = true;
-        if (machine.engage("hold", zone, machine.target)) onEngaged();
+        if (pet.machine.engage("hold", zone, pet.machine.target))
+          onEngaged(selected);
       }
     }, 750);
   };
   const move = (e: PointerEvent) => {
-    if (!e.isPrimary) return;
+    if (runtime.paused || !e.isPrimary) return;
     const now = performance.now(),
       p = point(e),
       rect = element.getBoundingClientRect();
-    const near = hitZone(p, rect.width, rect.height) !== "air";
+    const hit = runtime.hit(p, rect.width, rect.height);
+    element.style.cursor = hit ? "grab" : "default";
     if (pointer === null) {
       if (e.pointerType !== "mouse") return;
       const dt = now - hoverTime;
@@ -75,7 +81,20 @@ export function connectPointerEngine(
       hoverTime = now;
       hoverX = e.clientX;
       hoverY = e.clientY;
-      machine.track(p, speed, near);
+      if (hit) {
+        const pet = runtime.pets[hit.pet];
+        pet.motion.pause(1);
+        pet.machine.track(p, speed, true);
+      }
+      // A nibble follows the real pointer until release, including outside the body.
+      for (const pet of Object.values(runtime.pets)) {
+        if (
+          ["hunting", "pounce", "bite", "boop", "lick"].includes(
+            pet.machine.getSnapshot().state,
+          )
+        )
+          pet.machine.track(p, 0, false);
+      }
       return;
     }
     if (e.pointerId !== pointer) return;
@@ -91,11 +110,23 @@ export function connectPointerEngine(
       direction = sign;
     }
     if (distance > 18) stopHold();
-    machine.track(p, speed, near);
-    if (distance > 14 && speed < 0.48 && now - lastPet > 500 && near && !held) {
-      if (machine.engage(reversals >= 2 ? "scratch" : "stroke", zone, p))
-        onEngaged();
-      lastPet = now;
+    if (selected) {
+      const pet = runtime.pets[selected];
+      pet.motion.pause(2.5);
+      pet.machine.track(p, speed, hit?.pet === selected);
+      if (
+        distance > 14 &&
+        speed < 0.48 &&
+        now - lastPet > 500 &&
+        hit?.pet === selected &&
+        !held
+      ) {
+        if (
+          pet.machine.engage(reversals >= 2 ? "scratch" : "stroke", hit.zone, p)
+        )
+          onEngaged(selected);
+        lastPet = now;
+      }
     }
     x = e.clientX;
     y = e.clientY;
@@ -104,38 +135,49 @@ export function connectPointerEngine(
   const up = (e: PointerEvent) => {
     if (e.pointerId !== pointer) return;
     stopHold();
-    if (
-      !held &&
-      machine.engage(
-        classifyGesture(
-          distance,
-          performance.now() - start,
-          maxSpeed,
-          reversals,
-        ),
-        zone,
-        point(e),
+    if (selected && !held) {
+      if (
+        runtime.pets[selected].machine.engage(
+          classifyGesture(
+            distance,
+            performance.now() - start,
+            maxSpeed,
+            reversals,
+          ),
+          zone,
+          point(e),
+        )
       )
-    )
-      onEngaged();
+        onEngaged(selected);
+    } else if (!selected && distance < 12) {
+      const rect = element.getBoundingClientRect();
+      runtime.walkTo(point(e), rect.width, rect.height);
+    }
+    pointer = null;
+    selected = null;
     if (element.hasPointerCapture(e.pointerId))
       element.releasePointerCapture(e.pointerId);
-    pointer = null;
   };
   const cancel = () => {
     stopHold();
+    const captured = pointer;
     pointer = null;
-    machine.cancelPointer();
+    selected = null;
+    if (captured !== null && element.hasPointerCapture(captured))
+      element.releasePointerCapture(captured);
+    runtime.cancelPointers();
+  };
+  const lostCapture = () => {
+    if (pointer !== null) cancel();
   };
   const leave = () => {
     hoverTime = 0;
-    if (pointer === null && machine.getSnapshot().state === "watching")
-      machine.target = { x: 0, y: 0 };
   };
   element.addEventListener("pointerdown", down);
   element.addEventListener("pointermove", move);
   element.addEventListener("pointerup", up);
   element.addEventListener("pointercancel", cancel);
+  element.addEventListener("lostpointercapture", lostCapture);
   element.addEventListener("pointerleave", leave);
   window.addEventListener("blur", cancel);
   return () => {
@@ -144,6 +186,7 @@ export function connectPointerEngine(
     element.removeEventListener("pointermove", move);
     element.removeEventListener("pointerup", up);
     element.removeEventListener("pointercancel", cancel);
+    element.removeEventListener("lostpointercapture", lostCapture);
     element.removeEventListener("pointerleave", leave);
     window.removeEventListener("blur", cancel);
   };

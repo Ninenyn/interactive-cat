@@ -1,23 +1,24 @@
 # Validation record
 
-Validated on 7 September 2026 against a local production build.
+Validated on 7 September 2026 for the minimal shared-room update.
 
-- Lint and strict TypeScript: pass.
-- Behavior, gesture, cooldown, scheduling, rotation, and storage tests: 15 passed.
-- Production build: pass (Next.js static prerendered home route).
-- Chrome and WebKit: 11 browser tests passed across the core suite and Bo acceptance suite.
-- The native Chromium CDP touch test is intentionally skipped in WebKit; WebKit has its own pointer/keyboard/visual acceptance coverage.
-- Layouts checked at 320, 375, 390, 430, and 1280 pixels.
-- Original 3D pets and note layouts inspected visually in both modes.
-- Real Chromium touch events verified tap, stroke, and pointer cancellation.
-- Jew's occasional bite, release, and cooldown verified through browser state transitions.
-- Bo's nose-boop, long press, and independent Heart Note discovery verified in both browser engines.
-- Found-note opening, saving, persistence, and keyboard dismissal verified.
-- OS theme, manual override, sound toggle, and reduced-motion preference verified.
-- No application console errors in the Bo acceptance checks; no unhandled page errors in layout checks.
+- Lint, strict TypeScript, and optimized production build: pass.
+- Unit tests: 20 passed, including walking bounds, pet separation, distance-driven gait, reduced motion, camera projection, first-touch response, behavior, cooldown, scheduling, and storage.
+- Chrome and WebKit: 13 browser cases passed across the targeted acceptance runs.
+- Native Chromium touch injection is intentionally skipped in WebKit; both engines have their own pointer, keyboard, and visual coverage.
+- Both pets remain visible in day and night appearances.
+- Layouts checked at 320, 390, 430, 844, and 1280 pixels, including landscape.
+- Both pets wander independently, stay separated, and respond to petting at their moved positions.
+- Native touch verified tapping, gentle strokes, and cancellation.
+- Jew's nibble, release, and cooldown and Bo's boop and long press: pass.
+- Each companion's Heart Note discovery, unfolding, saving, persistence, and Escape dismissal: pass.
+- OS appearance, manual override, sound, keyboard paws, breathing, and reduced motion: pass.
+- Updated low-poly models inspected in phone and desktop views; both light and dark views checked without application console errors.
+- WebGL-disabled Chrome check: the visible vector fallback renders both pets and responds to petting.
+- Fallback motion only runs when its container is displayed; hidden canvas fallback content cannot update the 3D pets' positions or touch regions.
 
-The procedural models, sounds, and messages are original. No external asset, font, quote, audio, or analytics service is required.
+The characters, faceted geometry, synthesized sounds, and messages are original. Soft shadows use a small generated texture. There are no external model, image, font, quote, audio, or analytics requests.
 
-Screenshots and traces are generated under ignored test-results/. Use scripts/verify-live.mjs with the production URL for anonymous HTTPS, canvas rendering, petting, theme switching, mobile overflow, console-error, and resource-host verification after deployment.
+Ignored test-results/ contains temporary screenshots and traces. scripts/verify-live.mjs checks anonymous HTTPS, both rendered companions, wandering, petting, theme switching, viewport overflow, console errors, and resource hosts after deployment.
 
-Physical iPhone/Android hardware and device-specific vibration were not available for testing. WebKit is Safari-engine coverage, not a physical iPhone claim.
+Physical iPhone/Android hardware and device-specific vibration were not available. WebKit coverage is engine testing.

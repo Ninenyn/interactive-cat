@@ -38,7 +38,6 @@ const protectedStates = new Set<Behavior>([
   "digging",
   "heart-note",
   "leaving",
-  "entering",
 ]);
 const idleStates = new Set<Behavior>([
   "idle",
