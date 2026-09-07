@@ -205,7 +205,7 @@ function Pet({
           ],
     [cat],
   );
-  useFrame((_, delta) => {
+  useFrame((frame, delta) => {
     if (
       !root.current ||
       !head.current ||
@@ -221,7 +221,7 @@ function Pet({
     const s = machine.getSnapshot(),
       state = s.state,
       elapsed = (machine.clock - s.since) / 1000,
-      t = machine.clock / 1000;
+      t = frame.clock.elapsedTime;
     const smooth = 1 - Math.exp(-Math.min(delta, 0.1) * 13),
       motion = reduced ? 0.18 : 1;
     if (fangs.current)
