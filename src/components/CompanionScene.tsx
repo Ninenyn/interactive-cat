@@ -11,6 +11,7 @@ import {
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
+import { Sculpt } from "./PetGeometry";
 import type { Companion } from "@/interactions/companionStateMachine";
 import { RoomRuntime, type HitCircle } from "@/interactions/roomRuntime";
 import {
@@ -41,8 +42,7 @@ function Facet({
   scale = [1, 1, 1],
   rotation = [0, 0, 0],
   color,
-  detail = 0,
-  seed = 1,
+  detail = 1,
   meshRef,
 }: {
   position?: Vec3;
@@ -50,26 +50,12 @@ function Facet({
   rotation?: Vec3;
   color: string;
   detail?: number;
-  seed?: number;
   meshRef?: RefObject<THREE.Mesh | null>;
 }) {
-  const geometry = useMemo(() => {
-    const geometry = new THREE.IcosahedronGeometry(1, detail);
-    const count = geometry.getAttribute("position").count;
-    const colors = new Float32Array(count * 3),
-      base = new THREE.Color(color);
-    for (let i = 0; i < count; i += 3) {
-      const shade =
-        0.91 + (Math.sin(i * 17.17 + seed * 7.13) * 0.5 + 0.5) * 0.19;
-      for (let j = 0; j < 3; j++)
-        base
-          .clone()
-          .multiplyScalar(shade)
-          .toArray(colors, (i + j) * 3);
-    }
-    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
-    return geometry;
-  }, [color, detail, seed]);
+  const geometry = useMemo(
+    () => new THREE.IcosahedronGeometry(1, detail),
+    [detail],
+  );
   useEffect(() => () => geometry.dispose(), [geometry]);
   return (
     <mesh
@@ -79,7 +65,7 @@ function Facet({
       rotation={rotation}
       geometry={geometry}
     >
-      <meshStandardMaterial vertexColors flatShading roughness={0.94} />
+      <meshStandardMaterial color={color} flatShading roughness={0.84} />
     </mesh>
   );
 }
@@ -187,27 +173,29 @@ function PetEyes({ cat }: { cat: boolean }) {
       {[-1, 1].map((side) => (
         <group
           key={side}
-          position={[side * (cat ? 0.265 : 0.28), 0.025, cat ? 0.49 : 0.515]}
-          rotation={[0, side * 0.22, 0]}
+          position={[side * (cat ? 0.265 : 0.28), 0.025, cat ? 0.535 : 0.585]}
+          rotation={[0, side * 0.23, 0]}
         >
           {cat && (
-            <Facet
-              scale={[0.15, 0.18, 0.086]}
-              color="#d4b467"
-              seed={side + 3}
-            />
+            <mesh scale={[0.132, 0.157, 0.042]}>
+              <sphereGeometry args={[1, 16, 10]} />
+              <meshStandardMaterial color="#c4a466" roughness={0.4} />
+            </mesh>
           )}
-          <Facet
-            position={[0, 0, cat ? 0.046 : 0]}
-            scale={[cat ? 0.098 : 0.128, cat ? 0.142 : 0.168, 0.075]}
-            color="#101215"
-          />
-          <Facet
-            position={[-0.037, 0.052, cat ? 0.115 : 0.069]}
-            scale={[0.028, 0.034, 0.015]}
-            color="#fff7df"
-            detail={0}
-          />
+          <mesh
+            position={[0, 0, cat ? 0.032 : 0.006]}
+            scale={[cat ? 0.07 : 0.105, cat ? 0.126 : 0.137, 0.036]}
+          >
+            <sphereGeometry args={[1, 16, 10]} />
+            <meshStandardMaterial color="#101319" roughness={0.22} />
+          </mesh>
+          <mesh
+            position={[-0.029, 0.047, cat ? 0.066 : 0.04]}
+            scale={[0.021, 0.026, 0.01]}
+          >
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshBasicMaterial color="#fff6df" />
+          </mesh>
         </group>
       ))}
     </>
@@ -235,14 +223,13 @@ function Pet({
     tongue = useRef<THREE.Mesh>(null);
   const front = useRef<(THREE.Group | null)[]>([]),
     back = useRef<(THREE.Group | null)[]>([]);
-  const thighs = useRef<(THREE.Mesh | null)[]>([]),
-    backFeet = useRef<(THREE.Group | null)[]>([]);
+  const thighs = useRef<(THREE.Mesh | null)[]>([]);
   const shadow = useRef<THREE.Mesh>(null);
   const { size, camera } = useThree();
   const pointRef = useRef(new THREE.Vector3());
   const cat = pet === "jew",
-    fur = cat ? "#25262d" : "#d2a052",
-    light = cat ? "#303139" : "#e6bb75";
+    fur = cat ? "#24272e" : "#cd9b55",
+    light = cat ? "#292c33" : "#d8ab68";
   const pawColor = cat ? "#292a31" : "#ebc888";
   const texture = useMemo(() => {
     const data = new Uint8Array(64 * 64 * 4);
@@ -405,12 +392,11 @@ function Pet({
     for (let i = 0; i < 2; i++) {
       const f = front.current[i],
         b = back.current[i],
-        thigh = thighs.current[i],
-        foot = backFeet.current[i];
+        thigh = thighs.current[i];
       const phase = stride + i * Math.PI;
       if (f) {
         f.position.set(
-          (i === 0 ? -1 : 1) * (cat ? 0.3 : 0.34),
+          (i === 0 ? -1 : 1) * (cat ? 0.27 : 0.31),
           0.8,
           THREE.MathUtils.lerp(0.34, 0.53, stand),
         );
@@ -430,7 +416,7 @@ function Pet({
       }
       if (b) {
         b.position.set(
-          (i === 0 ? -1 : 1) * THREE.MathUtils.lerp(0.44, 0.34, stand),
+          (i === 0 ? -1 : 1) * THREE.MathUtils.lerp(0.35, 0.34, stand),
           THREE.MathUtils.lerp(0.61, 0.8, stand),
           THREE.MathUtils.lerp(-0.3, -0.7, stand),
         );
@@ -438,18 +424,15 @@ function Pet({
           ? Math.sin(phase + (cat ? Math.PI * 0.7 : Math.PI)) * 0.43
           : 0;
       }
-      if (thigh)
+      if (thigh) {
+        const halfHeight = THREE.MathUtils.lerp(0.305, 0.4, stand);
+        thigh.position.y = -halfHeight;
         thigh.scale.set(
-          THREE.MathUtils.lerp(0.3, 0.2, stand),
-          THREE.MathUtils.lerp(0.37, 0.27, stand),
-          THREE.MathUtils.lerp(0.35, 0.25, stand),
+          THREE.MathUtils.lerp(0.29, 0.21, stand),
+          halfHeight,
+          THREE.MathUtils.lerp(0.29, 0.24, stand),
         );
-      if (foot)
-        foot.position.set(
-          0,
-          THREE.MathUtils.lerp(-0.47, -0.64, stand),
-          THREE.MathUtils.lerp(0.19, 0.08, stand),
-        );
+      }
     }
     jaw.current.position.y = THREE.MathUtils.lerp(
       jaw.current.position.y,
@@ -521,20 +504,15 @@ function Pet({
         position={[runtime.pets[pet].motion.x, 0, runtime.pets[pet].motion.z]}
       >
         <group ref={pose}>
-          <Facet
+          <Sculpt
+            shape="body"
             meshRef={torso}
             position={[0, 0.85, -0.22]}
             scale={[0.5, 0.7, 0.5]}
             color={fur}
-            seed={3}
+            cream={cat ? undefined : "#e3c28a"}
           />
-          <Facet
-            meshRef={chest}
-            position={[0, 1.22, 0.17]}
-            scale={[0.36, 0.5, 0.34]}
-            color={cat ? light : "#edcf93"}
-            seed={8}
-          />
+          <mesh ref={chest} visible={false} position={[0, 1.22, 0.17]} />
           <group ref={tail} position={[0, 0.55, -0.56]}>
             <Tail cat={cat} />
           </group>
@@ -544,35 +522,18 @@ function Pet({
               ref={(node) => {
                 back.current[i] = node;
               }}
-              position={[side * 0.44, 0.61, -0.3]}
+              position={[side * 0.35, 0.61, -0.3]}
             >
-              <mesh
-                ref={(node) => {
+              <Sculpt
+                shape="haunch"
+                meshRef={(node) => {
                   thighs.current[i] = node;
                 }}
-                position={[0, -0.13, 0]}
-                scale={[0.3, 0.37, 0.35]}
-              >
-                <icosahedronGeometry args={[1, 1]} />
-                <meshStandardMaterial color={fur} flatShading roughness={1} />
-              </mesh>
-              <Facet
-                position={[0, -0.32, 0.02]}
-                scale={[0.17, 0.23, 0.18]}
+                position={[0, -0.305, 0]}
+                scale={[0.29, 0.305, 0.29]}
                 color={fur}
+                cream={cat ? undefined : pawColor}
               />
-              <group
-                ref={(node) => {
-                  backFeet.current[i] = node;
-                }}
-                position={[0, -0.47, 0.19]}
-              >
-                <Facet
-                  scale={[0.23, 0.16, 0.3]}
-                  color={pawColor}
-                  seed={side + 3}
-                />
-              </group>
             </group>
           ))}
           {[-1, 1].map((side, i) => (
@@ -583,26 +544,21 @@ function Pet({
               }}
               position={[side * 0.3, 0.8, 0.34]}
             >
-              <Facet
-                position={[0, -0.26, 0]}
-                scale={[0.16, 0.34, 0.17]}
+              <Sculpt
+                shape="foreleg"
+                position={[0, -0.4, 0.03]}
+                scale={[cat ? 0.205 : 0.23, 0.4, 0.24]}
                 color={light}
-                seed={side + 2}
-              />
-              <Facet
-                position={[0, -0.64, 0.09]}
-                scale={[0.22, 0.16, 0.29]}
-                color={pawColor}
-                seed={side + 5}
+                cream={cat ? undefined : pawColor}
               />
             </group>
           ))}
           <group ref={head} position={[0, cat ? 1.84 : 1.9, 0.3]}>
-            <Facet
+            <Sculpt
+              shape={cat ? "catHead" : "dogHead"}
               scale={[cat ? 0.66 : 0.7, cat ? 0.61 : 0.64, 0.59]}
               color={light}
-              seed={5}
-              rotation={[0.05, 0.12, -0.03]}
+              cream={cat ? undefined : "#e9cb95"}
             />
             <group ref={ears}>
               {cat ? (
@@ -617,12 +573,12 @@ function Pet({
                     position={[side * 0.61, 0.17, -0.08]}
                     rotation={[0, side * 0.12, side * 0.15]}
                   >
-                    <Facet
+                    <Sculpt
+                      shape="ear"
                       position={[0, -0.32, 0]}
-                      scale={[0.255, 0.53, 0.24]}
+                      scale={[0.225, 0.5, 0.135]}
                       color="#bd853c"
                       rotation={[0.08, 0, side * -0.08]}
-                      seed={side + 5}
                     />
                   </group>
                 ))
@@ -632,56 +588,24 @@ function Pet({
               <PetEyes cat={cat} />
             </group>
             <group ref={jaw}>
+              <Facet
+                position={[0, cat ? -0.17 : -0.2, cat ? 0.648 : 0.81]}
+                scale={cat ? [0.083, 0.052, 0.045] : [0.145, 0.095, 0.07]}
+                color={cat ? "#72575f" : "#302b28"}
+                detail={0}
+                rotation={[0, 0, Math.PI]}
+              />
               {!cat && (
-                <Facet
-                  position={[0, -0.34, 0.57]}
-                  scale={[0.24, 0.13, 0.14]}
-                  color="#3c3027"
-                />
-              )}
-              {cat ? (
-                <>
-                  {[-1, 1].map((side) => (
-                    <Facet
-                      key={side}
-                      position={[side * 0.14, -0.23, 0.5]}
-                      scale={[0.22, 0.18, 0.22]}
-                      color="#38383e"
-                      seed={side + 4}
-                    />
-                  ))}
-                  <Facet
-                    position={[0, -0.16, 0.696]}
-                    scale={[0.093, 0.059, 0.061]}
-                    color="#7e626a"
-                    detail={0}
-                    rotation={[0, 0, Math.PI]}
-                  />
-                  <Facet
-                    position={[0, -0.34, 0.49]}
-                    scale={[0.19, 0.1, 0.13]}
-                    color="#292a30"
-                  />
-                </>
-              ) : (
                 <>
                   <Facet
-                    position={[0, -0.19, 0.48]}
-                    scale={[0.36, 0.245, 0.34]}
-                    color="#f0d9a5"
-                    seed={8}
-                  />
-                  <Facet
-                    position={[0, -0.13, 0.79]}
-                    scale={[0.155, 0.11, 0.105]}
-                    color="#352c26"
-                    detail={0}
-                    rotation={[0, 0, Math.PI]}
+                    position={[0, -0.355, 0.705]}
+                    scale={[0.15, 0.025, 0.03]}
+                    color="#4f3b2c"
                   />
                   <Facet
                     meshRef={tongue}
-                    position={[0, -0.425, 0.676]}
-                    scale={[0.108, 0.115, 0.046]}
+                    position={[0, -0.425, 0.72]}
+                    scale={[0.09, 0.115, 0.04]}
                     color="#d99088"
                   />
                 </>
@@ -963,18 +887,18 @@ export default function CompanionScene(props: SceneProps) {
         aria-hidden="true"
       >
         <FrameDriver visible={visible} reduced={reduced} />
-        <ambientLight intensity={0.85} />
+        <ambientLight intensity={0.3} />
         <hemisphereLight
           args={[dark ? "#ebeced" : "#fff4dc", "#8b8172", 1.45]}
         />
         <directionalLight
           position={[-3, 7, 6]}
-          intensity={3.1}
+          intensity={1.8}
           color={dark ? "#f3f1e8" : "#fff2d9"}
         />
         <directionalLight
           position={[4, 4, -3]}
-          intensity={dark ? 3.4 : 2.6}
+          intensity={dark ? 2.7 : 2.1}
           color={dark ? "#c6d7e2" : "#ffe3ac"}
         />
         <directionalLight

@@ -19,6 +19,7 @@ for (const [name, browserType] of [
   );
   try {
     for (const theme of ["dark", "light"]) {
+      const pet = theme === "dark" ? "jew" : "bo";
       const context = await browser.newContext({
         viewport: { width: 390, height: 844 },
         colorScheme: theme,
@@ -40,7 +41,7 @@ for (const [name, browserType] of [
       );
       await page.waitForFunction(
         () =>
-          [...document.querySelectorAll(".pet-target")].length === 2 &&
+          [...document.querySelectorAll(".pet-target")].length === 1 &&
           [...document.querySelectorAll(".pet-target")].every(
             (e) =>
               Number.isFinite(Number(e.dataset.headX)) &&
@@ -53,7 +54,7 @@ for (const [name, browserType] of [
       assert.match(await page.title(), /Jew & Bo/);
       assert.equal(
         await page.locator(".room").getAttribute("data-companion"),
-        "both",
+        pet,
       );
       assert.equal(
         await page.evaluate(
@@ -65,14 +66,12 @@ for (const [name, browserType] of [
       await page.screenshot({
         path: "test-results/live-" + name + "-" + theme + ".png",
       });
-      const initial = await page
-        .locator(".pet-target")
-        .evaluateAll((items) =>
-          items.map((e) => ({
-            x: Number(e.dataset.x),
-            z: Number(e.dataset.z),
-          })),
-        );
+      const initial = await page.locator(".pet-target").evaluateAll((items) =>
+        items.map((e) => ({
+          x: Number(e.dataset.x),
+          z: Number(e.dataset.z),
+        })),
+      );
       await page.waitForFunction(
         (before) =>
           [...document.querySelectorAll(".pet-target")].some(
@@ -85,7 +84,7 @@ for (const [name, browserType] of [
         initial,
         { timeout: 15000 },
       );
-      for (const pet of ["jew", "bo"]) {
+      {
         await page.locator('[data-pet="' + pet + '"]').focus();
         await page.keyboard.press("Space");
         await page.waitForFunction(
@@ -109,14 +108,16 @@ for (const [name, browserType] of [
         await page.locator(".room").getAttribute("data-theme"),
         theme === "dark" ? "light" : "dark",
       );
-      assert.equal(await page.locator(".pet-target").count(), 2);
+      assert.equal(await page.locator(".pet-target").count(), 1);
+      assert.equal(
+        await page.locator(".room").getAttribute("data-companion"),
+        pet === "jew" ? "bo" : "jew",
+      );
       const resources = await page.evaluate(() =>
-        performance
-          .getEntriesByType("resource")
-          .map((r) => ({
-            host: new URL(r.name).host,
-            bytes: r.encodedBodySize || 0,
-          })),
+        performance.getEntriesByType("resource").map((r) => ({
+          host: new URL(r.name).host,
+          bytes: r.encodedBodySize || 0,
+        })),
       );
       assert.deepEqual(errors, []);
       reports.push({
@@ -125,10 +126,10 @@ for (const [name, browserType] of [
         status: response.status(),
         title: await page.title(),
         viewport: "390x844",
-        bothPets: true,
+        visiblePet: pet,
         overflow: false,
         wandering: true,
-        pettingBoth: true,
+        petting: true,
         themeSwitch: true,
         consoleErrors: errors,
         resourceHosts: [...new Set(resources.map((r) => r.host))],
