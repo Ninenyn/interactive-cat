@@ -9,7 +9,7 @@ import {
   type KeyboardEvent,
 } from "react";
 import { type Companion } from "@/interactions/companionStateMachine";
-import { RoomRuntime, companions } from "@/interactions/roomRuntime";
+import { RoomRuntime } from "@/interactions/roomRuntime";
 import { groundToScreen } from "@/interactions/roomCoordinates";
 import { connectPointerEngine } from "@/interactions/pointerEngine";
 import {
@@ -28,7 +28,6 @@ const Scene = dynamic(() => import("./CompanionScene"), {
   ssr: false,
   loading: () => (
     <div className="arrival">
-      <span />
       <span />
     </div>
   ),
@@ -95,7 +94,8 @@ export default function CompanionRoom() {
     reduced = useMedia("(prefers-reduced-motion: reduce)"),
     visible = useVisible();
   const theme = preferences.theme ?? (osDark ? "dark" : "light");
-  const [runtime] = useState(() => new RoomRuntime());
+  const visiblePet: Companion = theme === "dark" ? "jew" : "bo";
+  const [runtime] = useState(() => new RoomRuntime(visiblePet));
   const jew = useSyncExternalStore(
     runtime.pets.jew.machine.subscribe,
     runtime.pets.jew.machine.getSnapshot,
@@ -107,7 +107,6 @@ export default function CompanionRoom() {
     runtime.pets.bo.machine.getSnapshot,
   );
   const snapshots = { jew, bo };
-  const [active, setActive] = useState<Companion>("jew");
   const [menu, setMenu] = useState(false),
     [panel, setPanel] = useState<"notes" | "about" | null>(null),
     [savedOnly, setSavedOnly] = useState(false);
@@ -120,11 +119,13 @@ export default function CompanionRoom() {
     noteClose = useRef<HTMLButtonElement>(null);
   const [stageSize, setStageSize] = useState({ width: 390, height: 844 });
   const [breathPhase, setBreathPhase] = useState("Breathe in");
-  const snapshot = snapshots[active];
+  const snapshot = snapshots[visiblePet];
   const select = (pet: Companion) => {
     runtime.select(pet);
-    setActive(pet);
   };
+  useEffect(() => {
+    runtime.setVisiblePet(visiblePet);
+  }, [runtime, visiblePet]);
   useEffect(() => {
     if (!stage.current) return;
     const observer = new ResizeObserver((entries) => {
@@ -180,8 +181,7 @@ export default function CompanionRoom() {
   }, [noteOpen, panel]);
   useEffect(() => {
     if (!stage.current) return;
-    return connectPointerEngine(stage.current, runtime, (pet) => {
-      setActive(pet);
+    return connectPointerEngine(stage.current, runtime, () => {
       store.update({ welcomed: true });
       if (store.getSnapshot().sound) runtime.audio.setEnabled(true);
       setMenu(false);
@@ -279,7 +279,7 @@ export default function CompanionRoom() {
     const selected = (e.target as HTMLElement).getAttribute(
       "data-pet",
     ) as Companion | null;
-    const pet = selected ?? active,
+    const pet = selected ?? visiblePet,
       machine = runtime.pets[pet].machine;
     const key = e.key.toLowerCase();
     if (
@@ -338,9 +338,9 @@ export default function CompanionRoom() {
           : snapshot.state === "lick"
             ? "A little kiss from Bo."
             : snapshot.state === "paw"
-              ? (active === "jew" ? "Jew" : "Bo") + " offers a paw."
+              ? (visiblePet === "jew" ? "Jew" : "Bo") + " offers a paw."
               : snapshot.state === "petting"
-                ? (active === "jew" ? "Jew" : "Bo") + " is enjoying that."
+                ? (visiblePet === "jew" ? "Jew" : "Bo") + " is enjoying that."
                 : "";
   const collected = (savedOnly ? preferences.favorites : preferences.seen)
     .map((id) => messages.find((n) => n.id === id))
@@ -350,7 +350,7 @@ export default function CompanionRoom() {
     <main
       className="room"
       data-theme={theme}
-      data-companion="both"
+      data-companion={visiblePet}
       data-behavior={snapshot.state}
       data-reduced-motion={reduced}
     >
@@ -359,59 +359,58 @@ export default function CompanionRoom() {
         ref={stage}
         className="companion-stage"
         role="group"
-        aria-label="Jew and Bo’s room"
+        aria-label={
+          visiblePet === "jew" ? "Jew’s night room" : "Bo’s daylight room"
+        }
         aria-describedby="room-instructions"
         tabIndex={-1}
         onKeyDown={keyboard}
       >
         <Scene
           runtime={runtime}
+          pet={visiblePet}
           reduced={reduced}
           visible={visible && !panel && !noteOpen}
           dark={theme === "dark"}
         />
-        {companions.map((pet) => (
-          <button
-            key={pet}
-            ref={(node) => runtime.bindAnchor(pet, node)}
-            className="pet-target"
-            data-pet={pet}
-            data-state={snapshots[pet].state}
-            aria-label={
-              pet === "jew"
-                ? "Pet Jew, the black cat"
-                : "Pet Bo, the golden retriever"
+        <button
+          key={visiblePet}
+          ref={(node) => runtime.bindAnchor(visiblePet, node)}
+          className="pet-target"
+          data-pet={visiblePet}
+          data-state={snapshot.state}
+          aria-label={
+            visiblePet === "jew"
+              ? "Pet or drag Jew, the black cat"
+              : "Pet or drag Bo, the golden retriever"
+          }
+          onFocus={() => select(visiblePet)}
+          onClick={(event) => {
+            if (event.detail === 0) petTap(visiblePet);
+          }}
+        />
+        {["bite", "boop", "lick"].includes(snapshot.state) && (
+          <span
+            className={
+              "contact-effect " + (visiblePet === "jew" ? "nibble" : "boop")
             }
-            onFocus={() => select(pet)}
-            onClick={() => petTap(pet)}
-          />
-        ))}
-        {companions.map(
-          (pet) =>
-            ["bite", "boop", "lick"].includes(snapshots[pet].state) && (
-              <span
-                key={pet}
-                className={
-                  "contact-effect " + (pet === "jew" ? "nibble" : "boop")
-                }
-                style={{
-                  left: (runtime.pets[pet].machine.target.x + 1) * 50 + "%",
-                  top: (1 - runtime.pets[pet].machine.target.y) * 50 + "%",
-                }}
-                aria-hidden="true"
-              >
-                {pet === "jew" ? (
-                  <>
-                    <i />
-                    <i />
-                  </>
-                ) : (
-                  <Icon name="heart" size={24} />
-                )}
-              </span>
-            ),
+            style={{
+              left: (runtime.pets[visiblePet].machine.target.x + 1) * 50 + "%",
+              top: (1 - runtime.pets[visiblePet].machine.target.y) * 50 + "%",
+            }}
+            aria-hidden="true"
+          >
+            {visiblePet === "jew" ? (
+              <>
+                <i />
+                <i />
+              </>
+            ) : (
+              <Icon name="heart" size={24} />
+            )}
+          </span>
         )}
-        {(jew.state === "digging" || bo.state === "digging") && (
+        {snapshot.state === "digging" && (
           <div className="dig-dust" style={notePosition} aria-hidden="true">
             {[0, 1, 2, 3, 4, 5].map((i) => (
               <i key={i} style={{ "--i": i } as React.CSSProperties} />
@@ -445,10 +444,12 @@ export default function CompanionRoom() {
         )}
       </div>
       <p id="room-instructions" className="sr-only">
-        Two little friends, sharing a quiet room. Touch a pet to say hello,
-        stroke to pet, or hold to breathe together. Tap the floor to invite a
-        walk. Keyboard: Tab to choose a pet. Space to pet, P for a paw, H to
-        play, B to breathe, and arrow keys to look.
+        Jew stays with you at night and Bo stays with you in daylight. Touch or
+        stroke the pet to say hello, drag to move them, or hold still to breathe
+        together. Jew playfully nibbles and drops free if dragged for too long;
+        Bo is happy to keep being carried. Tap the floor to invite a walk.
+        Keyboard: Space to pet, P for a paw, H to play, B to breathe, and arrow
+        keys to look.
       </p>
       <p className="sr-only" role="status" aria-live="polite">
         {status}
@@ -501,7 +502,7 @@ export default function CompanionRoom() {
                 const value = !preferences.sound;
                 store.update({ sound: value });
                 runtime.audio.setEnabled(value);
-                if (value) runtime.audio.play("happy", active);
+                if (value) runtime.audio.play("happy", visiblePet);
               }}
               aria-pressed={preferences.sound}
             >
@@ -524,10 +525,8 @@ export default function CompanionRoom() {
             <button
               disabled={["digging", "heart-note"].includes(snapshot.state)}
               onClick={() => {
-                for (const pet of companions) {
-                  runtime.pets[pet].motion.pause(17);
-                  runtime.pets[pet].machine.rest();
-                }
+                runtime.pets[visiblePet].motion.pause(17);
+                runtime.pets[visiblePet].machine.rest();
                 setMenu(false);
                 store.update({ welcomed: true });
               }}
@@ -644,16 +643,17 @@ export default function CompanionRoom() {
         ) : (
           <div className="about-copy">
             <p>
-              Jew, a black cat. Bo, a golden retriever. A little company, at
-              their own pace.
+              Jew, a little black cat, keeps you company at night. Bo, a little
+              golden retriever, joins you in daylight.
             </p>
             <p>
-              Tap to say hello. Stroke to pet. Touch a paw, or hold still to
-              breathe together. Tap the floor to invite a walk.
+              Tap or stroke to say hello, drag your pet around, touch a paw, or
+              hold still to breathe together. Tap the floor to invite a walk.
             </p>
             <p>
-              Jew sometimes gives a tiny nibble; Bo prefers a boop.
-              Occasionally, they dig up a note for you.
+              Drag Jew for too long and he gives a tiny playful nibble, then
+              drops free. Bo is happy to be carried as long as you like. They
+              also dig up heart notes more often now.
             </p>
             <button
               className="system-theme"
@@ -665,7 +665,7 @@ export default function CompanionRoom() {
               Use my device’s appearance
             </button>
             <p className="keyboard-help">
-              Keyboard: <kbd>Tab</kbd> to choose a pet, <kbd>Space</kbd> to pet,{" "}
+              Keyboard: <kbd>Tab</kbd> to focus your pet, <kbd>Space</kbd> to pet,{" "}
               <kbd>P</kbd> for a paw, <kbd>H</kbd> to play, <kbd>B</kbd> to
               breathe, and arrows to look.
             </p>

@@ -157,6 +157,17 @@ export class CompanionMachine {
     } else this.outcome = this.random() < 0.58 ? "boop" : "lick";
     this.enter("hunting", 520);
   }
+  biteFromDrag(point: Point) {
+    if (this.snapshot.pet !== "jew" || protectedStates.has(this.snapshot.state))
+      return false;
+    this.target = point;
+    this.engagement++;
+    this.lastTouch = this.clock;
+    this.annoyance = 0;
+    this.biteReady = this.clock + BITE_COOLDOWN;
+    this.enter("bite", 650);
+    return true;
+  }
   switchPet(pet: Companion) {
     if (pet === this.snapshot.pet && !this.nextPet) return;
     this.nextPet = pet;

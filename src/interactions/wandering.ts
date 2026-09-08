@@ -35,6 +35,18 @@ export class Wanderer {
     this.goal = { x: clamp(point.x, bounds.x), z: clamp(point.z, bounds.z) };
     this.wait = 0;
   }
+  place(point: GroundPoint, bounds: Bounds) {
+    const next = { x: clamp(point.x, bounds.x), z: clamp(point.z, bounds.z) };
+    const dx = next.x - this.x,
+      dz = next.z - this.z;
+    if (Math.hypot(dx, dz) > 0.001) this.heading = Math.atan2(dx, dz);
+    this.x = next.x;
+    this.z = next.z;
+    this.goal = null;
+    this.wait = 0.9;
+    this.walking = false;
+    this.stand = 0;
+  }
   private chooseGoal(bounds: Bounds, other: GroundPoint) {
     for (let attempt = 0; attempt < 12; attempt++) {
       const p = {

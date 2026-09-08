@@ -1,6 +1,15 @@
-import { classifyGesture, screenToPoint, type Zone } from "./gestureClassifier";
+import {
+  classifyGesture,
+  screenToPoint,
+  type Point,
+  type Zone,
+} from "./gestureClassifier";
 import { RoomRuntime } from "./roomRuntime";
 import type { Companion } from "./companionStateMachine";
+
+const DRAG_THRESHOLD = 12;
+const JEW_DRAG_LIMIT = 2200;
+
 export function connectPointerEngine(
   element: HTMLElement,
   runtime: RoomRuntime,
@@ -17,18 +26,44 @@ export function connectPointerEngine(
     reversals = 0,
     direction = 0,
     lastPet = 0;
-  let hoverTime = 0,
-    hoverX = 0,
-    hoverY = 0;
   let zone: Zone = "air",
-    held = false;
+    held = false,
+    dragging = false;
+  let dragOffset = { x: 0, z: 0 };
+  let latestPoint: Point = { x: 0, y: 0 };
   let holdTimer: ReturnType<typeof setTimeout> | undefined;
+  let biteTimer: ReturnType<typeof setTimeout> | undefined;
+
   const stopHold = () => {
     if (holdTimer) clearTimeout(holdTimer);
     holdTimer = undefined;
   };
+  const stopBiteTimer = () => {
+    if (biteTimer) clearTimeout(biteTimer);
+    biteTimer = undefined;
+  };
+  const setDragging = (pet: Companion, value: boolean) => {
+    const anchor = runtime.pets[pet].anchor;
+    if (anchor) anchor.dataset.dragging = String(value);
+    element.style.cursor = value ? "grabbing" : "grab";
+  };
   const point = (e: PointerEvent) =>
     screenToPoint(e.clientX, e.clientY, element.getBoundingClientRect());
+
+  const dropJew = () => {
+    if (pointer === null || selected !== "jew" || !dragging) return;
+    const pet = runtime.pets.jew;
+    if (pet.machine.biteFromDrag(latestPoint)) onEngaged("jew");
+    dragging = false;
+    held = false;
+    setDragging("jew", false);
+    const captured = pointer;
+    pointer = null;
+    selected = null;
+    element.style.cursor = "default";
+    if (element.hasPointerCapture(captured)) element.releasePointerCapture(captured);
+  };
+
   const down = (e: PointerEvent) => {
     if (
       runtime.paused ||
@@ -43,65 +78,53 @@ export function connectPointerEngine(
     y = e.clientY;
     distance = maxSpeed = reversals = direction = 0;
     held = false;
+    dragging = false;
+    stopBiteTimer();
     const rect = element.getBoundingClientRect(),
       p = point(e),
       hit = runtime.hit(p, rect.width, rect.height);
+    latestPoint = p;
     selected = hit?.pet ?? null;
     zone = hit?.zone ?? "air";
     element.setPointerCapture(e.pointerId);
     if (!selected) return;
     const pet = runtime.pets[selected];
     runtime.select(selected);
+    dragOffset = runtime.dragOffset(selected, p, rect.width, rect.height);
     pet.motion.pause(3);
     onEngaged(selected);
-    pet.machine.track(p);
+    pet.machine.track(p, 0, true);
     holdTimer = setTimeout(() => {
-      if (pointer !== null && selected && distance < 18) {
+      if (pointer !== null && selected && distance < DRAG_THRESHOLD && !dragging) {
         held = true;
         if (pet.machine.engage("hold", zone, pet.machine.target))
           onEngaged(selected);
       }
     }, 750);
   };
+
   const move = (e: PointerEvent) => {
     if (runtime.paused || !e.isPrimary) return;
     const now = performance.now(),
       p = point(e),
-      rect = element.getBoundingClientRect();
-    const hit = runtime.hit(p, rect.width, rect.height);
-    element.style.cursor = hit ? "grab" : "default";
+      rect = element.getBoundingClientRect(),
+      hit = runtime.hit(p, rect.width, rect.height);
+    latestPoint = p;
+
     if (pointer === null) {
-      if (e.pointerType !== "mouse") return;
-      const dt = now - hoverTime;
-      const speed =
-        dt > 0 && dt < 160
-          ? Math.hypot(e.clientX - hoverX, e.clientY - hoverY) /
-            Math.max(16, dt)
-          : 0;
-      hoverTime = now;
-      hoverX = e.clientX;
-      hoverY = e.clientY;
-      if (hit) {
+      element.style.cursor = hit ? "grab" : "default";
+      if (e.pointerType === "mouse" && hit) {
         const pet = runtime.pets[hit.pet];
-        pet.motion.pause(1);
-        pet.machine.track(p, speed, true);
-      }
-      // A nibble follows the real pointer until release, including outside the body.
-      for (const pet of Object.values(runtime.pets)) {
-        if (
-          ["hunting", "pounce", "bite", "boop", "lick"].includes(
-            pet.machine.getSnapshot().state,
-          )
-        )
-          pet.machine.track(p, 0, false);
+        pet.machine.track(p, 0, true);
       }
       return;
     }
     if (e.pointerId !== pointer) return;
+
     const dx = e.clientX - x,
       dy = e.clientY - y,
-      step = Math.hypot(dx, dy);
-    const speed = step / Math.max(16, now - lastTime);
+      step = Math.hypot(dx, dy),
+      speed = step / Math.max(16, now - lastTime);
     distance += step;
     maxSpeed = Math.max(maxSpeed * 0.92, speed);
     if (Math.abs(dx) > 2) {
@@ -109,11 +132,41 @@ export function connectPointerEngine(
       if (direction && direction !== sign) reversals++;
       direction = sign;
     }
-    if (distance > 18) stopHold();
+
     if (selected) {
       const pet = runtime.pets[selected];
+      const locked = ["digging", "heart-note"].includes(
+        pet.machine.getSnapshot().state,
+      );
+      if (
+        !dragging &&
+        !locked &&
+        distance >= DRAG_THRESHOLD &&
+        ["head", "chin", "body"].includes(zone)
+      ) {
+        dragging = true;
+        held = false;
+        stopHold();
+        setDragging(selected, true);
+        pet.motion.pause(1);
+        if (selected === "jew") {
+          stopBiteTimer();
+          biteTimer = setTimeout(dropJew, JEW_DRAG_LIMIT);
+        }
+      }
+
+      if (dragging) {
+        runtime.dragPet(selected, p, rect.width, rect.height, dragOffset);
+        pet.machine.track(p, 0, false);
+        x = e.clientX;
+        y = e.clientY;
+        lastTime = now;
+        return;
+      }
+
+      if (distance > 18) stopHold();
       pet.motion.pause(2.5);
-      pet.machine.track(p, speed, hit?.pet === selected);
+      pet.machine.track(p, 0, hit?.pet === selected);
       if (
         distance > 14 &&
         speed < 0.48 &&
@@ -132,22 +185,24 @@ export function connectPointerEngine(
     y = e.clientY;
     lastTime = now;
   };
+
   const up = (e: PointerEvent) => {
     if (e.pointerId !== pointer) return;
     stopHold();
-    if (selected && !held) {
-      if (
-        runtime.pets[selected].machine.engage(
-          classifyGesture(
-            distance,
-            performance.now() - start,
-            maxSpeed,
-            reversals,
-          ),
-          zone,
-          point(e),
-        )
-      )
+    stopBiteTimer();
+    const wasDragging = dragging;
+    const releasedPet = selected;
+    if (releasedPet && wasDragging) {
+      setDragging(releasedPet, false);
+    } else if (selected && !held) {
+      const classified = classifyGesture(
+        distance,
+        performance.now() - start,
+        maxSpeed,
+        reversals,
+      );
+      const gesture = classified === "fast" ? "tap" : classified;
+      if (runtime.pets[selected].machine.engage(gesture, zone, point(e)))
         onEngaged(selected);
     } else if (!selected && distance < 12) {
       const rect = element.getBoundingClientRect();
@@ -155,14 +210,24 @@ export function connectPointerEngine(
     }
     pointer = null;
     selected = null;
+    dragging = false;
+    held = false;
+    element.style.cursor = "default";
     if (element.hasPointerCapture(e.pointerId))
       element.releasePointerCapture(e.pointerId);
   };
+
   const cancel = () => {
     stopHold();
-    const captured = pointer;
+    stopBiteTimer();
+    const captured = pointer,
+      releasedPet = selected;
     pointer = null;
     selected = null;
+    held = false;
+    dragging = false;
+    if (releasedPet) setDragging(releasedPet, false);
+    element.style.cursor = "default";
     if (captured !== null && element.hasPointerCapture(captured))
       element.releasePointerCapture(captured);
     runtime.cancelPointers();
@@ -171,8 +236,9 @@ export function connectPointerEngine(
     if (pointer !== null) cancel();
   };
   const leave = () => {
-    hoverTime = 0;
+    if (pointer === null) element.style.cursor = "default";
   };
+
   element.addEventListener("pointerdown", down);
   element.addEventListener("pointermove", move);
   element.addEventListener("pointerup", up);
@@ -182,6 +248,7 @@ export function connectPointerEngine(
   window.addEventListener("blur", cancel);
   return () => {
     stopHold();
+    stopBiteTimer();
     element.removeEventListener("pointerdown", down);
     element.removeEventListener("pointermove", move);
     element.removeEventListener("pointerup", up);

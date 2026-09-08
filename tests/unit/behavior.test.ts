@@ -68,6 +68,15 @@ describe("coordinated companion behavior", () => {
       expect(events).not.toContain("bite");
     }
   });
+  it("lets Jew nibble out of a long drag while Bo never uses the drag bite", () => {
+    const jew = ready("jew"),
+      bo = ready("bo");
+    expect(jew.biteFromDrag({ x: 0.25, y: -0.1 })).toBe(true);
+    expect(jew.getSnapshot().state).toBe("bite");
+    expect(jew.target).toEqual({ x: 0.25, y: -0.1 });
+    expect(bo.biteFromDrag({ x: 0.25, y: -0.1 })).toBe(false);
+    expect(bo.getSnapshot().state).not.toBe("bite");
+  });
   it("keeps the bite target at the moving fingertip and lets pointer cancellation recover", () => {
     const m = ready();
     m.hunt();
@@ -138,20 +147,21 @@ describe("heart notes and durable local preferences", () => {
     }
     expect(chooseMessage("jew", seen, () => 0.5).id).not.toBe(seen.at(-1));
   });
-  it("requires engagement and time, pauses for busy pets, spaces discoveries, and caps a session at three", () => {
+  it("requires a little engagement, pauses for busy pets, discovers more often, and caps a session at five", () => {
     const scheduler = new HeartScheduler(true, () => 0);
-    expect(scheduler.advance(24000, 0, true)).toBe(false);
-    expect(scheduler.advance(0, 4, false)).toBe(false);
-    expect(scheduler.advance(0, 4, true)).toBe(true);
-    expect(scheduler.advance(104999, 100, true)).toBe(false);
-    expect(scheduler.advance(1, 100, true)).toBe(true);
-    expect(scheduler.advance(105000, 100, true)).toBe(true);
+    expect(scheduler.advance(14000, 0, true)).toBe(false);
+    expect(scheduler.advance(0, 2, false)).toBe(false);
+    expect(scheduler.advance(0, 2, true)).toBe(true);
+    for (let discovery = 1; discovery < 5; discovery++) {
+      expect(scheduler.advance(44999, 100, true)).toBe(false);
+      expect(scheduler.advance(1, 100, true)).toBe(true);
+    }
     expect(scheduler.advance(999999, 100, true)).toBe(false);
   });
-  it("gives returning sessions a later discovery window", () => {
+  it("gives returning sessions a short but later discovery window", () => {
     const s = new HeartScheduler(false, () => 0);
-    expect(s.advance(24000, 8, true)).toBe(false);
-    expect(s.advance(26000, 8, true)).toBe(true);
+    expect(s.advance(21999, 8, true)).toBe(false);
+    expect(s.advance(1, 8, true)).toBe(true);
   });
   it("validates corrupted or incompatible browser storage without crashing", () => {
     expect(parsePreferences("{bad").seen).toEqual([]);

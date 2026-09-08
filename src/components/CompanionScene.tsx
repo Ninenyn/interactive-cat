@@ -12,22 +12,18 @@ import {
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { Companion } from "@/interactions/companionStateMachine";
-import {
-  RoomRuntime,
-  companions,
-  type HitCircle,
-} from "@/interactions/roomRuntime";
+import { RoomRuntime, type HitCircle } from "@/interactions/roomRuntime";
 import {
   CAMERA_TARGET_Y,
   roomZoom,
   roomBounds,
-  screenAtDepth,
   groundToScreen,
 } from "@/interactions/roomCoordinates";
 
 type Vec3 = [number, number, number];
 type SceneProps = {
   runtime: RoomRuntime;
+  pet: Companion;
   reduced: boolean;
   visible: boolean;
   dark: boolean;
@@ -45,7 +41,7 @@ function Facet({
   scale = [1, 1, 1],
   rotation = [0, 0, 0],
   color,
-  detail = 1,
+  detail = 0,
   seed = 1,
   meshRef,
 }: {
@@ -281,15 +277,14 @@ function Pet({
     )
       return;
     const point = pointRef.current;
-    const entry = runtime.pets[pet],
-      other = runtime.pets[cat ? "bo" : "jew"];
+    const entry = runtime.pets[pet];
     const machine = entry.machine,
       motion = entry.motion,
       s = machine.getSnapshot();
     motion.step(
       delta,
       roomBounds(size.width, size.height),
-      other.motion,
+      { x: 99, z: 99 },
       roamingStates.has(s.state) && !runtime.paused,
       reduced,
     );
@@ -312,20 +307,10 @@ function Pet({
       cat ? 1.48 : 1.61,
       stand,
     );
-    const z = motion.z;
-    let x = motion.x,
+    const z = motion.z,
+      x = motion.x,
       y = bob;
-    if (contact && !reduced) {
-      const target = screenAtDepth(
-        machine.target,
-        z + 0.9,
-        size.width,
-        size.height,
-      );
-      x = target.x;
-      y = target.y - (headY - 0.17);
-    }
-    root.current.position.lerp(point.set(x, y, z), contact ? 0.65 : smooth);
+    root.current.position.lerp(point.set(x, y, z), smooth);
     const desiredHeading = contact || hunting || digging ? 0 : motion.heading;
     const difference = Math.atan2(
       Math.sin(desiredHeading - root.current.rotation.y),
@@ -471,11 +456,10 @@ function Pet({
       s.state === "pounce" ? -0.09 : 0,
       smooth,
     );
-    if (fangs.current) fangs.current.visible = cat && contact;
+    if (fangs.current) fangs.current.visible = cat && s.state === "bite";
     if (tongue.current) {
-      tongue.current.visible = !cat && !sleeping;
-      tongue.current.scale.y =
-        s.state === "lick" ? 0.2 + Math.sin(t * 18) * 0.06 : 0.115;
+      tongue.current.visible = !cat && s.state === "lick";
+      tongue.current.scale.y = 0.2 + Math.sin(t * 18) * 0.06;
     }
     if (shadow.current) {
       shadow.current.position.set(motion.x, 0.008, motion.z);
@@ -771,9 +755,10 @@ function FrameDriver({
 }
 function FlatRoom({
   runtime,
+  pet: selectedPet,
   visible,
   reduced,
-}: Pick<SceneProps, "runtime" | "visible" | "reduced">) {
+}: Pick<SceneProps, "runtime" | "pet" | "visible" | "reduced">) {
   const room = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!visible || !room.current) return;
@@ -791,12 +776,12 @@ function FlatRoom({
         return;
       }
       const zoom = roomZoom(width, height);
-      for (const pet of companions) {
+      for (const pet of [selectedPet]) {
         const entry = runtime.pets[pet];
         entry.motion.step(
           dt,
           roomBounds(width, height),
-          runtime.pets[pet === "jew" ? "bo" : "jew"].motion,
+          { x: 99, z: 99 },
           roamingStates.has(entry.machine.getSnapshot().state),
           reduced,
         );
@@ -850,7 +835,7 @@ function FlatRoom({
       observer.disconnect();
       cancelAnimationFrame(frame);
     };
-  }, [runtime, visible, reduced]);
+  }, [runtime, selectedPet, visible, reduced]);
   return (
     <div
       ref={room}
@@ -858,7 +843,7 @@ function FlatRoom({
       data-fallback="true"
       aria-hidden="true"
     >
-      {companions.map((pet) => (
+      {[selectedPet].map((pet) => (
         <svg key={pet} data-flat={pet} viewBox="0 0 200 260">
           <ellipse
             cx="100"
@@ -956,9 +941,9 @@ export default function CompanionScene(props: SceneProps) {
       return false;
     }
   });
-  const { runtime, reduced, visible, dark } = props;
+  const { runtime, pet, reduced, visible, dark } = props;
   const fallback = (
-    <FlatRoom runtime={runtime} reduced={reduced} visible={visible} />
+    <FlatRoom runtime={runtime} pet={pet} reduced={reduced} visible={visible} />
   );
   if (!supported) return fallback;
   return (
@@ -997,9 +982,7 @@ export default function CompanionScene(props: SceneProps) {
           intensity={0.5}
           color="#f5e7d5"
         />
-        {companions.map((pet) => (
-          <Pet key={pet} runtime={runtime} pet={pet} reduced={reduced} />
-        ))}
+        <Pet runtime={runtime} pet={pet} reduced={reduced} />
       </Canvas>
     </SceneBoundary>
   );

@@ -1,9 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { prepare, head } from "./helpers";
-test("Bo boops, relaxes on hold, and finds his own note alongside Jew", async ({
+
+test("Bo owns daylight, relaxes on hold, can be carried freely, and finds his own note", async ({
   page,
 }) => {
-  test.setTimeout(80000);
+  test.setTimeout(65000);
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   page.on("console", (m) => {
@@ -11,6 +12,9 @@ test("Bo boops, relaxes on hold, and finds his own note alongside Jew", async ({
   });
   await page.setViewportSize({ width: 390, height: 844 });
   await prepare(page, { fixedRandom: true });
+  await expect(page.locator('[data-pet="bo"]')).toHaveCount(1);
+  await expect(page.locator('[data-pet="jew"]')).toHaveCount(0);
+
   await page.locator('[data-pet="bo"]').focus();
   await page.keyboard.press("h");
   await expect(page.locator('[data-pet="bo"]')).toHaveAttribute(
@@ -18,8 +22,9 @@ test("Bo boops, relaxes on hold, and finds his own note alongside Jew", async ({
     "boop",
   );
   await page.waitForTimeout(1700);
-  const h = await head(page, "bo");
-  await page.mouse.move(h.x, h.y);
+
+  const p = await head(page, "bo");
+  await page.mouse.move(p.x, p.y);
   await page.mouse.down();
   await page.waitForTimeout(850);
   await expect(page.locator('[data-pet="bo"]')).toHaveAttribute(
@@ -27,17 +32,29 @@ test("Bo boops, relaxes on hold, and finds his own note alongside Jew", async ({
     "breathing",
   );
   await page.mouse.up();
+
+  const drag = await head(page, "bo");
+  await page.mouse.move(drag.x, drag.y);
+  await page.mouse.down();
+  await page.mouse.move(drag.x + 60, drag.y + 16, { steps: 5 });
+  await page.waitForTimeout(2500);
+  await expect(page.locator('[data-pet="bo"]')).toHaveAttribute(
+    "data-dragging",
+    "true",
+  );
+  await page.mouse.up();
+
   await page.locator('[data-pet="bo"]').focus();
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 3; i++) {
     await page.keyboard.press("Space");
     await page.waitForTimeout(100);
   }
   await expect(
     page.getByRole("button", { name: "Open the heart note" }),
-  ).toBeVisible({ timeout: 60000 });
+  ).toBeVisible({ timeout: 35000 });
   await page.getByRole("button", { name: "Open the heart note" }).click();
   await expect(page.locator(".note-top")).toContainText("From Bo");
-  await expect(page.locator('[data-pet="jew"]')).toBeVisible();
+  await expect(page.locator('[data-pet="jew"]')).toHaveCount(0);
   await page.keyboard.press("Escape");
   await expect(page.locator(".open-note")).toHaveCount(0);
   expect(errors).toEqual([]);

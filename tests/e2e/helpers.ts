@@ -3,6 +3,7 @@ export async function prepare(
   page: Page,
   options: { dark?: boolean; reduced?: boolean; fixedRandom?: boolean } = {},
 ) {
+  const pet = options.dark ? "jew" : "bo";
   await page.emulateMedia({
     colorScheme: options.dark ? "dark" : "light",
     reducedMotion: options.reduced ? "reduce" : "no-preference",
@@ -21,25 +22,21 @@ export async function prepare(
     });
   await page.goto("/");
   await expect(page.locator("canvas")).toHaveCount(1);
-  await expect(page.locator(".room")).toHaveAttribute("data-companion", "both");
+  await expect(page.locator(".room")).toHaveAttribute("data-companion", pet);
+  await expect(page.locator(".pet-target")).toHaveCount(1);
+  await expect(page.locator(`[data-pet="${pet}"]`)).toHaveCount(1);
+  await expect(page.locator(`[data-pet="${pet === "jew" ? "bo" : "jew"}"]`)).toHaveCount(0);
   await expect
     .poll(async () =>
       page
         .locator(".pet-target")
-        .evaluateAll((items) =>
-          items.every(
-            (e) =>
-              Number.isFinite(Number((e as HTMLElement).dataset.headX)) &&
-              Number((e as HTMLElement).dataset.headX) > 0,
-          ),
+        .evaluate((e) =>
+          Number.isFinite(Number((e as HTMLElement).dataset.headX)) &&
+          Number((e as HTMLElement).dataset.headX) > 0,
         ),
     )
     .toBe(true);
-  await expect(page.locator('[data-pet="jew"]')).not.toHaveAttribute(
-    "data-state",
-    "entering",
-  );
-  await expect(page.locator('[data-pet="bo"]')).not.toHaveAttribute(
+  await expect(page.locator(`[data-pet="${pet}"]`)).not.toHaveAttribute(
     "data-state",
     "entering",
   );
