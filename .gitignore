@@ -13,3 +13,5 @@ review/_scratch/
 
 # Final review evidence and master assets are deliberately not ignored.
 # Select and verify a binary storage strategy before adding large files.
+
+dist/

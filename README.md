@@ -1,14 +1,27 @@
-# Jew & Bo — Reference-first rebuild
+# Jew & Bo — Model Studio
 
-The active project starts again from the two user-supplied character sheets. Its current deliverable is a production plan; no replacement character model or application is claimed complete.
+The current implementation is a Blender-free M1 review web app for two original clay character meshes. It provides orbit/zoom, hero/front/side/back views, silhouette and wireframe, original reference images, vertex editing/undo, editable mesh JSON save/reload, GLB export and PNG capture. The art remains unapproved.
 
-- Read `docs/PRODUCTION_PLAN.md` for the detailed Thai plan.
-- Read `docs/ART_DIRECTION.md` for reference-only modeling guidance.
-- Read `docs/SOURCES.md` for original tutorials and official Blender references.
-- Read `docs/ACCEPTANCE.md` for the evidence and visual review contract.
-- Read `references/manifest.json` before modeling. The original image bytes must be staged on the modeling machine and verified against those hashes.
-- Read `status.json` for the current state and next deliverable.
+The latest user instruction replaces the earlier local Blender prerequisite. Read `docs/BROWSER_PIPELINE.md` first, then `docs/PRODUCTION_PLAN.md`, `docs/ART_DIRECTION.md` and `docs/ACCEPTANCE.md` for the unchanged reference and review requirements.
 
-Next production deliverable: Jew in neutral gray, shown from the reference camera and front/side/back views, with an actual editable `.blend` and a turntable. Color production follows geometry and facial review.
+## Run
 
-The previous working contents were moved out of this project. Git history is retained for recovery, and must not be used as a source of character geometry, proportions, rigging or render targets for this rebuild.
+```sh
+npm ci
+npm run build
+npm test
+npm run test:web
+npm run dev
+```
+
+The local studio serves `dist/` on port 3212. Browser QA uses the installed Google Chrome. Vercel serves the static build using the repository's vercel.json. No Blender installation or runtime model generator is required.
+
+## Asset ownership
+
+- `art/source/`: original offline polygon-cage authoring modules, one owner per pet.
+- `art/meshes/`: realized portable editable vertex/triangle data.
+- `references/original/`: exact user attachments with verified hashes.
+- `review/M1/`: actual source/export renders and validation evidence.
+- `web/`: review UI and renderer.
+
+This stage does not implement the full companion behavior or final materials/rig. Previous rejected assets remain outside the active project and are not reused.

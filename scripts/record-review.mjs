@@ -1,0 +1,8 @@
+import fs from 'node:fs/promises';
+import crypto from 'node:crypto';
+const directory='review/M1';
+const files=[...(await fs.readdir(directory)).filter(p=>/\.(png|glb)$/.test(p)).map(p=>directory+'/'+p), 'art/source/jew.mjs','art/source/bo.mjs','art/meshes/jew.mesh.json','art/meshes/bo.mesh.json','web/studio.js','web/style.css','references/manifest.json'];
+const manifest={stage:'M1',state:'ready_for_review',artApproval:'pending',createdAt:new Date().toISOString(),owners:{jew:'reference_art_direction',bo:'modeling_research',renderer:'root',visualQA:'production_plan_review'},pose:'Static SIT blockout; neutral stand, facial deformation and rig not yet proven',lighting:{preset:'Neutral clay studio',renderer:'Three.js 0.185.1',toneMapping:'ACESFilmic',exposure:1.08,selfShadows:false,groundShadow:true,source:'web/studio.js'},referenceAnchors:{jew:'MISCHIEF STUDY: SQUINT face / SIT body',bo:'CONCEPT 01 lower Bo row: SIT primary / STAND proportions'},inferredGeometry:'Profile, back and concealed surfaces are interpretations; not measured orthographic reconstruction',findings:['Compactness, eye contour and shoulder joins revised after independent render inspection','Full reference sheet and unobstructed paws verified in mobile viewport','Future M2 requires refined eyelids, eyes and expression; final colors, rig and companion behavior pending'],files:{}};
+for(const file of files){const bytes=await fs.readFile(file);manifest.files[file]={bytes:bytes.length,sha256:crypto.createHash('sha256').update(bytes).digest('hex')};}
+await fs.writeFile(directory+'/manifest.json',JSON.stringify(manifest,null,2)+'\n');
+console.log(JSON.stringify({review:manifest.state,approval:manifest.artApproval,hashedFiles:files.length}));

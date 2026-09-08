@@ -2,6 +2,8 @@
 
 Research date: 2026-09-08. Source notes for the clean-slate plan; only the two supplied concept images were used as character targets.
 
+Update after the user's Blender-free request: the Blender references below explain modeling methods; they are no longer installation or file-format prerequisites. The active pipeline is in BROWSER_PIPELINE.md. Preserve realized mesh JSON as the editable master and use GLB for interchange. Official browser implementation references checked on 8 September 2026: [BufferGeometry](https://threejs.org/docs/pages/BufferGeometry.html), [MeshStandardMaterial](https://threejs.org/docs/pages/MeshStandardMaterial.html), [GLTFExporter](https://threejs.org/docs/pages/GLTFExporter.html), [SkinnedMesh](https://threejs.org/docs/pages/SkinnedMesh.html), and [AnimationClip](https://threejs.org/docs/pages/AnimationClip.html). The current M1 app proves geometry/material export; skeletal and facial animation authoring remains planned.
+
 ## Evidence from supplied images
 
 Viewed both local attachments directly:
@@ -99,7 +101,7 @@ Gate: elbows, shoulders, cheeks and eyelids retain volume; feet do not detach vi
 
 ### F. Early GLB proof, then production clips
 
-Export one test mesh and a blink/step animation as soon as topology, a provisional material and rig exist. Use that small test to discover exporter limitations before authoring every clip. Preserve an editable `.blend` source with a defined export collection, saved scene settings and repeatable export script.
+Export one test mesh and a blink/step animation as soon as topology, a provisional material and rig exist. Use that small test to discover exporter limitations before authoring every clip. Preserve the editable mesh JSON plus explicit skeleton/weights/morph/keyframe data, saved scene settings and repeatable export script. A `.blend` can be an optional additional source if Blender is introduced later.
 
 Verify morph names, action names, animation duration, axis/scale, clipping, normals, materials and shadow response in the actual runtime. Compare screenshots from equivalent cameras. Web lighting/color-management parity is a separate job from mesh quality. Only then produce the complete interaction clips and performance variants.
 

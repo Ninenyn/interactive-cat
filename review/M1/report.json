@@ -1,0 +1,79 @@
+{
+  "stage": "M1",
+  "artApproval": "pending",
+  "physicalDeviceTested": false,
+  "checks": [
+    "source mesh JSON reload",
+    "vertex edit and undo",
+    "GLB export and fresh GLB-only render",
+    "export does not mutate source",
+    "surface and camera controls",
+    "reference dialog",
+    "user GLB download",
+    "390px mobile viewport layout, not physical-phone testing"
+  ],
+  "assets": {
+    "jew": {
+      "pet": "jew",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "c6952ac5cb7d111ff6dd5c30efa5567075d53553c8a4f721801023aa5b35b789",
+      "parts": 19,
+      "triangles": 2168,
+      "camera": [
+        5.5,
+        3.250000000000001,
+        8
+      ],
+      "target": [
+        0,
+        1.35,
+        0
+      ],
+      "viewport": {
+        "width": 1096,
+        "height": 895,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 188176,
+      "magic": 1179937895,
+      "meshes": 19,
+      "vertices": 6238,
+      "glbHash": "f82e065d18713d82d6a3577a8c0ebd32f17fa0c39c0cb82af2f57cae28222cc1"
+    },
+    "bo": {
+      "pet": "bo",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "e59b7fac15cf687ca92f1a79b96e3abfaecb0690f4b6fcac9451605b489d59cc",
+      "parts": 11,
+      "triangles": 1592,
+      "camera": [
+        5.5,
+        3.250000000000001,
+        8
+      ],
+      "target": [
+        0,
+        1.35,
+        0
+      ],
+      "viewport": {
+        "width": 1096,
+        "height": 895,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 112876,
+      "magic": 1179937895,
+      "meshes": 11,
+      "vertices": 3700,
+      "glbHash": "0f3393eb4a75f6e297e2cfa8d707a77d9eddc38be50df15f31b20752a2afb16c"
+    }
+  },
+  "status": "PASS",
+  "browserVersion": "152.0.7977.76"
+}

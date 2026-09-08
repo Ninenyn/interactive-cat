@@ -1,0 +1,118 @@
+{
+  "stage": "M1",
+  "state": "ready_for_review",
+  "artApproval": "pending",
+  "createdAt": "2026-09-08T08:49:29.919Z",
+  "owners": {
+    "jew": "reference_art_direction",
+    "bo": "modeling_research",
+    "renderer": "root",
+    "visualQA": "production_plan_review"
+  },
+  "pose": "Static SIT blockout; neutral stand, facial deformation and rig not yet proven",
+  "lighting": {
+    "preset": "Neutral clay studio",
+    "renderer": "Three.js 0.185.1",
+    "toneMapping": "ACESFilmic",
+    "exposure": 1.08,
+    "selfShadows": false,
+    "groundShadow": true,
+    "source": "web/studio.js"
+  },
+  "referenceAnchors": {
+    "jew": "MISCHIEF STUDY: SQUINT face / SIT body",
+    "bo": "CONCEPT 01 lower Bo row: SIT primary / STAND proportions"
+  },
+  "inferredGeometry": "Profile, back and concealed surfaces are interpretations; not measured orthographic reconstruction",
+  "findings": [
+    "Compactness, eye contour and shoulder joins revised after independent render inspection",
+    "Full reference sheet and unobstructed paws verified in mobile viewport",
+    "Future M2 requires refined eyelids, eyes and expression; final colors, rig and companion behavior pending"
+  ],
+  "files": {
+    "review/M1/bo-M1.glb": {
+      "bytes": 112876,
+      "sha256": "0f3393eb4a75f6e297e2cfa8d707a77d9eddc38be50df15f31b20752a2afb16c"
+    },
+    "review/M1/bo-back.png": {
+      "bytes": 426246,
+      "sha256": "14e8e5ee40df86fdb0d8e794fa3303df2b3ca1e1bd6a710306bdc64955a927e5"
+    },
+    "review/M1/bo-front.png": {
+      "bytes": 444328,
+      "sha256": "c45f6fca4afc0d190ea2ce78ca3eb94dcea38fc1647dc465e0fc93a4b82d1ef4"
+    },
+    "review/M1/bo-glb-import.png": {
+      "bytes": 456259,
+      "sha256": "6489672ff7fa3132412e9eb936328eefd60144e83d6b76d6274178fa213e7dab"
+    },
+    "review/M1/bo-hero.png": {
+      "bytes": 457322,
+      "sha256": "aa2db822dc7e238486c8f51ee4d9fede026ccbcc3beb8918d67eee5ffacec1e5"
+    },
+    "review/M1/bo-mobile.png": {
+      "bytes": 214156,
+      "sha256": "3c41022f6c30476f1b6110a1bd18261483fdb9498e5d6ab013b09f987ccbfaab"
+    },
+    "review/M1/bo-side.png": {
+      "bytes": 438891,
+      "sha256": "31bed73e97a865bfc30528fbfda08de71ac1630252cd95e977391ea1bb50a7e2"
+    },
+    "review/M1/jew-M1.glb": {
+      "bytes": 188176,
+      "sha256": "f82e065d18713d82d6a3577a8c0ebd32f17fa0c39c0cb82af2f57cae28222cc1"
+    },
+    "review/M1/jew-back.png": {
+      "bytes": 430524,
+      "sha256": "4caacb35e6d5a480b9c0a5f9860882899389aa608354dd42c70288da00b49f6a"
+    },
+    "review/M1/jew-front.png": {
+      "bytes": 444267,
+      "sha256": "d2200370b7a23e3d16f08d7ac0b8fb781921fb2693bed3aa77fd5272551b1b7d"
+    },
+    "review/M1/jew-glb-import.png": {
+      "bytes": 455357,
+      "sha256": "8afd18c887193ba633d59a891884de29bdb1faab0261aa3b85c95e62dc53e496"
+    },
+    "review/M1/jew-hero.png": {
+      "bytes": 455795,
+      "sha256": "fdbe925272bc9e67ec3c0f4deffae6cb5f45532802ac518b234ee5f3addb9e37"
+    },
+    "review/M1/jew-mobile.png": {
+      "bytes": 210876,
+      "sha256": "d728cec2ca03028f2b3fbea600e6274b70c8f3bd2e2811909776f533ff1cebfb"
+    },
+    "review/M1/jew-side.png": {
+      "bytes": 438845,
+      "sha256": "9dd994870714b67b20b9ad00aa322bae4cc88985655a691d3feac9456ded2aaa"
+    },
+    "art/source/jew.mjs": {
+      "bytes": 13382,
+      "sha256": "415e34674fc150286c3a3577d48a79a84d9681a49bff7314feb913a3e8817ac6"
+    },
+    "art/source/bo.mjs": {
+      "bytes": 12729,
+      "sha256": "8175e3b533090c5922990942535e313de4a23cc5e1bef35d133ad40e984ee573"
+    },
+    "art/meshes/jew.mesh.json": {
+      "bytes": 50507,
+      "sha256": "c6952ac5cb7d111ff6dd5c30efa5567075d53553c8a4f721801023aa5b35b789"
+    },
+    "art/meshes/bo.mesh.json": {
+      "bytes": 63127,
+      "sha256": "e59b7fac15cf687ca92f1a79b96e3abfaecb0690f4b6fcac9451605b489d59cc"
+    },
+    "web/studio.js": {
+      "bytes": 20835,
+      "sha256": "69a3c3abe5705f2abf151d82ddb680bde1258e9cc30c08bd1ae70695f131452d"
+    },
+    "web/style.css": {
+      "bytes": 11724,
+      "sha256": "4b742eef8b10ea33b6e1aafa6ded52cd8d33e8e39603218e2eaa0fd34cad83b2"
+    },
+    "references/manifest.json": {
+      "bytes": 1781,
+      "sha256": "9cd2d90fc447773d791a5d921a514a18c9fd865c4b6ac5a406b3a95c1c6375a1"
+    }
+  }
+}

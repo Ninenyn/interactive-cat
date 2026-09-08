@@ -8,7 +8,7 @@ Review separately for Jew and Bo. Shape, face, and material submissions should b
 
 ## Required review package
 
-- Editable source file and its SHA-256.
+- Realized editable mesh JSON and its SHA-256; the Blender-free pipeline in BROWSER_PIPELINE.md supersedes the old .blend requirement.
 - Stage, pet, revision, owner, timestamp and previous approved revision if one exists.
 - Reference image hash and selected anchor panel.
 - Actual hero render, front/side/back/three-quarter views; turntable for shape changes.
