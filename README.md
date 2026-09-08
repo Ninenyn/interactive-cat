@@ -2,7 +2,7 @@
 
 A quiet, mobile-first companion room with two little friends: Jew, a mischievous black cat, and Bo, a warm golden retriever. Jew appears in Moonlight; Bo appears in Daylight.
 
-Original low-poly characters use continuous skinned surfaces with compact kitten/puppy proportions: a round-cheeked black cat and a golden retriever with a broad muzzle, hanging ears, and a full tail. Both have short sturdy legs, generous paws, and rounded dark eyes. Jew has 26 bones; Bo has 25. They walk with articulated knees and elbows, plant their paws during each stance, and blend between sitting, stretching, sleeping, digging, grooming, offering a paw, and being carried. The opening screen contains only the visible pet and a small corner menu.
+Original low-poly characters use continuous skinned surfaces with compact kitten/puppy proportions: a round-cheeked black cat and a golden retriever with a broad muzzle, hanging ears, and a full tail. Both have short sturdy legs and generous paws. Jew has a uniform near-black coat, golden eyes, asymmetric cheeky lids, and a narrow staring expression; Bo has warm golden fur, a cream muzzle/chest/paws, and rounded dark eyes. Eye surfaces follow the actual face mesh, and shader eyelids close over stationary eyes rather than scaling the eyeballs. Jew has 26 bones; Bo has 25. They walk with articulated knees and elbows, plant their paws during each stance, and blend between sitting, stretching, sleeping, digging, grooming, offering a paw, and being carried. The opening screen contains only the visible pet and a small corner menu.
 
 ## Play
 
@@ -47,7 +47,7 @@ Next.js App Router, TypeScript, React, Three.js, and React Three Fiber. There is
 - `src/interactions`: explicit behavior ownership, gesture classification, pointer capture/cancellation, and mutable animation runtime.
 - `src/assets/pets`: original connected meshes and normalized skin weights, generated offline.
 - `src/companions/animalRig.ts`: skeletons, pose blending, two-bone leg IK, foot planting, gaze, ears, jaws, and articulated tails.
-- `scripts/build-pet-models.mjs`: reproducible animal surface generator using Three.js; no external model downloads.
+- `scripts/build-pet-models.mjs`: authored polygon cages with connected head, ear, torso, leg, and tail loops. One controlled Loop refinement softens the silhouette while preserving flat facets and pointed cat ears. The generator verifies closed, connected topology and exports four-weight skinning; no implicit surfaces, decimation, or external model downloads.
 - `scripts/review-rig.mjs`: local visual studio for inspecting every pose using the production rig.
 - `src/components/CompanionScene.tsx`: scene integration, projected bone hit regions, camera, lighting, frame scheduling, and 2D fallback.
 - `src/heart-notes`: 72 original messages, discovery scheduling, rotation, and validated local preferences.
@@ -63,7 +63,7 @@ Only theme override, sound preference, first-visit completion, found IDs, and fa
 
 ## Performance and accessibility
 
-Offline-generated faceted geometry (about 3,000 triangles for Jew and 3,400 for Bo, plus small facial details); no shadow maps, texture downloads, or external audio. Soft shadows use a small, locally generated alpha texture. Device pixel ratio is capped at 1.5. The renderer schedules frames on demand, targets 60 fps, falls back to 30 fps on limited devices or slow frames, and uses 12 fps for reduced motion. Rendering and behavioral time pause while hidden. Reduced motion removes roaming, decorative animation, and breathing expansion while retaining screen-reader announcements and contact feedback.
+Offline-generated faceted geometry (2,186 vertices / 4,368 triangles for Jew and 2,202 vertices / 4,400 triangles for Bo, plus small facial details); no shadow maps, texture downloads, or external audio. Soft shadows use a small, locally generated alpha texture. Device pixel ratio is capped at 1.5. The renderer schedules frames on demand, targets 60 fps, falls back to 30 fps on limited devices or slow frames, and uses 12 fps for reduced motion. Rendering and behavioral time pause while hidden. Reduced motion removes roaming, decorative animation, and breathing expansion while retaining screen-reader announcements and contact feedback.
 
 Pointer Events support touch, mouse, and pen, including cancellation and capture. The full-screen companion canvas handles touch gestures. Native dialogs handle focus and keyboard dismissal for settings content. Primary controls are at least 44 × 44 CSS pixels. Audio is off initially; haptics are optional and feature-detected. Without WebGL, an original faceted vector version of the visible companion preserves wandering, interaction controls, and state feedback. Its animation runs only when the fallback is actually displayed.
 

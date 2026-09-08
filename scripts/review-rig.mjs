@@ -28,8 +28,8 @@ const html = `<!doctype html><html><style>html,body{margin:0;overflow:hidden;bac
 <script type="module">
 import * as T from "three";import {AnimalRig} from "/rig.js";
 const renderer=new T.WebGLRenderer({antialias:true});renderer.setSize(600,500);renderer.setPixelRatio(1.5);document.body.append(renderer.domElement);
-const scene=new T.Scene();scene.background=new T.Color("#d9d5cb");const camera=new T.OrthographicCamera(-2.65,2.65,2.21,-2.21,.1,40);
-camera.position.set(4,2.7,5);camera.lookAt(0,.95,0);
+const scene=new T.Scene();scene.background=new T.Color("#d9d5cb");const camera=new T.OrthographicCamera(-2.30,2.30,1.92,-1.92,.1,40);
+camera.position.set(3,2.7,6);camera.lookAt(0,1.10,0);
 scene.add(new T.AmbientLight(0xffffff,.3),new T.HemisphereLight(0xfff4dc,0x8b8172,1.45));
 for(const [p,intensity,color] of [[[-3,7,6],1.8,0xfff2d9],[[4,4,-3],2.1,0xffe3ac],[[2,2,5],.5,0xf5e7d5]]){const light=new T.DirectionalLight(color,intensity);light.position.set(...p);scene.add(light);}
 let rig;
@@ -82,6 +82,8 @@ try {
       "paw",
       "groom",
       "bite",
+      "watching",
+      "curious",
     ]) {
       const bounds = await page.evaluate(
         ({ pet, state }) => window.pose(pet, state),
@@ -94,8 +96,8 @@ try {
   for (const pet of ["jew", "bo"])
     for (const state of ["stand", "idle", "sleeping"]) {
       for (const [view, heading] of [
-        ["front", 0.675],
-        ["side", -0.9],
+        ["front", 0.464],
+        ["side", -1.107],
         ["back", 2.5],
       ]) {
         await page.evaluate(

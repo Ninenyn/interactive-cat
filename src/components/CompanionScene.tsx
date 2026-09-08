@@ -125,9 +125,7 @@ function Pet({
         zone,
       };
     };
-    const hits: HitCircle[] = [
-      project(rig.byName.head, 0.53, "head"),
-    ];
+    const hits: HitCircle[] = [project(rig.byName.head, 0.64, "head")];
     for (const leg of rig.legs) hits.push(project(leg.paw, 0.22, "paw"));
     hits.push(
       project(rig.byName.neck, 0.28, "chin"),
@@ -303,20 +301,20 @@ function FlatRoom({
           <path
             d="M143 215Q190 192 170 149"
             fill="none"
-            stroke={pet === "jew" ? "#2b2b34" : "#bc8c48"}
+            stroke={pet === "jew" ? "#0b0c0e" : "#bc8c48"}
             strokeWidth="18"
             strokeLinecap="round"
           />
           <path
             d="m57 230-6-78 38-34 53 22 12 88Z"
-            fill={pet === "jew" ? "#303139" : "#d5a85c"}
+            fill={pet === "jew" ? "#0b0c0e" : "#d5a85c"}
           />
           <path
             d="m80 133 22 85 37-75-34-17Z"
-            fill={pet === "jew" ? "#3f4047" : "#ebce94"}
+            fill={pet === "jew" ? "#15171b" : "#ebce94"}
           />
           {pet === "jew" ? (
-            <path d="m37 90 3-70 45 36 39-3 38-35 7 71Z" fill="#282931" />
+            <path d="m37 90 3-70 45 36 39-3 38-35 7 71Z" fill="#0b0c0e" />
           ) : (
             <path
               d="M33 54 19 112 47 133 61 61 144 60 156 133 184 111 167 51Z"
@@ -325,19 +323,19 @@ function FlatRoom({
           )}
           <path
             d="m41 61 43-22 45 5 37 24 8 51-34 33-76-1-32-38Z"
-            fill={pet === "jew" ? "#35363e" : "#dfb469"}
+            fill={pet === "jew" ? "#0b0c0e" : "#dfb469"}
           />
           <path
             d="m41 61 43-22 16 64-68 10Z"
-            fill={pet === "jew" ? "#44454e" : "#edc681"}
+            fill={pet === "jew" ? "#15171b" : "#edc681"}
           />
           <path
             d="m100 103 29-59 37 24 8 51-34 33Z"
-            fill={pet === "jew" ? "#2c2d34" : "#cc9d54"}
+            fill={pet === "jew" ? "#0b0c0e" : "#cc9d54"}
           />
           <path
             d="m67 130 31-22 34 21-29 27Z"
-            fill={pet === "jew" ? "#4d4850" : "#f2dcb0"}
+            fill={pet === "jew" ? "#0b0c0e" : "#f2dcb0"}
           />
           <ellipse
             cx="69"
@@ -358,7 +356,7 @@ function FlatRoom({
           <path d="m91 122 21 0-10 12Z" fill="#3b3032" />
           <path
             d="m57 224 31-5 5 20-40 0Zm57-4 31 4 7 15-40 0Z"
-            fill={pet === "jew" ? "#404149" : "#efd09a"}
+            fill={pet === "jew" ? "#0b0c0e" : "#efd09a"}
           />
         </svg>
       ))}
@@ -412,12 +410,16 @@ export default function CompanionScene(props: SceneProps) {
         <FrameDriver visible={visible} reduced={reduced} />
         <ambientLight intensity={0.3} />
         <hemisphereLight
-          args={[dark ? "#ebeced" : "#fff4dc", "#8b8172", 1.45]}
+          args={[
+            dark ? "#eef2f8" : "#fff4dc",
+            dark ? "#525967" : "#8b8172",
+            1.1,
+          ]}
         />
         <directionalLight
           position={[-3, 7, 6]}
-          intensity={1.8}
-          color={dark ? "#f3f1e8" : "#fff2d9"}
+          intensity={dark ? 3.0 : 1.8}
+          color={dark ? "#ffffff" : "#fff2d9"}
         />
         <directionalLight
           position={[4, 4, -3]}

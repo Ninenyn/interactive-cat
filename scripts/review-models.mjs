@@ -4,9 +4,15 @@ const browser = await chromium.launch({ channel: "chrome" });
 await fs.mkdir("test-results/model-review", { recursive: true });
 try {
   for (const theme of ["light", "dark"]) {
-    for (const moving of [false, true]) {
-      const width = moving ? 390 : 900;
-      const prefix = theme + (moving ? "-walking" : "-sitting");
+    for (const [width, moving] of [
+      [900, false],
+      [390, false],
+      [390, true],
+    ]) {
+      const prefix =
+        theme +
+        (moving ? "-walking" : "-sitting") +
+        (width === 390 ? "-mobile" : "");
       const context = await browser.newContext({
         viewport: { width, height: 900 },
         colorScheme: theme,
@@ -24,12 +30,10 @@ try {
       );
       await page.waitForTimeout(1200);
       if (moving) {
-        const before = await page
-          .locator(".pet-target")
-          .evaluate((e) => ({
-            x: Number(e.dataset.x),
-            z: Number(e.dataset.z),
-          }));
+        const before = await page.locator(".pet-target").evaluate((e) => ({
+          x: Number(e.dataset.x),
+          z: Number(e.dataset.z),
+        }));
         await page.waitForFunction(
           (before) => {
             const pet = document.querySelector(".pet-target");

@@ -66,6 +66,7 @@ export class AnimalRig {
     nip: 0,
   };
   private materials: T.Material[] = [];
+  private eyeMaterials: T.ShaderMaterial[] = [];
   private details: T.BufferGeometry[] = [];
 
   constructor(pet: Companion) {
@@ -102,28 +103,12 @@ export class AnimalRig {
     );
     geometry.setIndex(data.indices);
     geometry = geometry.toNonIndexed();
-    const colors: number[] = [],
-      positions = geometry.attributes.position;
-    for (let i = 0; i < positions.count; i += 3) {
-      const center = new T.Vector3();
-      for (let j = 0; j < 3; j++)
-        center.add(new T.Vector3().fromBufferAttribute(positions, i + j));
-      center.divideScalar(3);
-      let color = this.cat ? "#33343b" : "#c59451";
-      if (!this.cat) {
-        if (center.z > 1.2 && center.y < 1.43) color = "#e5c797";
-        else if (
-          center.z > 0.35 &&
-          center.z < 0.83 &&
-          center.y < 1.2 &&
-          center.y > 0.7 &&
-          Math.abs(center.x) < 0.29
-        )
-          color = "#d1ad72";
-        else if (Math.abs(center.x) > 0.3 && center.y > 1.35 && center.z > 0.8)
-          color = "#a97437";
-      }
-      const rgb = new T.Color(color);
+    const colors: number[] = [];
+    const palette = this.cat
+      ? ["#0b0c0e", "#0b0c0e", "#0b0c0e", "#0b0c0e"]
+      : ["#ce9845", "#edd3a3", "#bd8337", "#e4c48e"];
+    for (const region of data.regions) {
+      const rgb = new T.Color(palette[region]);
       for (let j = 0; j < 3; j++) colors.push(...rgb.toArray());
     }
     geometry.setAttribute("color", new T.Float32BufferAttribute(colors, 3));
@@ -164,98 +149,242 @@ export class AnimalRig {
           planted: false,
         });
       }
+    const headOrigin = v(data.bones.find((b) => b.name === "head")!.position);
+    // Sample the actual refined head surface. Facial features conform to the
+    // cage instead of hovering on a guessed sphere/plane in front of it.
+    const faceSurface = (x: number, y: number) => {
+      const px = x + headOrigin.x,
+        py = y + headOrigin.y;
+      let front = -Infinity;
+      for (let i = 0; i < data.indices.length; i += 3) {
+        const ia = data.indices[i] * 3,
+          ib = data.indices[i + 1] * 3,
+          ic = data.indices[i + 2] * 3;
+        const ax = data.positions[ia],
+          ay = data.positions[ia + 1];
+        const bx = data.positions[ib],
+          by = data.positions[ib + 1];
+        const cx = data.positions[ic],
+          cy = data.positions[ic + 1];
+        const d = (by - cy) * (ax - cx) + (cx - bx) * (ay - cy);
+        if (Math.abs(d) < 1e-9) continue;
+        const u = ((by - cy) * (px - cx) + (cx - bx) * (py - cy)) / d;
+        const v = ((cy - ay) * (px - cx) + (ax - cx) * (py - cy)) / d;
+        if (u < -0.00001 || v < -0.00001 || u + v > 1.00001) continue;
+        const z =
+          u * data.positions[ia + 2] +
+          v * data.positions[ib + 2] +
+          (1 - u - v) * data.positions[ic + 2];
+        front = Math.max(front, z);
+      }
+      return Number.isFinite(front) ? front - headOrigin.z : 0.3;
+    };
     this.byName.head.add(this.eyes, this.jaw);
     for (const side of [-1, 1]) {
-      const eye = new T.Group();
-      eye.position.set(side * 0.255, 0.035, this.cat ? 0.353 : 0.372);
-      eye.rotation.y = side * 0.45;
-      // Rounded, mostly dark eyes; a narrow warm iris avoids the old fixed stare.
-      this.detail(
-        eye,
-        new T.SphereGeometry(1, 16, 12),
-        this.cat ? "#c1a56b" : "#755034",
-        [0, 0, 0],
-        [0.094, 0.105, 0.027],
-        0.5,
+      const material = new T.ShaderMaterial({
+        uniforms: {
+          iris: { value: new T.Color(this.cat ? "#bb812e" : "#55331b") },
+          pupil: { value: new T.Color("#090a0c") },
+          opening: { value: this.cat ? 0.62 : 1 },
+          slant: { value: this.cat ? side * 0.1 : 0 },
+          gaze: { value: new T.Vector2() },
+        },
+        vertexShader: `
+          varying vec2 eyeUv;
+          void main() {
+            eyeUv=uv;
+            gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);
+          }
+        `,
+        fragmentShader: `
+          varying vec2 eyeUv;
+          uniform vec3 iris;
+          uniform vec3 pupil;
+          uniform float opening;
+          uniform float slant;
+          uniform vec2 gaze;
+          void main() {
+            vec2 p=eyeUv*2.0-1.0;
+            float r=length(p);
+            float top=mix(-0.67,1.05,opening)+slant*p.x;
+            float bottom=-0.85+0.2*(1.0-opening)+0.10*p.x*p.x;
+            if(r>1.0 || p.y>top || p.y<bottom) discard;
+            float pr=length(p-gaze);
+            vec3 color=iris*(0.75+0.25*(1.0-p.y));
+            color=mix(color,pupil,1.0-smoothstep(0.66,0.69,pr));
+            color=mix(color,pupil,smoothstep(0.89,1.0,r)*0.8);
+            vec2 glint=gaze+vec2(-0.21,min(0.29,top-0.14));
+            float shine=1.0-smoothstep(0.065,0.10,length(p-glint));
+            color=mix(color,vec3(0.94,0.87,0.70),shine);
+            gl_FragColor=vec4(color,1.0);
+            #include <tonemapping_fragment>
+            #include <colorspace_fragment>
+          }
+        `,
+      });
+      const eyeGeometry = new T.BufferGeometry(),
+        eyePositions: number[] = [],
+        uvs: number[] = [],
+        indices: number[] = [];
+      const resolution = 16,
+        cx = side * (this.cat ? 0.3 : 0.235),
+        cy = this.cat ? -0.005 : 0.02;
+      const rx = (this.cat ? 0.31 : 0.232) / 2,
+        ry = (this.cat ? 0.315 : 0.285) / 2;
+      for (let y = 0; y <= resolution; y++)
+        for (let x = 0; x <= resolution; x++) {
+          const u = x / resolution,
+            vv = y / resolution,
+            px = cx + (u * 2 - 1) * rx,
+            py = cy + (vv * 2 - 1) * ry;
+          eyePositions.push(px, py, faceSurface(px, py) + 0.007);
+          uvs.push(u, vv);
+        }
+      for (let y = 0; y < resolution; y++)
+        for (let x = 0; x < resolution; x++) {
+          const i = y * (resolution + 1) + x;
+          indices.push(
+            i,
+            i + 1,
+            i + resolution + 2,
+            i,
+            i + resolution + 2,
+            i + resolution + 1,
+          );
+        }
+      eyeGeometry.setAttribute(
+        "position",
+        new T.Float32BufferAttribute(eyePositions, 3),
       );
-      this.detail(
-        eye,
-        new T.SphereGeometry(1, 16, 12),
-        "#15181b",
-        [0, 0.004, 0.021],
-        [0.076, 0.089, 0.019],
-        0.3,
-      );
-      this.detail(
-        eye,
-        new T.SphereGeometry(1, 8, 6),
-        "#fff2d8",
-        [-0.026, 0.039, 0.038],
-        [0.019, 0.023, 0.008],
-        0.4,
-      );
-      this.detail(
-        eye,
-        new T.SphereGeometry(1, 6, 4),
-        "#c9bca3",
-        [0.029, -0.029, 0.038],
-        [0.008, 0.01, 0.004],
-        0.5,
-      );
+      eyeGeometry.setAttribute("uv", new T.Float32BufferAttribute(uvs, 2));
+      eyeGeometry.setIndex(indices);
+      eyeGeometry.computeVertexNormals();
+      const eye = new T.Mesh(eyeGeometry, material);
+      this.eyeMaterials.push(material);
+      this.materials.push(material);
+      this.details.push(eye.geometry);
       this.eyes.add(eye);
       if (this.cat) {
-        const ear = this.byName[side < 0 ? "earL" : "earR"];
         const g = new T.BufferGeometry();
         g.setAttribute(
           "position",
           new T.Float32BufferAttribute(
             [
-              -0.06,
-              0.015,
-              0.087,
-              0.065,
-              0.015,
-              0.087,
-              side * 0.028,
-              0.21,
-              0.032,
+              side * -0.105,
+              0.025,
+              0.09,
+              side * 0.105,
+              0.025,
+              0.037,
+              side * 0.125,
+              0.355,
+              -0.002,
             ],
             3,
           ),
         );
         g.computeVertexNormals();
-        this.detail(ear, g, "#80636c", [0, 0, 0], [1, 1, 1]);
+        this.detail(
+          this.byName[side < 0 ? "earL" : "earR"],
+          g,
+          "#9e5c50",
+          [0, 0, 0],
+          [1, 1, 1],
+        );
       }
     }
+    // A small bevelled triangular nose, with a feline philtrum and two quiet mouth curves.
+    const nose = new T.BufferGeometry();
+    const nx = this.cat ? 0.068 : 0.095,
+      ny = this.cat ? 0.047 : 0.06;
+    nose.setAttribute(
+      "position",
+      new T.Float32BufferAttribute(
+        [
+          -nx,
+          ny * 0.5,
+          0,
+          nx,
+          ny * 0.5,
+          0,
+          0,
+          -ny,
+          0,
+          -nx,
+          ny * 0.5,
+          0,
+          0,
+          ny * 0.4,
+          0.025,
+          nx,
+          ny * 0.5,
+          0,
+          nx,
+          ny * 0.5,
+          0,
+          0,
+          ny * 0.4,
+          0.025,
+          0,
+          -ny,
+          0,
+          0,
+          -ny,
+          0,
+          0,
+          ny * 0.4,
+          0.025,
+          -nx,
+          ny * 0.5,
+          0,
+        ],
+        3,
+      ),
+    );
+    nose.computeVertexNormals();
     this.detail(
       this.byName.head,
-      new T.IcosahedronGeometry(1, 0),
-      this.cat ? "#8b686f" : "#342a27",
-      [0, this.cat ? -0.085 : -0.1, this.cat ? 0.515 : 0.667],
-      [this.cat ? 0.065 : 0.105, 0.042, 0.037],
+      nose,
+      this.cat ? "#985d57" : "#30231a",
+      [
+        0,
+        this.cat ? -0.176 : -0.178,
+        faceSurface(0, this.cat ? -0.176 : -0.178) + 0.009,
+      ],
+      [1, 1, 1],
     );
-    this.detail(
-      this.jaw,
-      new T.SphereGeometry(1, 8, 6),
-      "#30292a",
-      [0, -0.19, this.cat ? 0.479 : 0.635],
-      [this.cat ? 0.072 : 0.13, 0.009, 0.013],
-    );
+    for (const side of [-1, 1]) {
+      const curve = new T.CatmullRomCurve3(
+        [
+          [0, -0.224],
+          [side * 0.035, -0.27],
+          [side * 0.075, -0.278],
+          [side * 0.104, -0.264],
+        ].map(([x, y]) => new T.Vector3(x, y, faceSurface(x, y) + 0.009)),
+      );
+      this.detail(
+        this.jaw,
+        new T.TubeGeometry(curve, 5, 0.006, 4, false),
+        this.cat ? "#050608" : "#594330",
+        [0, 0, 0],
+        [1, 1, 1],
+      );
+    }
     this.tongue = this.detail(
       this.jaw,
       new T.SphereGeometry(1, 8, 6),
       "#c98982",
-      [0, -0.225, 0.649],
-      [0.055, 0.06, 0.027],
+      [0, -0.27, faceSurface(0, -0.27) + 0.025],
+      [0.055, 0.06, 0.02],
     );
     this.tongue.visible = false;
     this.jaw.add(this.fangs);
     for (const side of [-1, 1]) {
       const tooth = this.detail(
         this.fangs,
-        new T.ConeGeometry(0.011, 0.025, 4),
+        new T.ConeGeometry(0.01, 0.025, 4),
         "#e9dfc6",
-        [side * 0.046, -0.198, 0.488],
+        [side * 0.045, -0.258, faceSurface(side * 0.045, -0.258) + 0.01],
         [1, 1, 1],
       );
       tooth.rotation.z = Math.PI;
@@ -398,7 +527,13 @@ export class AnimalRig {
       0,
       alpha,
     );
-    this.rotate("chest", 0.16 * w.stretch, 0.12 * w.sleep, 0, alpha);
+    this.rotate(
+      "chest",
+      0.16 * w.stretch + 0.4 * w.sleep,
+      0.12 * w.sleep,
+      0,
+      alpha,
+    );
     this.rotate(
       "neck",
       0.2 * w.sit + 0.25 * w.stretch + 0.2 * w.dig,
@@ -407,9 +542,19 @@ export class AnimalRig {
       alpha,
     );
     this.root.updateMatrixWorld(true);
+    // Derive a comfortable seated shoulder height from this character's leg lengths.
+    // This keeps the front paws below the shoulders after torso proportions change.
+    if (w.sit > 0.001) {
+      const leg = this.legs[0];
+      this.positionInRig(leg.upper, a);
+      const height =
+        0.14 + (leg.upperRest.length() + leg.lowerRest.length()) * 0.965;
+      hip.position.y += (height - a.y) * w.sit;
+      this.root.updateMatrixWorld(true);
+    }
     if (w.sleep > 0.001) {
       const curledNeck = new T.Quaternion().setFromEuler(
-        new T.Euler(0.8, 0.35, 0, "YXZ"),
+        new T.Euler(1.45, 0.15, 0, "YXZ"),
       );
       this.byName.neck.getWorldQuaternion(parentQ);
       this.root.getWorldQuaternion(rootQ).invert();
@@ -424,12 +569,17 @@ export class AnimalRig {
       0.32 * w.sleep +
       0.36 * w.stretch +
       0.3 * w.dig +
-      0.28 * w.groom -
+      0.5 * w.groom -
       0.13 * w.nip;
     const headYaw =
       0.35 * w.sleep + clamp(input.target.x, -1, 1) * 0.15 * (1 - w.sleep);
     q.setFromEuler(
-      euler.set(headPitch, headYaw, state === "curious" ? 0.12 : 0, "YXZ"),
+      euler.set(
+        headPitch,
+        headYaw,
+        state === "curious" ? 0.12 : this.cat ? 0.04 : 0,
+        "YXZ",
+      ),
     );
     const desiredHead = q.clone();
     this.byName.head.getWorldQuaternion(parentQ);
@@ -454,7 +604,7 @@ export class AnimalRig {
     const tails = this.data.bones.filter((bone) =>
       bone.name.startsWith("tail"),
     );
-    const tailCurl = smooth(Math.max(w.sleep, w.sit * 0.92));
+    const tailCurl = smooth(Math.max(w.sleep, w.sit));
     this.root.updateMatrixWorld(true);
     tails.forEach((def, i) => {
       const wag = input.reduced
@@ -467,11 +617,14 @@ export class AnimalRig {
       );
       if (i < tails.length - 1) {
         const next = this.byName[tails[i + 1].name];
+        this.positionInRig(this.byName[def.name], a);
+        const dy = clamp((0.13 - a.y) / next.position.length(), -0.8, 0.3);
+        const horizontal = Math.sqrt(1 - dy * dy);
         const direction = new T.Vector3(
-          Math.sin(-1.45 + i * 0.42),
-          i === 0 ? -0.3 : 0,
-          Math.cos(-1.45 + i * 0.42),
-        ).normalize();
+          Math.sin(-1.45 + i * 0.42) * horizontal,
+          dy,
+          Math.cos(-1.45 + i * 0.42) * horizontal,
+        );
         const curled = new T.Quaternion().setFromUnitVectors(
           next.position.clone().normalize(),
           direction,
@@ -498,7 +651,11 @@ export class AnimalRig {
         foot.z += 0.16 * w.sit;
         foot.x += leg.side * 0.055 * w.sit;
       }
-      if (leg.front) foot.z -= 0.24 * w.sit;
+      if (leg.front && w.sit > 0.001) {
+        this.positionInRig(leg.upper, b);
+        foot.z = mix(foot.z, b.z + 0.025, w.sit);
+        foot.x = mix(foot.x, b.x * 0.86, w.sit);
+      }
       foot.z += (leg.front ? 0.4 : -0.1) * w.stretch;
       if (w.sleep > 0.001) {
         if (leg.front) {
@@ -524,7 +681,7 @@ export class AnimalRig {
         foot.y += Math.max(0, Math.sin(phase)) * 0.2 * w.dig;
         foot.z += (0.2 + Math.cos(phase) * 0.16) * w.dig;
         if (leg.side < 0) {
-          foot.y += 0.36 * w.paw + 0.47 * w.groom;
+          foot.y += 0.36 * w.paw + 0.82 * w.groom;
           foot.z += 0.18 * w.paw + 0.2 * w.groom;
           foot.x *= 1 - 0.65 * w.groom;
         }
@@ -576,11 +733,30 @@ export class AnimalRig {
       state,
     );
     const blink = !input.reduced && (t + (this.cat ? 1.3 : 3.1)) % 4.9 < 0.12;
-    this.eyes.scale.y = mix(
-      this.eyes.scale.y,
-      w.sleep > 0.5 ? 0.06 : blink ? 0.08 : affectionate ? 0.42 : 1,
-      alpha * 1.5,
-    );
+    // Eyelids occlude a fixed-size iris; they never squash the eye or the skull.
+    const staring = this.cat && ["watching", "curious"].includes(state);
+    const deliberateSquint =
+      this.cat && !input.reduced && Math.sin(t * 0.32) > 0.95;
+    for (let i = 0; i < this.eyeMaterials.length; i++) {
+      const uniforms = this.eyeMaterials[i].uniforms;
+      const resting = this.cat ? (i === 0 ? 0.56 : 0.72) : 1;
+      const target =
+        w.sleep > 0.5 || blink
+          ? 0.015
+          : affectionate
+            ? 0.24
+            : staring || deliberateSquint
+              ? 0.28
+              : resting;
+      uniforms.opening.value = mix(uniforms.opening.value, target, alpha * 1.5);
+      (uniforms.gaze.value as T.Vector2).lerp(
+        new T.Vector2(
+          clamp(input.target.x, -1, 1) * 0.15,
+          clamp(input.target.y, -1, 1) * 0.06,
+        ),
+        alpha,
+      );
+    }
     this.jaw.rotation.x = mix(
       this.jaw.rotation.x,
       state === "bite" ? 0.06 : state === "lick" ? 0.04 : 0,
