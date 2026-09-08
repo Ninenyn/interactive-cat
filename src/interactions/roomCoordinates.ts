@@ -6,7 +6,7 @@ export const roomZoom = (width: number, height: number) =>
 export function roomBounds(width: number, height: number) {
   const zoom = roomZoom(width, height);
   return {
-    x: Math.max(1.7, Math.min(4, width / zoom / 2 - 1.45)),
+    x: Math.max(0.8, Math.min(4, width / zoom / 2 - 2.2)),
     z: Math.max(1.2, Math.min(3.1, (height / zoom) * 0.23)),
   };
 }

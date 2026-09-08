@@ -7,11 +7,10 @@ import {
   useRef,
   useState,
   type ReactNode,
-  type RefObject,
 } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { Sculpt } from "./PetGeometry";
+import { AnimalRig } from "@/companions/animalRig";
 import type { Companion } from "@/interactions/companionStateMachine";
 import { RoomRuntime, type HitCircle } from "@/interactions/roomRuntime";
 import {
@@ -21,7 +20,6 @@ import {
   groundToScreen,
 } from "@/interactions/roomCoordinates";
 
-type Vec3 = [number, number, number];
 type SceneProps = {
   runtime: RoomRuntime;
   pet: Companion;
@@ -37,170 +35,6 @@ const roamingStates = new Set([
   "happy",
   "entering",
 ]);
-function Facet({
-  position = [0, 0, 0],
-  scale = [1, 1, 1],
-  rotation = [0, 0, 0],
-  color,
-  detail = 1,
-  meshRef,
-}: {
-  position?: Vec3;
-  scale?: Vec3;
-  rotation?: Vec3;
-  color: string;
-  detail?: number;
-  meshRef?: RefObject<THREE.Mesh | null>;
-}) {
-  const geometry = useMemo(
-    () => new THREE.IcosahedronGeometry(1, detail),
-    [detail],
-  );
-  useEffect(() => () => geometry.dispose(), [geometry]);
-  return (
-    <mesh
-      ref={meshRef}
-      position={position}
-      scale={scale}
-      rotation={rotation}
-      geometry={geometry}
-    >
-      <meshStandardMaterial color={color} flatShading roughness={0.84} />
-    </mesh>
-  );
-}
-function CatEar({ side }: { side: number }) {
-  const geometry = useMemo(() => {
-    const vertices = [
-      [-0.25, 0, 0.07],
-      [0.25, 0, 0.07],
-      [-0.06, 0.62, -0.06],
-      [-0.2, 0, -0.23],
-      [0.2, 0, -0.23],
-    ];
-    const faces = [0, 1, 2, 1, 4, 2, 4, 3, 2, 3, 0, 2, 0, 3, 4, 0, 4, 1];
-    const g = new THREE.BufferGeometry();
-    g.setAttribute(
-      "position",
-      new THREE.Float32BufferAttribute(
-        faces.flatMap((i) => vertices[i]),
-        3,
-      ),
-    );
-    g.computeVertexNormals();
-    return g;
-  }, []);
-  useEffect(() => () => geometry.dispose(), [geometry]);
-  return (
-    <group
-      position={[side * 0.43, 0.34, -0.04]}
-      rotation={[0, 0, side * -0.17]}
-    >
-      <mesh geometry={geometry}>
-        <meshStandardMaterial color="#24242b" flatShading roughness={1} />
-      </mesh>
-      <mesh position={[0, 0.22, 0.048]} rotation={[0.19, 0, Math.PI / 2]}>
-        <circleGeometry args={[0.18, 3]} />
-        <meshStandardMaterial
-          color="#6d565a"
-          flatShading
-          roughness={1}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
-    </group>
-  );
-}
-function Tail({ cat }: { cat: boolean }) {
-  const geometry = useMemo(() => {
-    const points = (
-      cat
-        ? [
-            [0, 0, 0],
-            [0.06, 0.24, -0.3],
-            [0.22, 0.67, -0.42],
-            [0.19, 1.03, -0.38],
-            [-0.05, 1.13, -0.3],
-          ]
-        : [
-            [0, 0, 0],
-            [0.04, 0.16, -0.25],
-            [0.08, 0.38, -0.58],
-            [0.02, 0.61, -0.81],
-          ]
-    ).map((p) => new THREE.Vector3(...p));
-    const curve = new THREE.CatmullRomCurve3(points);
-    const geometry = new THREE.TubeGeometry(
-      curve,
-      10,
-      cat ? 0.115 : 0.2,
-      5,
-      false,
-    );
-    const positions = geometry.getAttribute("position");
-    for (let ring = 0; ring <= 10; ring++) {
-      const center = curve.getPointAt(ring / 10);
-      const taper = cat
-        ? 1 - (ring / 10) * 0.55
-        : Math.sin(((ring / 10) * 0.85 + 0.12) * Math.PI) * 0.8 + 0.16;
-      for (let j = 0; j <= 5; j++) {
-        const i = ring * 6 + j;
-        positions.setXYZ(
-          i,
-          center.x + (positions.getX(i) - center.x) * taper,
-          center.y + (positions.getY(i) - center.y) * taper,
-          center.z + (positions.getZ(i) - center.z) * taper,
-        );
-      }
-    }
-    geometry.computeVertexNormals();
-    return geometry;
-  }, [cat]);
-  useEffect(() => () => geometry.dispose(), [geometry]);
-  return (
-    <mesh geometry={geometry}>
-      <meshStandardMaterial
-        color={cat ? "#25252c" : "#c58d43"}
-        flatShading
-        roughness={1}
-      />
-    </mesh>
-  );
-}
-function PetEyes({ cat }: { cat: boolean }) {
-  return (
-    <>
-      {[-1, 1].map((side) => (
-        <group
-          key={side}
-          position={[side * (cat ? 0.265 : 0.28), 0.025, cat ? 0.535 : 0.585]}
-          rotation={[0, side * 0.23, 0]}
-        >
-          {cat && (
-            <mesh scale={[0.132, 0.157, 0.042]}>
-              <sphereGeometry args={[1, 16, 10]} />
-              <meshStandardMaterial color="#c4a466" roughness={0.4} />
-            </mesh>
-          )}
-          <mesh
-            position={[0, 0, cat ? 0.032 : 0.006]}
-            scale={[cat ? 0.07 : 0.105, cat ? 0.126 : 0.137, 0.036]}
-          >
-            <sphereGeometry args={[1, 16, 10]} />
-            <meshStandardMaterial color="#101319" roughness={0.22} />
-          </mesh>
-          <mesh
-            position={[-0.029, 0.047, cat ? 0.066 : 0.04]}
-            scale={[0.021, 0.026, 0.01]}
-          >
-            <sphereGeometry args={[1, 8, 6]} />
-            <meshBasicMaterial color="#fff6df" />
-          </mesh>
-        </group>
-      ))}
-    </>
-  );
-}
 function Pet({
   runtime,
   pet,
@@ -210,259 +44,78 @@ function Pet({
   pet: Companion;
   reduced: boolean;
 }) {
-  const root = useRef<THREE.Group>(null),
-    pose = useRef<THREE.Group>(null),
-    head = useRef<THREE.Group>(null);
-  const torso = useRef<THREE.Mesh>(null),
-    chest = useRef<THREE.Mesh>(null);
-  const eyes = useRef<THREE.Group>(null),
-    ears = useRef<THREE.Group>(null),
-    tail = useRef<THREE.Group>(null);
-  const jaw = useRef<THREE.Group>(null),
-    fangs = useRef<THREE.Group>(null),
-    tongue = useRef<THREE.Mesh>(null);
-  const front = useRef<(THREE.Group | null)[]>([]),
-    back = useRef<(THREE.Group | null)[]>([]);
-  const thighs = useRef<(THREE.Mesh | null)[]>([]);
+  const rig = useMemo(() => new AnimalRig(pet), [pet]);
   const shadow = useRef<THREE.Mesh>(null);
   const { size, camera } = useThree();
-  const pointRef = useRef(new THREE.Vector3());
-  const cat = pet === "jew",
-    fur = cat ? "#24272e" : "#cd9b55",
-    light = cat ? "#292c33" : "#d8ab68";
-  const pawColor = cat ? "#292a31" : "#ebc888";
+  const point = useMemo(() => new THREE.Vector3(), []);
   const texture = useMemo(() => {
     const data = new Uint8Array(64 * 64 * 4);
     for (let y = 0; y < 64; y++)
       for (let x = 0; x < 64; x++) {
-        const r = Math.hypot((x - 31.5) / 31.5, (y - 31.5) / 31.5);
-        const i = (y * 64 + x) * 4;
-        data[i] = data[i + 1] = data[i + 2] = 32;
+        const r = Math.hypot((x - 31.5) / 31.5, (y - 31.5) / 31.5),
+          i = (y * 64 + x) * 4;
+        data[i] = data[i + 1] = data[i + 2] = 24;
         data[i + 3] = Math.round(
-          Math.max(0, Math.exp(-r * r * 5) - Math.exp(-5)) * 100,
+          Math.max(0, Math.exp(-r * r * 5) - Math.exp(-5)) * 110,
         );
       }
-    const t = new THREE.DataTexture(data, 64, 64);
-    t.needsUpdate = true;
-    t.magFilter = THREE.LinearFilter;
-    t.minFilter = THREE.LinearFilter;
-    return t;
+    const result = new THREE.DataTexture(data, 64, 64);
+    result.needsUpdate = true;
+    result.magFilter = THREE.LinearFilter;
+    result.minFilter = THREE.LinearFilter;
+    return result;
   }, []);
+  useEffect(
+    () => () => {
+      rig.dispose();
+    },
+    [rig],
+  );
   useEffect(() => () => texture.dispose(), [texture]);
   useFrame((frame, delta) => {
     if (size.width <= 0 || size.height <= 0) return;
-    if (
-      !root.current ||
-      !pose.current ||
-      !head.current ||
-      !torso.current ||
-      !chest.current ||
-      !eyes.current ||
-      !ears.current ||
-      !tail.current ||
-      !jaw.current
-    )
-      return;
-    const point = pointRef.current;
-    const entry = runtime.pets[pet];
-    const machine = entry.machine,
+    const entry = runtime.pets[pet],
       motion = entry.motion,
-      s = machine.getSnapshot();
+      machine = entry.machine,
+      state = machine.getSnapshot().state;
+    const dragging = entry.anchor?.dataset.dragging === "true";
     motion.step(
       delta,
       roomBounds(size.width, size.height),
       { x: 99, z: 99 },
-      roamingStates.has(s.state) && !runtime.paused,
+      roamingStates.has(state) && !runtime.paused && !dragging,
       reduced,
     );
-    const t = frame.clock.elapsedTime,
-      elapsed = (machine.clock - s.since) / 1000;
-    const smooth = 1 - Math.exp(-Math.min(delta, 0.05) * 12),
-      stand = reduced ? 0 : motion.stand;
-    const contact = ["pounce", "bite", "boop", "lick"].includes(s.state),
-      hunting = s.state === "hunting";
-    const sleeping = s.state === "sleeping",
-      digging = s.state === "digging";
-    const affectionate = ["happy", "petting", "blink", "breathing"].includes(
-      s.state,
-    );
-    const moving = motion.walking && !reduced,
-      stride = motion.stride;
-    const bob = moving ? Math.abs(Math.sin(stride)) * 0.045 : 0;
-    const headY = THREE.MathUtils.lerp(
-      cat ? 1.84 : 1.9,
-      cat ? 1.48 : 1.61,
-      stand,
-    );
-    const z = motion.z,
-      x = motion.x,
-      y = bob;
-    root.current.position.lerp(point.set(x, y, z), smooth);
-    const desiredHeading = contact || hunting || digging ? 0 : motion.heading;
-    const difference = Math.atan2(
-      Math.sin(desiredHeading - root.current.rotation.y),
-      Math.cos(desiredHeading - root.current.rotation.y),
-    );
-    root.current.rotation.y += difference * smooth;
-    pose.current.scale.y = THREE.MathUtils.lerp(
-      pose.current.scale.y,
-      sleeping ? 0.68 : hunting ? 0.84 : s.state === "stretch" ? 0.82 : 1,
-      smooth,
-    );
-    const breath = !reduced
-      ? Math.sin(s.state === "breathing" ? (elapsed * Math.PI) / 4 : t * 1.6) *
-        (s.state === "breathing" ? 0.025 : 0.009)
-      : 0;
-    torso.current.position.set(0, 0.85 + stand * 0.06, -0.22 + stand * 0.08);
-    torso.current.scale.set(
-      (cat ? 0.48 : 0.55) + breath,
-      THREE.MathUtils.lerp(0.7, 0.47, stand),
-      THREE.MathUtils.lerp(0.49, cat ? 0.74 : 0.81, stand),
-    );
-    chest.current.position.set(
-      0,
-      THREE.MathUtils.lerp(1.22, 1.04, stand),
-      THREE.MathUtils.lerp(0.17, 0.4, stand),
-    );
-    chest.current.scale.set(
-      cat ? 0.35 : 0.39,
-      THREE.MathUtils.lerp(0.5, 0.37, stand),
-      0.34,
-    );
-    head.current.position.set(
-      0,
-      headY +
-        (moving ? Math.cos(stride * 2) * 0.025 : 0) -
-        (digging ? 0.25 : 0),
-      THREE.MathUtils.lerp(0.3, 0.72, stand),
-    );
-    const engaged = ["watching", "curious", "petting", "happy", "paw"].includes(
-      s.state,
-    );
-    head.current.rotation.y = THREE.MathUtils.lerp(
-      head.current.rotation.y,
-      engaged
-        ? Math.max(-0.28, Math.min(0.28, machine.target.x * 0.3))
-        : Math.sin(t * 0.42 + (cat ? 0 : 3)) * 0.05,
-      smooth,
-    );
-    head.current.rotation.x = THREE.MathUtils.lerp(
-      head.current.rotation.x,
-      sleeping ? 0.18 : digging ? 0.2 : affectionate ? -0.08 : 0,
-      smooth,
-    );
-    head.current.rotation.z = THREE.MathUtils.lerp(
-      head.current.rotation.z,
-      s.state === "curious"
-        ? cat
-          ? -0.12
-          : 0.2
-        : affectionate && !reduced
-          ? Math.sin(t * 1.5) * 0.07
-          : 0,
-      smooth,
-    );
-    const blink = (t + (cat ? 1.1 : 3.4)) % (cat ? 5.1 : 4.7) < 0.14;
-    eyes.current.scale.y = THREE.MathUtils.lerp(
-      eyes.current.scale.y,
-      sleeping ? 0.06 : affectionate ? 0.17 : blink ? 0.08 : 1,
-      smooth,
-    );
-    tail.current.position.set(
-      0,
-      THREE.MathUtils.lerp(0.55, 0.99, stand),
-      THREE.MathUtils.lerp(-0.56, -0.82, stand),
-    );
-    tail.current.rotation.z = reduced
-      ? 0
-      : Math.sin(
-          t *
-            (cat ? (s.state === "annoyed" ? 11 : 1.8) : affectionate ? 12 : 7),
-        ) * (cat ? 0.14 : 0.43);
-    tail.current.rotation.y = reduced
-      ? 0
-      : Math.sin(t * (cat ? 1.4 : 7)) * (cat ? 0.13 : 0.32);
-    tail.current.rotation.x = cat ? 0 : -0.1;
-    ears.current.rotation.z =
-      !cat && moving
-        ? Math.sin(stride) * 0.08
-        : cat && s.state === "curious"
-          ? Math.sin(t * 7) * 0.025
-          : 0;
-    for (let i = 0; i < 2; i++) {
-      const f = front.current[i],
-        b = back.current[i],
-        thigh = thighs.current[i];
-      const phase = stride + i * Math.PI;
-      if (f) {
-        f.position.set(
-          (i === 0 ? -1 : 1) * (cat ? 0.27 : 0.31),
-          0.8,
-          THREE.MathUtils.lerp(0.34, 0.53, stand),
-        );
-        f.rotation.x = moving ? Math.sin(phase) * 0.48 : 0;
-        if (digging && !reduced) {
-          f.rotation.x = -0.25 + Math.sin(t * 15 + i * Math.PI) * 0.6;
-          f.position.y += 0.1;
-        }
-        if (
-          (s.state === "paw" && i === 0) ||
-          contact ||
-          (s.state === "groom" && i === 0)
-        ) {
-          f.position.y += 0.3;
-          f.rotation.x = -0.95;
-        }
-      }
-      if (b) {
-        b.position.set(
-          (i === 0 ? -1 : 1) * THREE.MathUtils.lerp(0.35, 0.34, stand),
-          THREE.MathUtils.lerp(0.61, 0.8, stand),
-          THREE.MathUtils.lerp(-0.3, -0.7, stand),
-        );
-        b.rotation.x = moving
-          ? Math.sin(phase + (cat ? Math.PI * 0.7 : Math.PI)) * 0.43
-          : 0;
-      }
-      if (thigh) {
-        const halfHeight = THREE.MathUtils.lerp(0.305, 0.4, stand);
-        thigh.position.y = -halfHeight;
-        thigh.scale.set(
-          THREE.MathUtils.lerp(0.29, 0.21, stand),
-          halfHeight,
-          THREE.MathUtils.lerp(0.29, 0.24, stand),
-        );
-      }
-    }
-    jaw.current.position.y = THREE.MathUtils.lerp(
-      jaw.current.position.y,
-      s.state === "pounce" ? -0.09 : 0,
-      smooth,
-    );
-    if (fangs.current) fangs.current.visible = cat && s.state === "bite";
-    if (tongue.current) {
-      tongue.current.visible = !cat && s.state === "lick";
-      tongue.current.scale.y = 0.2 + Math.sin(t * 18) * 0.06;
-    }
+    rig.moveTo(motion.x, motion.z, dragging ? 0 : motion.heading, delta);
+    rig.update({
+      state,
+      delta,
+      time: machine.clock / 1000,
+      stride: motion.stride,
+      stand: motion.stand,
+      walking: motion.walking,
+      dragging,
+      reduced,
+      target: machine.target,
+    });
     if (shadow.current) {
-      shadow.current.position.set(motion.x, 0.008, motion.z);
-      shadow.current.rotation.z = -motion.heading;
-      shadow.current.scale.set(
-        cat ? 1.7 : 1.9,
-        THREE.MathUtils.lerp(1.35, 1.85, stand),
-        1,
+      shadow.current.position.set(
+        rig.root.position.x,
+        0.008,
+        rig.root.position.z,
       );
+      shadow.current.rotation.z = -rig.root.rotation.y;
+      shadow.current.scale.set(pet === "jew" ? 1.25 : 1.55, 2.7, 1);
+      const material = shadow.current.material as THREE.MeshBasicMaterial;
+      material.opacity = dragging ? 0.55 : 1;
     }
-    root.current.updateWorldMatrix(true, true);
     const zoom = roomZoom(size.width, size.height);
     const project = (
       object: THREE.Object3D,
       radius: number,
       zone: HitCircle["zone"],
-      offsetY = 0,
     ): HitCircle => {
       object.getWorldPosition(point);
-      point.y += offsetY;
       point.project(camera);
       return {
         x: ((point.x + 1) * size.width) / 2,
@@ -473,14 +126,15 @@ function Pet({
       };
     };
     const hits: HitCircle[] = [
-      project(head.current, cat ? 0.69 : 0.75, "head"),
+      project(rig.byName.head, pet === "jew" ? 0.43 : 0.5, "head"),
     ];
-    for (const leg of front.current)
-      if (leg) hits.push(project(leg, 0.25, "paw", -0.58));
+    for (const leg of rig.legs) hits.push(project(leg.paw, 0.22, "paw"));
     hits.push(
-      project(chest.current, 0.46, "chin"),
-      project(torso.current, 0.63, "body"),
-      project(tail.current, 0.28, "tail", 0.5),
+      project(rig.byName.neck, 0.28, "chin"),
+      project(rig.byName.chest, 0.44, "body"),
+      project(rig.byName.spine, 0.47, "body"),
+      project(rig.byName.pelvis, 0.4, "body"),
+      project(rig.byName.tail2, 0.2, "tail"),
     );
     runtime.project(pet, hits);
   });
@@ -499,138 +153,7 @@ function Pet({
           toneMapped={false}
         />
       </mesh>
-      <group
-        ref={root}
-        position={[runtime.pets[pet].motion.x, 0, runtime.pets[pet].motion.z]}
-      >
-        <group ref={pose}>
-          <Sculpt
-            shape="body"
-            meshRef={torso}
-            position={[0, 0.85, -0.22]}
-            scale={[0.5, 0.7, 0.5]}
-            color={fur}
-            cream={cat ? undefined : "#e3c28a"}
-          />
-          <mesh ref={chest} visible={false} position={[0, 1.22, 0.17]} />
-          <group ref={tail} position={[0, 0.55, -0.56]}>
-            <Tail cat={cat} />
-          </group>
-          {[-1, 1].map((side, i) => (
-            <group
-              key={"back" + side}
-              ref={(node) => {
-                back.current[i] = node;
-              }}
-              position={[side * 0.35, 0.61, -0.3]}
-            >
-              <Sculpt
-                shape="haunch"
-                meshRef={(node) => {
-                  thighs.current[i] = node;
-                }}
-                position={[0, -0.305, 0]}
-                scale={[0.29, 0.305, 0.29]}
-                color={fur}
-                cream={cat ? undefined : pawColor}
-              />
-            </group>
-          ))}
-          {[-1, 1].map((side, i) => (
-            <group
-              key={"front" + side}
-              ref={(node) => {
-                front.current[i] = node;
-              }}
-              position={[side * 0.3, 0.8, 0.34]}
-            >
-              <Sculpt
-                shape="foreleg"
-                position={[0, -0.4, 0.03]}
-                scale={[cat ? 0.205 : 0.23, 0.4, 0.24]}
-                color={light}
-                cream={cat ? undefined : pawColor}
-              />
-            </group>
-          ))}
-          <group ref={head} position={[0, cat ? 1.84 : 1.9, 0.3]}>
-            <Sculpt
-              shape={cat ? "catHead" : "dogHead"}
-              scale={[cat ? 0.66 : 0.7, cat ? 0.61 : 0.64, 0.59]}
-              color={light}
-              cream={cat ? undefined : "#e9cb95"}
-            />
-            <group ref={ears}>
-              {cat ? (
-                <>
-                  <CatEar side={-1} />
-                  <CatEar side={1} />
-                </>
-              ) : (
-                [-1, 1].map((side) => (
-                  <group
-                    key={side}
-                    position={[side * 0.61, 0.17, -0.08]}
-                    rotation={[0, side * 0.12, side * 0.15]}
-                  >
-                    <Sculpt
-                      shape="ear"
-                      position={[0, -0.32, 0]}
-                      scale={[0.225, 0.5, 0.135]}
-                      color="#bd853c"
-                      rotation={[0.08, 0, side * -0.08]}
-                    />
-                  </group>
-                ))
-              )}
-            </group>
-            <group ref={eyes}>
-              <PetEyes cat={cat} />
-            </group>
-            <group ref={jaw}>
-              <Facet
-                position={[0, cat ? -0.17 : -0.2, cat ? 0.648 : 0.81]}
-                scale={cat ? [0.083, 0.052, 0.045] : [0.145, 0.095, 0.07]}
-                color={cat ? "#72575f" : "#302b28"}
-                detail={0}
-                rotation={[0, 0, Math.PI]}
-              />
-              {!cat && (
-                <>
-                  <Facet
-                    position={[0, -0.355, 0.705]}
-                    scale={[0.15, 0.025, 0.03]}
-                    color="#4f3b2c"
-                  />
-                  <Facet
-                    meshRef={tongue}
-                    position={[0, -0.425, 0.72]}
-                    scale={[0.09, 0.115, 0.04]}
-                    color="#d99088"
-                  />
-                </>
-              )}
-              <group ref={fangs} visible={false}>
-                <Facet
-                  position={[0, -0.29, 0.68]}
-                  scale={[0.14, 0.12, 0.06]}
-                  color="#16151b"
-                />
-                {[-1, 1].map((side) => (
-                  <mesh
-                    key={side}
-                    position={[side * 0.09, -0.26, 0.729]}
-                    rotation={[0, 0, Math.PI]}
-                  >
-                    <coneGeometry args={[0.031, 0.1, 3]} />
-                    <meshStandardMaterial color="#f8ead3" flatShading />
-                  </mesh>
-                ))}
-              </group>
-            </group>
-          </group>
-        </group>
-      </group>
+      <primitive object={rig.root} />
     </>
   );
 }
