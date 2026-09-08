@@ -2,7 +2,7 @@
 
 A quiet, mobile-first companion room with two little friends: Jew, a mischievous black cat, and Bo, a warm golden retriever. Jew appears in Moonlight; Bo appears in Daylight.
 
-Original low-poly characters use continuous skinned surfaces with natural animal proportions: a slender black cat and a broader golden retriever with hanging ears and a feathered tail. Jew has 26 bones; Bo has 25. They walk with articulated knees and elbows, plant their paws during each stance, and blend between sitting, stretching, sleeping, digging, grooming, offering a paw, and being carried. The opening screen contains only the visible pet and a small corner menu.
+Original low-poly characters use continuous skinned surfaces with compact kitten/puppy proportions: a round-cheeked black cat and a golden retriever with a broad muzzle, hanging ears, and a full tail. Both have short sturdy legs, generous paws, and rounded dark eyes. Jew has 26 bones; Bo has 25. They walk with articulated knees and elbows, plant their paws during each stance, and blend between sitting, stretching, sleeping, digging, grooming, offering a paw, and being carried. The opening screen contains only the visible pet and a small corner menu.
 
 ## Play
 
@@ -55,7 +55,7 @@ Next.js App Router, TypeScript, React, Three.js, and React Three Fiber. There is
 - `src/hooks`: device preferences and visibility.
 - `tests`: behavior/cooldown/storage unit tests and production browser tests.
 
-Each pet has an independent state machine for major behavior. A shared runtime coordinates note discovery and pointer routing. Locomotion uses bounded ground positions, steering, separation checks, distance-driven leg animation, and randomized rests; touching a pet pauses its walk. Rest and action poses bend the skeleton without scaling the body. During a walking stance, the foot target remains planted in world space; the swing phase lifts and advances it. Screen hit regions are projected from the moving models through the same camera used by the renderer. Drag handling distinguishes carrying from petting and releases pointer capture on cancellation. The system cursor is never hidden, trapped, or repositioned.
+Each pet has an independent state machine for major behavior. A shared runtime coordinates note discovery and pointer routing. Locomotion uses bounded ground positions, steering, separation checks, distance-driven leg animation, and randomized rests; touching a pet pauses its walk. Rest and action poses bend the skeleton without scaling the body. Sitting tilts the torso as one mass to prevent pinched chest folds, and the resting tail arcs beside the paws. During a walking stance, the foot target remains planted in world space; the swing phase lifts and advances it. Screen hit regions are projected from the moving models through the same camera used by the renderer. Drag handling distinguishes carrying from petting and releases pointer capture on cancellation. The system cursor is never hidden, trapped, or repositioned.
 
 First-session note discoveries require at least two meaningful interactions and 14–24 seconds of active time. Returning sessions wait 22–38 seconds. Later discoveries wait 45–75 seconds. At most five notes appear per session. A busy companion, an open collection or note, or a hidden page cannot start a discovery. Notes do not repeat within each companion's 36-message collection until exhausted; repeats then favor the oldest third.
 
@@ -63,7 +63,7 @@ Only theme override, sound preference, first-visit completion, found IDs, and fa
 
 ## Performance and accessibility
 
-Offline-generated faceted geometry (about 1,650 triangles for Jew and 1,900 for Bo, plus small facial details); no shadow maps, texture downloads, or external audio. Soft shadows use a small, locally generated alpha texture. Device pixel ratio is capped at 1.5. The renderer schedules frames on demand, targets 60 fps, falls back to 30 fps on limited devices or slow frames, and uses 12 fps for reduced motion. Rendering and behavioral time pause while hidden. Reduced motion removes roaming, decorative animation, and breathing expansion while retaining screen-reader announcements and contact feedback.
+Offline-generated faceted geometry (about 3,000 triangles for Jew and 3,400 for Bo, plus small facial details); no shadow maps, texture downloads, or external audio. Soft shadows use a small, locally generated alpha texture. Device pixel ratio is capped at 1.5. The renderer schedules frames on demand, targets 60 fps, falls back to 30 fps on limited devices or slow frames, and uses 12 fps for reduced motion. Rendering and behavioral time pause while hidden. Reduced motion removes roaming, decorative animation, and breathing expansion while retaining screen-reader announcements and contact feedback.
 
 Pointer Events support touch, mouse, and pen, including cancellation and capture. The full-screen companion canvas handles touch gestures. Native dialogs handle focus and keyboard dismissal for settings content. Primary controls are at least 44 × 44 CSS pixels. Audio is off initially; haptics are optional and feature-detected. Without WebGL, an original faceted vector version of the visible companion preserves wandering, interaction controls, and state feedback. Its animation runs only when the fallback is actually displayed.
 

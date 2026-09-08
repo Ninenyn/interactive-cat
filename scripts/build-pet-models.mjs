@@ -16,13 +16,13 @@ for (const cat of [true, false]) {
     bones.push({ name, parent, position: p });
     return bones.length - 1;
   };
-  const hipY = cat ? 1.02 : 1.13,
-    chestY = cat ? 1.1 : 1.23;
+  const hipY = cat ? 0.83 : 0.96,
+    chestY = cat ? 0.91 : 1.06;
   bone("pelvis", -1, [0, hipY, -0.65]);
   bone("spine", 0, [0, hipY + 0.04, -0.2]);
   bone("chest", 1, [0, chestY, 0.43]);
-  bone("neck", 2, [0, cat ? 1.29 : 1.45, 0.77]);
-  bone("head", 3, [0, cat ? 1.43 : 1.59, 1.06]);
+  bone("neck", 2, [0, cat ? 1.04 : 1.2, 0.68]);
+  bone("head", 3, [0, cat ? 1.25 : 1.43, 0.88]);
   const solid = (distance, weights) => fields.push({ distance, weights });
   const ellipsoid = (p, r, weights) => {
     const center = V(p);
@@ -60,26 +60,26 @@ for (const cat of [true, false]) {
   };
   ellipsoid(
     [0, hipY, -0.5],
-    [cat ? 0.3 : 0.38, cat ? 0.33 : 0.41, 0.46],
+    [cat ? 0.39 : 0.46, cat ? 0.35 : 0.43, 0.43],
     bodyWeights,
   );
   ellipsoid(
     [0, hipY + 0.01, 0.04],
-    [cat ? 0.28 : 0.37, cat ? 0.32 : 0.43, 0.73],
+    [cat ? 0.35 : 0.43, cat ? 0.34 : 0.42, 0.63],
     bodyWeights,
   );
   ellipsoid(
     [0, chestY - 0.04, 0.46],
-    [cat ? 0.29 : 0.4, cat ? 0.4 : 0.49, 0.36],
+    [cat ? 0.36 : 0.45, cat ? 0.37 : 0.45, 0.36],
     bodyWeights,
   );
   capsule(
     [0, chestY, 0.48],
     bones[4].position,
-    cat ? 0.23 : 0.29,
-    cat ? 0.225 : 0.27,
+    cat ? 0.29 : 0.34,
+    cat ? 0.3 : 0.35,
     (p) => {
-      const t = T.MathUtils.clamp((p.z - 0.48) / 0.58, 0, 1);
+      const t = T.MathUtils.clamp((p.z - 0.48) / 0.4, 0, 1);
       return [
         [2, 1 - t],
         [3, t * (1 - t)],
@@ -88,28 +88,30 @@ for (const cat of [true, false]) {
     },
   );
   const h = bones[4].position;
+  ellipsoid(h, [0.47, cat ? 0.4 : 0.42, cat ? 0.42 : 0.44], () => [
+    [4, 1],
+  ]);
   ellipsoid(
-    h,
-    [cat ? 0.31 : 0.35, cat ? 0.285 : 0.32, cat ? 0.34 : 0.37],
-    () => [[4, 1]],
-  );
-  ellipsoid(
-    [0, h[1] - 0.09, h[2] + (cat ? 0.23 : 0.34)],
-    [cat ? 0.205 : 0.245, cat ? 0.15 : 0.19, cat ? 0.205 : 0.32],
+    [0, h[1] - 0.09, h[2] + (cat ? 0.29 : 0.38)],
+    [cat ? 0.265 : 0.31, cat ? 0.18 : 0.23, cat ? 0.225 : 0.29],
     () => [[4, 1]],
   );
   for (const side of [-1, 1]) {
-    const x = side * (cat ? 0.235 : 0.31);
+    const x = side * (cat ? 0.28 : 0.35);
     for (const front of [true, false]) {
       const prefix = (front ? "front" : "hind") + (side < 0 ? "L" : "R");
       const a = [x, front ? chestY - 0.04 : hipY - 0.02, front ? 0.48 : -0.65];
-      const b = [x, front ? 0.57 : 0.58, front ? 0.36 : -0.37];
+      const b = [
+        x,
+        front ? (cat ? 0.46 : 0.53) : cat ? 0.45 : 0.52,
+        front ? 0.36 : -0.37,
+      ];
       const c = [x, 0.14, front ? 0.49 : -0.76];
       const index = bone(prefix, front ? 2 : 0, a);
       bone(prefix + "Lower", index, b);
       bone(prefix + "Paw", index + 1, c);
-      const r = cat ? (front ? 0.12 : 0.16) : front ? 0.16 : 0.2;
-      capsule(a, b, r, cat ? 0.075 : 0.095, (p) => {
+      const r = cat ? (front ? 0.175 : 0.21) : front ? 0.205 : 0.25;
+      capsule(a, b, r, cat ? 0.125 : 0.15, (p) => {
         const t = T.MathUtils.clamp((a[1] - p.y) / (a[1] - b[1]), 0, 1);
         const upperBlend = T.MathUtils.smoothstep(p.y, a[1] - 0.3, a[1] - 0.05);
         return [
@@ -118,7 +120,7 @@ for (const cat of [true, false]) {
           [index + 1, (1 - upperBlend) * t * 0.3],
         ];
       });
-      capsule(b, c, cat ? 0.075 : 0.095, cat ? 0.055 : 0.07, (p) => {
+      capsule(b, c, cat ? 0.125 : 0.15, cat ? 0.11 : 0.135, (p) => {
         const t = T.MathUtils.clamp((b[1] - p.y) / (b[1] - c[1]), 0, 1);
         return [
           [index, (1 - t) * 0.25],
@@ -128,13 +130,13 @@ for (const cat of [true, false]) {
       });
       ellipsoid(
         [x, 0.095, c[2] + 0.085],
-        [cat ? 0.095 : 0.125, 0.085, cat ? 0.16 : 0.2],
+        [cat ? 0.145 : 0.18, 0.1, cat ? 0.19 : 0.23],
         () => [[index + 2, 1]],
       );
     }
     const ear = bone(side < 0 ? "earL" : "earR", 4, [
-      side * (cat ? 0.2 : 0.3),
-      h[1] + (cat ? 0.17 : 0.12),
+      side * (cat ? 0.295 : 0.415),
+      h[1] + (cat ? 0.265 : 0.17),
       h[2] - 0.075,
     ]);
     if (cat) {
@@ -142,7 +144,8 @@ for (const cat of [true, false]) {
       const verts = [
         [p[0] - 0.12, p[1] - 0.09, p[2] + 0.1],
         [p[0] + 0.12, p[1] - 0.09, p[2] + 0.1],
-        [p[0] + side * 0.045, p[1] + 0.35, p[2] - 0.01],
+        [p[0] + side * 0.025 - 0.025, p[1] + 0.29, p[2] - 0.01],
+        [p[0] + side * 0.025 + 0.025, p[1] + 0.29, p[2] - 0.01],
         [p[0] - 0.09, p[1] - 0.07, p[2] - 0.13],
         [p[0] + 0.09, p[1] - 0.07, p[2] - 0.13],
       ].map(V);
@@ -164,8 +167,8 @@ for (const cat of [true, false]) {
       geom.dispose();
     } else {
       ellipsoid(
-        [side * 0.35, h[1] - 0.13, h[2] - 0.09],
-        [0.125, 0.35, 0.18],
+        [side * 0.44, h[1] - 0.13, h[2] - 0.035],
+        [0.165, 0.37, 0.23],
         (p) => [
           [4, T.MathUtils.smoothstep(p.y, h[1] - 0.05, h[1] + 0.15) * 0.4],
           [
@@ -179,26 +182,26 @@ for (const cat of [true, false]) {
   const tailPoints = cat
     ? [
         [0, hipY, -0.94],
-        [0, 1.18, -1.18],
-        [0, 1.49, -1.28],
-        [0, 1.8, -1.3],
-        [0, 2.08, -1.27],
-        [0, 2.23, -1.1],
-        [0, 2.17, -0.93],
+        [0, 0.92, -1.15],
+        [0, 1.12, -1.29],
+        [0, 1.35, -1.32],
+        [0, 1.55, -1.26],
+        [0, 1.64, -1.1],
+        [0, 1.59, -0.98],
       ]
     : [
         [0, hipY, -1.02],
-        [0, 1.23, -1.3],
-        [0, 1.39, -1.58],
-        [0, 1.56, -1.81],
-        [0, 1.69, -2.0],
-        [0, 1.77, -2.13],
+        [0, 1.02, -1.25],
+        [0, 1.13, -1.45],
+        [0, 1.28, -1.61],
+        [0, 1.44, -1.72],
+        [0, 1.55, -1.71],
       ];
   const tailStart = bones.length;
   tailPoints.forEach((p, i) => bone("tail" + i, i ? tailStart + i - 1 : 0, p));
   for (let i = 0; i < tailPoints.length - 1; i++) {
-    const ra = cat ? 0.085 - i * 0.009 : [0.12, 0.16, 0.15, 0.115, 0.075][i];
-    const rb = cat ? 0.076 - i * 0.009 : [0.16, 0.15, 0.115, 0.075, 0.025][i];
+    const ra = cat ? 0.115 - i * 0.008 : [0.145, 0.19, 0.18, 0.145, 0.095][i];
+    const rb = cat ? 0.107 - i * 0.008 : [0.19, 0.18, 0.145, 0.095, 0.055][i];
     capsule(tailPoints[i], tailPoints[i + 1], ra, rb, (p) => {
       const a = V(tailPoints[i]),
         d = V(tailPoints[i + 1]).sub(a);
@@ -232,7 +235,7 @@ for (const cat of [true, false]) {
         let distance = 10;
         for (const field of fields) {
           const d = field.distance(p),
-            k = 0.065;
+            k = 0.075;
           const h = T.MathUtils.clamp(0.5 + (0.5 * (d - distance)) / k, 0, 1);
           distance = T.MathUtils.lerp(d, distance, h) - k * h * (1 - h);
         }
@@ -255,7 +258,7 @@ for (const cat of [true, false]) {
   const original = geometry.attributes.position.count;
   geometry = new SimplifyModifier().modify(
     geometry,
-    Math.max(0, original - (cat ? 820 : 940)),
+    Math.max(0, original - (cat ? 1500 : 1700)),
   );
   const position = geometry.attributes.position,
     skinIndex = [],

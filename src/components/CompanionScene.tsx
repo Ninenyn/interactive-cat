@@ -126,7 +126,7 @@ function Pet({
       };
     };
     const hits: HitCircle[] = [
-      project(rig.byName.head, pet === "jew" ? 0.43 : 0.5, "head"),
+      project(rig.byName.head, 0.53, "head"),
     ];
     for (const leg of rig.legs) hits.push(project(leg.paw, 0.22, "paw"));
     hits.push(

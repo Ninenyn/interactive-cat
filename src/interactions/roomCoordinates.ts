@@ -2,7 +2,7 @@ import type { Point } from "./gestureClassifier";
 export const CAMERA_TARGET_Y = 0.65;
 export const CAMERA_PITCH = Math.atan2(7.5 - CAMERA_TARGET_Y, 12);
 export const roomZoom = (width: number, height: number) =>
-  Math.min(width / 6.6, height / 7.2, 135);
+  Math.min(width / 5.8, height / 6.5, 145);
 export function roomBounds(width: number, height: number) {
   const zoom = roomZoom(width, height);
   return {

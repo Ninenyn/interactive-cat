@@ -90,6 +90,23 @@ try {
       await page.screenshot({ path: dir + "/" + pet + "-" + state + ".png" });
       report.push({ pet, state, bounds });
     }
+  // Inspect front, side and rear silhouettes as well as the default three-quarter view.
+  for (const pet of ["jew", "bo"])
+    for (const state of ["stand", "idle", "sleeping"]) {
+      for (const [view, heading] of [
+        ["front", 0.675],
+        ["side", -0.9],
+        ["back", 2.5],
+      ]) {
+        await page.evaluate(
+          ({ pet, state, heading }) => window.pose(pet, state, heading),
+          { pet, state, heading },
+        );
+        await page.screenshot({
+          path: dir + "/" + pet + "-" + state + "-" + view + ".png",
+        });
+      }
+    }
   if (errors.length) throw new Error(errors.join("\n"));
   await fs.writeFile(dir + "/report.json", JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report));

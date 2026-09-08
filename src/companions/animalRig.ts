@@ -109,9 +109,9 @@ export class AnimalRig {
       for (let j = 0; j < 3; j++)
         center.add(new T.Vector3().fromBufferAttribute(positions, i + j));
       center.divideScalar(3);
-      let color = this.cat ? "#292b31" : "#bb8745";
+      let color = this.cat ? "#33343b" : "#c59451";
       if (!this.cat) {
-        if (center.z > 1.28 && center.y < 1.59) color = "#dcc095";
+        if (center.z > 1.2 && center.y < 1.43) color = "#e5c797";
         else if (
           center.z > 0.35 &&
           center.z < 0.83 &&
@@ -167,35 +167,40 @@ export class AnimalRig {
     this.byName.head.add(this.eyes, this.jaw);
     for (const side of [-1, 1]) {
       const eye = new T.Group();
-      eye.position.set(
-        side * (this.cat ? 0.19 : 0.225),
-        0.035,
-        this.cat ? 0.267 : 0.29,
-      );
-      eye.rotation.y = side * 0.48;
-      if (this.cat)
-        this.detail(
-          eye,
-          new T.SphereGeometry(1, 8, 6),
-          "#a88c49",
-          [0, 0, 0],
-          [0.057, 0.031, 0.018],
-        );
+      eye.position.set(side * 0.255, 0.035, this.cat ? 0.353 : 0.372);
+      eye.rotation.y = side * 0.45;
+      // Rounded, mostly dark eyes; a narrow warm iris avoids the old fixed stare.
       this.detail(
         eye,
-        new T.SphereGeometry(1, 10, 8),
-        "#111317",
-        [0, 0, this.cat ? 0.014 : 0],
-        [this.cat ? 0.021 : 0.044, this.cat ? 0.026 : 0.038, 0.016],
-        0.25,
+        new T.SphereGeometry(1, 16, 12),
+        this.cat ? "#c1a56b" : "#755034",
+        [0, 0, 0],
+        [0.094, 0.105, 0.027],
+        0.5,
+      );
+      this.detail(
+        eye,
+        new T.SphereGeometry(1, 16, 12),
+        "#15181b",
+        [0, 0.004, 0.021],
+        [0.076, 0.089, 0.019],
+        0.3,
+      );
+      this.detail(
+        eye,
+        new T.SphereGeometry(1, 8, 6),
+        "#fff2d8",
+        [-0.026, 0.039, 0.038],
+        [0.019, 0.023, 0.008],
+        0.4,
       );
       this.detail(
         eye,
         new T.SphereGeometry(1, 6, 4),
-        "#ebdec0",
-        [-0.014, 0.012, this.cat ? 0.026 : 0.014],
-        [0.008, 0.008, 0.005],
-        0.3,
+        "#c9bca3",
+        [0.029, -0.029, 0.038],
+        [0.008, 0.01, 0.004],
+        0.5,
       );
       this.eyes.add(eye);
       if (this.cat) {
@@ -212,35 +217,35 @@ export class AnimalRig {
               0.015,
               0.087,
               side * 0.028,
-              0.245,
-              0.022,
+              0.21,
+              0.032,
             ],
             3,
           ),
         );
         g.computeVertexNormals();
-        this.detail(ear, g, "#57484c", [0, 0, 0], [1, 1, 1]);
+        this.detail(ear, g, "#80636c", [0, 0, 0], [1, 1, 1]);
       }
     }
     this.detail(
       this.byName.head,
       new T.IcosahedronGeometry(1, 0),
-      this.cat ? "#4c3b40" : "#2a2624",
-      [0, this.cat ? -0.09 : -0.085, this.cat ? 0.417 : 0.643],
-      [this.cat ? 0.065 : 0.11, 0.047, 0.047],
+      this.cat ? "#8b686f" : "#342a27",
+      [0, this.cat ? -0.085 : -0.1, this.cat ? 0.515 : 0.667],
+      [this.cat ? 0.065 : 0.105, 0.042, 0.037],
     );
     this.detail(
       this.jaw,
       new T.SphereGeometry(1, 8, 6),
       "#30292a",
-      [0, -0.18, this.cat ? 0.34 : 0.52],
-      [this.cat ? 0.085 : 0.15, 0.014, 0.055],
+      [0, -0.19, this.cat ? 0.479 : 0.635],
+      [this.cat ? 0.072 : 0.13, 0.009, 0.013],
     );
     this.tongue = this.detail(
       this.jaw,
       new T.SphereGeometry(1, 8, 6),
       "#c98982",
-      [0, -0.215, 0.57],
+      [0, -0.225, 0.649],
       [0.055, 0.06, 0.027],
     );
     this.tongue.visible = false;
@@ -248,9 +253,9 @@ export class AnimalRig {
     for (const side of [-1, 1]) {
       const tooth = this.detail(
         this.fangs,
-        new T.ConeGeometry(0.014, 0.052, 4),
+        new T.ConeGeometry(0.011, 0.025, 4),
         "#e9dfc6",
-        [side * 0.046, -0.195, 0.385],
+        [side * 0.046, -0.198, 0.488],
         [1, 1, 1],
       );
       tooth.rotation.z = Math.PI;
@@ -370,37 +375,33 @@ export class AnimalRig {
     hip.position.set(
       0,
       rest[1] -
-        0.6 * w.sit -
-        0.58 * w.sleep -
+        (this.cat ? 0.46 : 0.54) * w.sit -
+        (this.cat ? 0.4 : 0.51) * w.sleep -
         0.12 * w.dig +
         0.48 * w.carry +
         breath,
       rest[2] - 0.07 * w.sit,
     );
+    // Tilt the torso as one mass when sitting: splitting the bend across the
+    // belly bones compressed the chest into sharp folds.
     this.rotate(
       "pelvis",
-      0.06 * w.carry,
+      -0.55 * w.sit + 0.06 * w.carry,
       0.14 * w.sleep,
       carrying ? Math.sin(t * 2) * 0.035 : 0,
       alpha,
     );
     this.rotate(
       "spine",
-      -0.65 * w.sit + 0.35 * w.stretch + 0.13 * w.dig,
-      0.35 * w.sleep,
+      0.22 * w.stretch + 0.1 * w.dig,
+      0.1 * w.sleep,
       0,
       alpha,
     );
-    this.rotate(
-      "chest",
-      -0.15 * w.sit + 0.25 * w.stretch,
-      0.45 * w.sleep,
-      0,
-      alpha,
-    );
+    this.rotate("chest", 0.16 * w.stretch, 0.12 * w.sleep, 0, alpha);
     this.rotate(
       "neck",
-      0.22 * w.sit + 0.4 * w.stretch + 0.25 * w.dig,
+      0.2 * w.sit + 0.25 * w.stretch + 0.2 * w.dig,
       0.25 * w.sleep,
       0,
       alpha,
@@ -408,7 +409,7 @@ export class AnimalRig {
     this.root.updateMatrixWorld(true);
     if (w.sleep > 0.001) {
       const curledNeck = new T.Quaternion().setFromEuler(
-        new T.Euler(1.1, 0.9, 0, "YXZ"),
+        new T.Euler(0.8, 0.35, 0, "YXZ"),
       );
       this.byName.neck.getWorldQuaternion(parentQ);
       this.root.getWorldQuaternion(rootQ).invert();
@@ -426,7 +427,7 @@ export class AnimalRig {
       0.28 * w.groom -
       0.13 * w.nip;
     const headYaw =
-      1.1 * w.sleep + clamp(input.target.x, -1, 1) * 0.15 * (1 - w.sleep);
+      0.35 * w.sleep + clamp(input.target.x, -1, 1) * 0.15 * (1 - w.sleep);
     q.setFromEuler(
       euler.set(headPitch, headYaw, state === "curious" ? 0.12 : 0, "YXZ"),
     );
@@ -467,9 +468,9 @@ export class AnimalRig {
       if (i < tails.length - 1) {
         const next = this.byName[tails[i + 1].name];
         const direction = new T.Vector3(
-          Math.sin(-1.1 + i * 0.62),
-          i === 0 ? -0.8 : i === 1 ? -0.3 : 0,
-          Math.cos(-1.1 + i * 0.62),
+          Math.sin(-1.45 + i * 0.42),
+          i === 0 ? -0.3 : 0,
+          Math.cos(-1.45 + i * 0.42),
         ).normalize();
         const curled = new T.Quaternion().setFromUnitVectors(
           next.position.clone().normalize(),
@@ -494,19 +495,19 @@ export class AnimalRig {
       const foot = v(restP);
       foot.y = 0.14;
       if (!leg.front) {
-        foot.z += 0.22 * w.sit;
-        foot.x += leg.side * 0.02 * w.sit;
+        foot.z += 0.16 * w.sit;
+        foot.x += leg.side * 0.055 * w.sit;
       }
-      if (leg.front) foot.z -= 0.22 * w.sit;
-      foot.z += (leg.front ? 0.63 : -0.13) * w.stretch;
+      if (leg.front) foot.z -= 0.24 * w.sit;
+      foot.z += (leg.front ? 0.4 : -0.1) * w.stretch;
       if (w.sleep > 0.001) {
         if (leg.front) {
           this.positionInRig(this.byName.head, b);
           foot.lerp(
             new T.Vector3(
-              b.x + 0.13 + leg.side * 0.05,
+              b.x + leg.side * (this.cat ? 0.23 : 0.29),
               0.14,
-              b.z + 0.1 - leg.side * 0.09,
+              b.z + 0.16,
             ),
             w.sleep,
           );
@@ -523,8 +524,8 @@ export class AnimalRig {
         foot.y += Math.max(0, Math.sin(phase)) * 0.2 * w.dig;
         foot.z += (0.2 + Math.cos(phase) * 0.16) * w.dig;
         if (leg.side < 0) {
-          foot.y += 0.52 * w.paw + 0.72 * w.groom;
-          foot.z += 0.24 * w.paw + 0.26 * w.groom;
+          foot.y += 0.36 * w.paw + 0.47 * w.groom;
+          foot.z += 0.18 * w.paw + 0.2 * w.groom;
           foot.x *= 1 - 0.65 * w.groom;
         }
         foot.y += 0.12 * w.nip;
@@ -582,7 +583,7 @@ export class AnimalRig {
     );
     this.jaw.rotation.x = mix(
       this.jaw.rotation.x,
-      state === "bite" ? 0.22 : state === "lick" ? 0.12 : 0,
+      state === "bite" ? 0.06 : state === "lick" ? 0.04 : 0,
       alpha,
     );
     this.tongue.visible = !this.cat && state === "lick";
