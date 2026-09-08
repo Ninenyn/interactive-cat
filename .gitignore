@@ -1,11 +1,15 @@
+.DS_Store
+__pycache__/
+*.pyc
+*.blend1
+*.blend2
+.env
+.env.*
+!.env.example
 node_modules/
 .next/
-out/
 .vercel/
-.env*
-!.env.example
-*.tsbuildinfo
-playwright-report/
-test-results/
-.DS_Store
-.vercel
+review/_scratch/
+
+# Final review evidence and master assets are deliberately not ignored.
+# Select and verify a binary storage strategy before adding large files.

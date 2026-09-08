@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "decisionDate": "2026-09-08",
+  "source": "User attachments in the clean-slate instruction",
+  "visuallyInspectedInConversation": true,
+  "stagedOnMachineB": false,
+  "references": [
+    {
+      "pet": "jew",
+      "filename": "042d83c2-3c1c-4165-99aa-f37c31fa50e2.png",
+      "title": "JEW — MISCHIEF STUDY",
+      "libraryFileId": "libfile_3bd3b69b8ad88191ae75e91d890c1fb9",
+      "sha256": "3df98037cbbf466a7877302f79c4cc928616acee44de6cefb6092ac7397d2ec5",
+      "bytes": 2126719,
+      "targetPath": "references/original/042d83c2-3c1c-4165-99aa-f37c31fa50e2.png",
+      "authority": ["black coat", "facial shape", "SQUINT", "SIDE-EYE", "CHEEKY", "SIT silhouette", "WALK pose"],
+      "primaryFacePanel": "top-right SQUINT",
+      "primaryBodyPanel": "lower-left SIT (SQUINT)"
+    },
+    {
+      "pet": "bo",
+      "filename": "bdf4310f-fcdc-4e2e-bd86-7de37229f673.png",
+      "title": "JEW & BO — CONCEPT 01",
+      "libraryFileId": "libfile_80d4575ebe90819182ec22916a68981b",
+      "sha256": "41b6d8fbdf8d9f41a71b4cd688ccbaf5fa2a6606abd166ae1d1570ada8274feb",
+      "bytes": 2303193,
+      "targetPath": "references/original/bdf4310f-fcdc-4e2e-bd86-7de37229f673.png",
+      "authority": ["Bo lower row only", "golden puppy", "floppy ears", "cream muzzle/chest/paws", "stand/sit/walk"],
+      "primaryFacePanel": "lower-left SIT",
+      "primaryBodyPanel": "lower-center STAND",
+      "excludedAsJewTarget": true
+    }
+  ],
+  "unresolvedViews": ["true orthographic side", "rear", "underside"],
+  "rule": "Stage exact original bytes and verify hashes before modeling; never use rejected project assets as references."
+}
