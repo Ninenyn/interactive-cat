@@ -1,10 +1,12 @@
 # Jew & Bo — Model Studio
 
-[Open M1 review web app](https://jew-and-gxvp2xlwf-ninenyns-projects.vercel.app). The current Vercel preview protection requires a project-authorized Vercel login.
+The full-body anatomy revision is ready for preview deployment. The earlier preview is historical; see `status.json` for deployment tracking.
 
 The current implementation is a Blender-free M1 review web app for two original clay character meshes. It provides orbit/zoom, hero/front/side/back views, silhouette and wireframe, original reference images, vertex editing/undo, editable mesh JSON save/reload, GLB export and PNG capture. The art remains unapproved.
 
-The latest user instruction replaces the earlier local Blender prerequisite. Read `docs/BROWSER_PIPELINE.md` first, then `docs/PRODUCTION_PLAN.md`, `docs/ART_DIRECTION.md` and `docs/ACCEPTANCE.md` for the unchanged reference and review requirements.
+The latest full-body references govern anatomy: Jew stands on four connected legs; Bo is a seated golden with revised shoulders, forelegs and paws. Jew's nose shares the facial skin and the mouth follows its surface. Read `docs/ANATOMY_REVISION.md` for this revision.
+
+The user authorizes a Blender-free browser pipeline. Read `docs/BROWSER_PIPELINE.md` first, then `docs/PRODUCTION_PLAN.md`, `docs/ART_DIRECTION.md` and `docs/ACCEPTANCE.md` for the stage and review requirements, subject to the latest anatomy amendment.
 
 ## Run
 
@@ -25,7 +27,7 @@ The local studio serves `dist/` on port 3212. Browser QA uses the installed Goog
 - `art/source/`: original offline polygon-cage authoring modules, one owner per pet.
 - `art/meshes/`: realized portable editable vertex/triangle data.
 - `references/original/`: exact user attachments with verified hashes.
-- `review/M1/`: actual source/export renders and validation evidence.
+- `review/M1-anatomy/`: current source/export renders and validation evidence; `review/M1/` is historical.
 - `web/`: review UI and renderer.
 
 This stage does not implement the full companion behavior or final materials/rig. Previous rejected assets remain outside the active project and are not reused.

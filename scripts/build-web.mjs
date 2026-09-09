@@ -33,7 +33,7 @@ for(const relative of vendorFiles){
  await fs.copyFile(path.join(root,'node_modules/three',relative),dest);
 }
 await fs.mkdir(path.join(out,'references'),{recursive:true});
-for(const [from,to] of [['042d83c2-3c1c-4165-99aa-f37c31fa50e2.png','jew.png'],['bdf4310f-fcdc-4e2e-bd86-7de37229f673.png','bo.png']]){
+for(const [from,to] of [['042d83c2-3c1c-4165-99aa-f37c31fa50e2.png','jew.png'],['bdf4310f-fcdc-4e2e-bd86-7de37229f673.png','bo.png'],['4506533e-61b3-4a79-8ffd-74c9718bf058.png','jew-anatomy.png'],['e2f28ba6-cf77-4a20-875b-6c6a173c3481.png','bo-anatomy.png']]){
  await fs.copyFile(path.join(root,'references/original',from),path.join(out,'references',to));
 }
 console.log(JSON.stringify({status:'built',assets:assetManifest.assets}));

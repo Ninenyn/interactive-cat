@@ -7,10 +7,16 @@
     "build": "node scripts/build-web.mjs",
     "models:generate": "node scripts/build-web.mjs --regenerate",
     "dev": "node scripts/serve.mjs",
-    "test": "node --test tests/mesh-contract.test.mjs",
+    "test": "node --test tests/*.test.mjs",
     "test:web": "node scripts/check-web.mjs"
   },
-  "dependencies": {"three": "0.185.1"},
-  "devDependencies": {"@playwright/test": "1.56.0"},
-  "engines": {"node": ">=22"}
+  "dependencies": {
+    "three": "0.185.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.56.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
 }

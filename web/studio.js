@@ -7,8 +7,8 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const host=$('#canvas-host'), stage=$('.stage');
 const meta={
- jew:{title:'Jew',subtitle:'แมวดำ · โครงสีเทา',reference:'Mischief Study',view:'SIT / SQUINT',focus:['หัวกว้างและแก้มอิ่ม','หู ปาก และอุ้งเท้าตามภาพ','ลำตัวกะทัดรัดและหางต่อเนื่อง']},
- bo:{title:'Bo',subtitle:'ลูกโกลเด้น · โครงสีเทา',reference:'Concept 01',view:'BO / SIT',focus:['หัวลูกหมากว้างและปากสั้น','หูตกเป็นแผ่นข้างแก้ม','อก อุ้งเท้า และลำตัวกะทัดรัด']}
+ jew:{title:'Jew',subtitle:'แมวยืนสี่ขา · โครงสีเทา',reference:'โครงแมวเต็มตัว',view:'STAND / ANATOMY',focus:['หัว ปาก และจมูกเป็นผิวต่อเนื่อง','แนวหลัง อก และท้องตามภาพเต็มตัว','สี่ขา ข้อขาหลัง และอุ้งเท้ารับพื้น']},
+ bo:{title:'Bo',subtitle:'โกลเด้นท่านั่ง · โครงสีเทา',reference:'โครงโกลเด้นเต็มตัว',view:'SIT / ANATOMY',focus:['สัดส่วนหัวต่ออกตามภาพเต็มตัว','แนวไหล่ ศอก ข้อมือ และขาหน้า','สะโพกพับ ขาหลัง และอุ้งเท้ารับพื้น']}
 };
 let renderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});}
@@ -44,6 +44,7 @@ const transform=new TransformControls(camera,renderer.domElement);transform.setM
 transform.addEventListener('dragging-changed',e=>{controls.enabled=!e.value;});
 
 let pet='jew',model=null,modelRoot=null,importedRoot=null,manifest=null;
+let referenceMode='anatomy';
 let surface='clay',currentView='hero',editing=false,selection=null,undo=[],request=0,edited=false;
 const loaded=new Map();
 const partMeshes=new Map();
@@ -55,6 +56,8 @@ const materials=()=>({
  nose:new THREE.MeshStandardMaterial({color:0x6e6960,roughness:.8,metalness:0,flatShading:true}),
  innerEar:new THREE.MeshStandardMaterial({color:0xa39d94,roughness:.94,metalness:0,flatShading:true})
 });
+function disposeMaterial(value){for(const m of Array.isArray(value)?value:[value])m?.dispose();}
+function clayMaterialFor(mesh,palette){const names=mesh.userData.materialKinds;if(names)return names.map(name=>(palette[name]||palette.clay).clone());return (palette[mesh.userData.materialKind]||palette.clay).clone();}
 function disposeTree(root){if(!root)return;root.traverse(o=>{o.geometry?.dispose();for(const m of Array.isArray(o.material)?o.material:[o.material])m?.dispose();});root.removeFromParent();}
 function clearPoints(){for(const child of [...pointGroup.children])disposeTree(child);}
 function clearSelection(){selection=null;transform.detach();marker.visible=false;$('#vertex-label').textContent='ยังไม่ได้เลือกจุดยอด';for(const axis of ['x','y','z'])$('#vertex-'+axis).disabled=true;}
@@ -66,6 +69,7 @@ function validateMesh(value){
   total+=p.positions.length/3;
   if(total>150000||p.positions.some(v=>!Number.isFinite(v)||Math.abs(v)>50))throw new Error('พิกัดหรือขนาดโมเดลไม่ถูกต้อง');
   if(p.indices.some(v=>!Number.isInteger(v)||v<0||v>=p.positions.length/3))throw new Error('ดัชนีจุดยอดไม่ถูกต้อง');
+  if(p.materialGroups){let offset=0;if(!Array.isArray(p.materialGroups)||!p.materialGroups.length)throw new Error('กลุ่มวัสดุไม่ถูกต้อง');for(const g of p.materialGroups){if(g.start!==offset||!Number.isInteger(g.count)||g.count<=0||g.count%3||!['clay','nose','eye','innerEar'].includes(g.material))throw new Error('ขอบเขตวัสดุไม่ถูกต้อง');offset+=g.count;}if(offset!==p.indices.length)throw new Error('กลุ่มวัสดุต้องครอบคลุมผิวทั้งหมด');}
  }
  return value;
 }
@@ -76,7 +80,8 @@ function buildModel(value){
  const palette=materials();
  model.parts.forEach((part,i)=>{
   let g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(part.positions,3));g.setIndex(part.indices);if(part.material!=='eye'){const flat=g.toNonIndexed();g.dispose();g=flat;}g.computeVertexNormals();g.computeBoundingSphere();
-  const mesh=new THREE.Mesh(g,(palette[part.material]||palette.clay).clone());mesh.name=part.name;mesh.castShadow=true;mesh.receiveShadow=false;mesh.userData={partIndex:i,materialKind:part.material||'clay',renderToSource:part.material==='eye'?null:[...part.indices]};modelRoot.add(mesh);partMeshes.set(i,mesh);
+  const kinds=part.materialGroups?.map(group=>group.material);if(kinds)part.materialGroups.forEach((group,n)=>g.addGroup(group.start,group.count,n));
+  const mesh=new THREE.Mesh(g,kinds?kinds.map(kind=>(palette[kind]||palette.clay).clone()):(palette[part.material]||palette.clay).clone());mesh.name=part.name;mesh.castShadow=true;mesh.receiveShadow=false;mesh.userData={partIndex:i,materialKind:part.material||'clay',materialKinds:kinds,renderToSource:part.material==='eye'?null:[...part.indices]};modelRoot.add(mesh);partMeshes.set(i,mesh);
  });
  Object.values(palette).forEach(m=>m.dispose());
  const box=new THREE.Box3().setFromObject(modelRoot),center=box.getCenter(new THREE.Vector3());
@@ -90,21 +95,39 @@ function rebuildPoints(){
   point.position.copy(modelRoot.position);point.visible=editing;point.userData.partIndex=i;pointGroup.add(point);
  }
 }
+function frameModel(direction,focusBox){
+ const ratio=host.clientWidth/host.clientHeight||1;
+ if(!modelRoot){const h=4.5;camera.left=-h*ratio/2;camera.right=h*ratio/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();return;}
+ const box=focusBox||new THREE.Box3().setFromObject(modelRoot),center=box.getCenter(new THREE.Vector3());
+ const dir=direction?new THREE.Vector3(...direction).normalize():camera.position.clone().sub(controls.target).normalize();
+ camera.position.copy(center).addScaledVector(dir,10);camera.lookAt(center);camera.updateMatrixWorld(true);
+ const inverse=camera.quaternion.clone().invert();let loX=Infinity,hiX=-Infinity,loY=Infinity,hiY=-Infinity;
+ for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){const v=new THREE.Vector3(x,y,z).sub(center).applyQuaternion(inverse);loX=Math.min(loX,v.x);hiX=Math.max(hiX,v.x);loY=Math.min(loY,v.y);hiY=Math.max(hiY,v.y);}
+ const h=Math.max((hiY-loY)/.68,(hiX-loX)/(ratio*.80),2);
+ const screenUp=new THREE.Vector3(0,1,0).applyQuaternion(camera.quaternion);
+ controls.target.copy(center).addScaledVector(screenUp,-h*.045);camera.position.copy(controls.target).addScaledVector(dir,10);camera.zoom=1;
+ camera.left=-h*ratio/2;camera.right=h*ratio/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();controls.update();
+}
+function focusFace(view='side'){
+ const box=new THREE.Box3();for(const mesh of partMeshes.values())if(/(skull|head|muzzle|nose|eye|ear|mouth|philtrum)/i.test(mesh.name)&&!/welded standing skin/.test(mesh.name))box.union(new THREE.Box3().setFromObject(mesh));
+ if(box.isEmpty())return;box.expandByScalar(.10);controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');currentView='face-'+view;frameModel(view==='side'?[9,0,0]:[5.5,1.8,8],box);
+}
+$('#face-closeup').onclick=()=>focusFace('side');
 function setView(view){
  currentView=view;controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');
- const positions={hero:[5.5,3.25,8],front:[0,1.65,9],side:[9,1.65,0],back:[0,1.65,-9]};
- camera.position.fromArray(positions[view]||positions.hero);controls.target.set(0,1.35,0);camera.zoom=1;camera.lookAt(controls.target);camera.updateProjectionMatrix();controls.update();
+ const positions={hero:pet==='jew'?[8,2.6,5]:[5.5,2.5,8],front:[0,0,9],side:[9,0,0],back:[0,0,-9]};
+ frameModel(positions[view]||positions.hero);
  $$('[data-view]').forEach(b=>{const yes=b.dataset.view===view;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
 }
-function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);const h=4.5,ratio=width/height;camera.left=-h*ratio/2;camera.right=h*ratio/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();}
+function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);frameModel();}
 new ResizeObserver(resize).observe(host);
 function applySurface(next){
  surface=next;
  partMeshes.forEach(mesh=>{
-  mesh.material.dispose();
+  disposeMaterial(mesh.material);
   if(next==='silhouette')mesh.material=new THREE.MeshBasicMaterial({color:0x37312a});
   else if(next==='wire')mesh.material=new THREE.MeshBasicMaterial({color:0x756149,wireframe:true});
-  else{const palette=materials();mesh.material=palette[mesh.userData.materialKind]||palette.clay;for(const m of Object.values(palette))if(m!==mesh.material)m.dispose();}
+  else{const palette=materials();mesh.material=clayMaterialFor(mesh,palette);Object.values(palette).forEach(m=>m.dispose());}
  });
  floor.visible=next!=='wire';
  $$('[data-surface]').forEach(b=>{const yes=b.dataset.surface===next;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
@@ -118,13 +141,19 @@ async function choosePet(next){
   pet=next;edited=false;undo=[];$('#undo-edit').disabled=true;$('#draft-note').textContent='';
   buildModel(loaded.get(next));setView('hero');
   const m=meta[pet];$('#pet-title').textContent=m.title;$('#pet-subtitle').textContent=m.subtitle;$('#pet-number').textContent=pet==='jew'?'01':'02';
-  $('#reference-name').textContent=m.reference;$('#reference-view').textContent=m.view;$('#dialog-title').textContent=m.title+' — '+m.reference;
-  for(const image of [$('#reference-image'),$('#reference-large')]){image.src='/references/'+pet+'.png';image.alt=m.title+' '+m.reference+' ภาพต้นฉบับ';}
+  referenceMode='anatomy';updateReference();
   $('#focus-list').replaceChildren(...m.focus.map(t=>{const li=document.createElement('li');li.textContent=t;return li;}));
   $$('[data-pet]').forEach(b=>{const yes=b.dataset.pet===pet;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
   $('#load-state').classList.add('hidden');
  }catch(error){$('#load-state').textContent='เปิดโมเดลไม่สำเร็จ กรุณาโหลดหน้าใหม่';console.error(error);}
 }
+function updateReference(){
+ const m=meta[pet],anatomy=referenceMode==='anatomy',title=anatomy?m.reference:(pet==='jew'?'Mischief Study':'Concept 01');
+ $('#reference-name').textContent=title;$('#reference-view').textContent=anatomy?m.view:'IDENTITY / COLOR';$('#dialog-title').textContent=m.title+' — '+title;
+ for(const img of [$('#reference-image'),$('#reference-large')]){img.src='/references/'+pet+(anatomy?'-anatomy':'')+'.png';img.alt=m.title+' '+title+' ภาพอ้างอิง';}
+ $$('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.reference===referenceMode)));
+}
+$$('[data-reference]').forEach(b=>b.onclick=()=>{referenceMode=b.dataset.reference;updateReference();});
 function toast(message){const e=$('#toast');e.textContent=message;e.classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.classList.remove('visible'),3500);}
 function download(data,name,type){const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
 function getSource(){const value=structuredClone(model);value.metadata={...value.metadata,reviewStatus:'M1-unreviewed',browserEdited:edited,baseMeshHash:manifest?.assets[pet]?.sha256||null};return value;}
@@ -132,7 +161,7 @@ async function exportGLB(){
  if(!modelRoot)throw new Error('โมเดลยังไม่พร้อม');
  const clone=modelRoot.clone(true),palette=materials();
  clone.name=pet+'-M1-clay';clone.visible=true;
- clone.traverse(o=>{if(!o.isMesh)return;o.geometry=o.geometry.clone();o.material=(palette[o.userData.materialKind]||palette.clay).clone();o.castShadow=false;o.receiveShadow=false;});
+ clone.traverse(o=>{if(!o.isMesh)return;o.geometry=o.geometry.clone();o.material=clayMaterialFor(o,palette);o.castShadow=false;o.receiveShadow=false;});
  clone.userData={stage:'M1',approval:'pending',pet,sourceHash:manifest?.assets[pet]?.sha256||null,browserEdited:edited};
  try{return await new GLTFExporter().parseAsync(clone,{binary:true,onlyVisible:true});}
  finally{disposeTree(clone);Object.values(palette).forEach(m=>m.dispose());}
@@ -188,9 +217,9 @@ function frame(){requestAnimationFrame(frame);if(document.hidden)return;controls
 try{manifest=await readJSON('/models/manifest.json');await choosePet('jew');}
 catch(e){console.error(e);$('#load-state').textContent='เปิดข้อมูลโมเดลไม่สำเร็จ กรุณาโหลดหน้าใหม่';}
 window.__studio={
- ready:()=>!!modelRoot,choosePet,setView,applySurface,source:getSource,exportGLB,showImported,showSource,selectVertex,
+ ready:()=>!!modelRoot,choosePet,setView,focusFace,applySurface,source:getSource,exportGLB,showImported,showSource,selectVertex,
  setVertex:xyz=>{remember();moveVertex(xyz);selectVertex(selection.part,selection.index);},
  capture:()=>{renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png');},
- info:()=>({pet,stage:'M1',approval:'pending',edited,sourceHash:manifest?.assets[pet]?.sha256,parts:model?.parts.length,triangles:model?.parts.reduce((n,p)=>n+p.indices.length/3,0),camera:camera.position.toArray(),target:controls.target.toArray(),viewport:{width:host.clientWidth,height:host.clientHeight,dpr:renderer.getPixelRatio()},renderer:THREE.REVISION}),
+ info:()=>({pet,stage:'M1',approval:'pending',edited,sourceHash:manifest?.assets[pet]?.sha256,parts:model?.parts.length,exportPrimitives:model?.parts.reduce((n,p)=>n+(p.materialGroups?.length||1),0),triangles:model?.parts.reduce((n,p)=>n+p.indices.length/3,0),camera:camera.position.toArray(),target:controls.target.toArray(),viewport:{width:host.clientWidth,height:host.clientHeight,dpr:renderer.getPixelRatio()},renderer:THREE.REVISION}),
  async verifyExport(){const buffer=await exportGLB();const imported=await new GLTFLoader().parseAsync(buffer,'');let count=0,vertices=0;imported.scene.traverse(o=>{if(o.isMesh){count++;vertices+=o.geometry.attributes.position.count;}});const magic=new DataView(buffer).getUint32(0,true);disposeTree(imported.scene);return {bytes:buffer.byteLength,magic,meshes:count,vertices};}
 };

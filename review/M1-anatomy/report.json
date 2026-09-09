@@ -1,0 +1,81 @@
+{
+  "stage": "M1",
+  "artApproval": "pending",
+  "physicalDeviceTested": false,
+  "checks": [
+    "source mesh JSON reload",
+    "vertex edit and undo",
+    "GLB export and fresh GLB-only render",
+    "export does not mutate source",
+    "surface, full-body and face camera controls",
+    "reference dialog",
+    "user GLB download",
+    "390px mobile viewport layout, not physical-phone testing"
+  ],
+  "assets": {
+    "jew": {
+      "pet": "jew",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "3d44a32bdf9fcb1cab1e4aa46276dc0ac68ce46187e3a795f2a8e4a484890885",
+      "parts": 8,
+      "exportPrimitives": 10,
+      "triangles": 1476,
+      "camera": [
+        8.234131780445662,
+        4.055220947537813,
+        5.146332362778539
+      ],
+      "target": [
+        0.05894058731278279,
+        1.398283809769629,
+        0.03683786707048925
+      ],
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 130804,
+      "magic": 1179937895,
+      "meshes": 10,
+      "vertices": 11600,
+      "glbHash": "b3163bfb72a58abaec3368b6897255ed46a4785f8c6784e938b204c90dc59caa"
+    },
+    "bo": {
+      "pet": "bo",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "9420b6c4c718b13af847ac2609cafae6684c848c3daca6113e6530d126a3a5e4",
+      "parts": 9,
+      "exportPrimitives": 9,
+      "triangles": 2816,
+      "camera": [
+        5.519101424784578,
+        3.776443779546466,
+        8.027783890595748
+      ],
+      "target": [
+        0.03280007619259599,
+        1.282670439277384,
+        0.04770920173468508
+      ],
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 214480,
+      "magic": 1179937895,
+      "meshes": 9,
+      "vertices": 7372,
+      "glbHash": "2dc810fc673744534b3a81ea3858ee2fbd6b5d5f11725fe1b1749fcac30d9598"
+    }
+  },
+  "status": "PASS",
+  "browserVersion": "152.0.7977.76"
+}

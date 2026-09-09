@@ -50,5 +50,38 @@
     "rear",
     "underside"
   ],
-  "rule": "Stage exact original bytes and verify hashes before modeling; never use rejected project assets as references."
+  "rule": "Stage exact original bytes and verify hashes before modeling; never use rejected project assets as references.",
+  "anatomyRevision": {
+    "date": "2026-09-08",
+    "supersedes": "Prior M1 chibi body proportions and Jew seated pose",
+    "stagedOnMachineB": true,
+    "references": [
+      {
+        "pet": "jew",
+        "filename": "4506533e-61b3-4a79-8ffd-74c9718bf058.png",
+        "sha256": "8b055e21f97e3389a12bf08460bd6dd7cce0c993867175014aabbe67d2d2a218",
+        "bytes": 720908,
+        "targetPath": "references/original/4506533e-61b3-4a79-8ffd-74c9718bf058.png",
+        "authority": "Standing full cat body anatomy"
+      },
+      {
+        "pet": "bo",
+        "filename": "e2f28ba6-cf77-4a20-875b-6c6a173c3481.png",
+        "sha256": "a37b44b6c8a1fee1aa99fb3959bbe6bbfda9c59e64cb947c3ba1d076f4c86ae1",
+        "bytes": 996375,
+        "targetPath": "references/original/e2f28ba6-cf77-4a20-875b-6c6a173c3481.png",
+        "authority": "Seated full golden body anatomy"
+      }
+    ],
+    "defects": [
+      {
+        "file": "417fd636-38c3-4b28-a2fb-f08335a0ac77.png",
+        "issue": "Jew floating nose and mouth in side wireframe"
+      },
+      {
+        "file": "f3942924-6053-4ec3-9169-ea26ee6650e1.png",
+        "issue": "Bo angular foreleg and torso anatomy"
+      }
+    ]
+  }
 }

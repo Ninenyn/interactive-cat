@@ -2,6 +2,8 @@
 
 ## Authority
 
+LATEST ANATOMY REVISION: Read docs/ANATOMY_REVISION.md first. The user's new standing full-body cat and seated full-body golden references supersede old chibi body proportions/poses. Jew now stands on four connected legs, Bo remains seated with natural chest/limb anatomy. Prior concept sheets govern identity/color only where compatible. The floating-face and limb defects are rejected, not approved art.
+
 The user's latest instructions and two attached character sheets define this rebuild. Read README.md, docs/BROWSER_PIPELINE.md, docs/PRODUCTION_PLAN.md, docs/ART_DIRECTION.md, docs/ACCEPTANCE.md, references/manifest.json, and status.json before starting a task.
 
 Jew uses the black MISCHIEF STUDY sheet. Bo uses the lower row of CONCEPT 01. Do not use CONCEPT 01's gray, wide-eyed cat as a second target for Jew. Do not inspect or import rejected assets from recovery branches or folders for modeling guidance.

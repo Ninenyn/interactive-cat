@@ -1,0 +1,134 @@
+{
+  "stage": "M1",
+  "state": "ready_for_review",
+  "artApproval": "pending",
+  "createdAt": "2026-09-09T02:28:00.335Z",
+  "owners": {
+    "jew": "jew_anatomy",
+    "bo": "bo_anatomy",
+    "renderer": "root",
+    "visualQA": "anatomy_qa"
+  },
+  "pose": "Jew STAND / Bo SIT; anatomy revision; facial deformation and rig not yet proven",
+  "lighting": {
+    "preset": "Neutral clay studio",
+    "renderer": "Three.js 0.185.1",
+    "toneMapping": "ACESFilmic",
+    "exposure": 1.08,
+    "selfShadows": false,
+    "groundShadow": true,
+    "source": "web/studio.js"
+  },
+  "referenceAnchors": {
+    "jew": "Full-body standing cat 4506533e; Mischief Study identity",
+    "bo": "Full-body seated golden e2f28ba6; Concept 01 identity"
+  },
+  "inferredGeometry": "Profile, back and concealed surfaces are interpretations; not measured orthographic reconstruction",
+  "findings": [
+    "Shared Jew muzzle/nose, actual facial patch attachment, quadruped stance and Bo anatomical limbs revised after independent render inspection",
+    "Full reference sheet and unobstructed paws verified in mobile viewport",
+    "Future M2 requires refined eyelids, eyes and expression; final colors, rig and companion behavior pending"
+  ],
+  "files": {
+    "review/M1-anatomy/bo-M1.glb": {
+      "bytes": 214480,
+      "sha256": "2dc810fc673744534b3a81ea3858ee2fbd6b5d5f11725fe1b1749fcac30d9598"
+    },
+    "review/M1-anatomy/bo-back.png": {
+      "bytes": 454628,
+      "sha256": "bf4e6a3ad612ef9d25e62682a4493a00d89eb6b0fae2f283af5fa94bdd2f28bc"
+    },
+    "review/M1-anatomy/bo-face-side.png": {
+      "bytes": 428094,
+      "sha256": "20e4dca5bcc09ef2ca0c29726156209cf933867fdae2cf9d1222571a7b68b882"
+    },
+    "review/M1-anatomy/bo-front.png": {
+      "bytes": 466923,
+      "sha256": "d22c4734681355fde0b7041703fa298829fb31d676de9b2b85dea01862259942"
+    },
+    "review/M1-anatomy/bo-glb-import.png": {
+      "bytes": 471045,
+      "sha256": "86bbe3c7773e6f578b6389a7cf08bedfd4e0094f9f2653f7ac678bf5e0463eb8"
+    },
+    "review/M1-anatomy/bo-hero.png": {
+      "bytes": 471725,
+      "sha256": "6a794e160acf71151dd2bc7310130053d0ac2bf104ddb5c79eaade066602b5c2"
+    },
+    "review/M1-anatomy/bo-mobile.png": {
+      "bytes": 224348,
+      "sha256": "ca8b5cf71b55df9a9077079458367c97a7401a13d497c7cd93329fc9a2293062"
+    },
+    "review/M1-anatomy/bo-side-wire.png": {
+      "bytes": 524906,
+      "sha256": "645bfca539325af31e1d480bbdcac74b07a94d91bec562a3c91112c4c90a1e8f"
+    },
+    "review/M1-anatomy/bo-side.png": {
+      "bytes": 458583,
+      "sha256": "9be820fec7821018fe3e59b028786d3eb53c7d08953906e77f3a70bb0dc8883e"
+    },
+    "review/M1-anatomy/jew-M1.glb": {
+      "bytes": 130804,
+      "sha256": "b3163bfb72a58abaec3368b6897255ed46a4785f8c6784e938b204c90dc59caa"
+    },
+    "review/M1-anatomy/jew-back.png": {
+      "bytes": 394570,
+      "sha256": "1589e2d79b7a884ba20164da85b192ffadbf269b62bfd79f08c9e8a7535a8d77"
+    },
+    "review/M1-anatomy/jew-face-side.png": {
+      "bytes": 350346,
+      "sha256": "439a329e7ff72c5449d9814b9ead71cf011bf0f37df81a71eed6bbd3f35106c7"
+    },
+    "review/M1-anatomy/jew-front.png": {
+      "bytes": 398586,
+      "sha256": "588426168fb79138178e0d57315bccfc4d0529dedb6fcdbe3059bde14ceb8c9a"
+    },
+    "review/M1-anatomy/jew-glb-import.png": {
+      "bytes": 397678,
+      "sha256": "6bf2f53bfd49ae88db0bf7c2360770b5c519d67373a7f1578c47c5fa86484040"
+    },
+    "review/M1-anatomy/jew-hero.png": {
+      "bytes": 398267,
+      "sha256": "533f0ebe460302dcd2559b39b5a1c64b6379d426f0874f88bffb88d446809c46"
+    },
+    "review/M1-anatomy/jew-mobile.png": {
+      "bytes": 169126,
+      "sha256": "8071d86fb8814ebcb8be82afad92c7360a2d5bbbf7201dc3bb356daf7f7389e4"
+    },
+    "review/M1-anatomy/jew-side-wire.png": {
+      "bytes": 446254,
+      "sha256": "159711012fa3136b6459aad649972a32dc21a59551c83e202f150eb685e428f5"
+    },
+    "review/M1-anatomy/jew-side.png": {
+      "bytes": 379973,
+      "sha256": "c6951c449bca54c7ebd3372ebf52ce5513e6510f6bb1d7bf5b4affab7ca0eb69"
+    },
+    "art/source/jew.mjs": {
+      "bytes": 12709,
+      "sha256": "78b4cd357163e801bb413a30e9a8cd124f6972cec150fc424e7dad339a9008db"
+    },
+    "art/source/bo.mjs": {
+      "bytes": 19940,
+      "sha256": "f836678e59d78859753f0e67da2e2ab35cedf549bd5a33dc089746713217bbbc"
+    },
+    "art/meshes/jew.mesh.json": {
+      "bytes": 39651,
+      "sha256": "3d44a32bdf9fcb1cab1e4aa46276dc0ac68ce46187e3a795f2a8e4a484890885"
+    },
+    "art/meshes/bo.mesh.json": {
+      "bytes": 115461,
+      "sha256": "9420b6c4c718b13af847ac2609cafae6684c848c3daca6113e6530d126a3a5e4"
+    },
+    "web/studio.js": {
+      "bytes": 24312,
+      "sha256": "19a5c3fab32dd666440da662b62da6403709d68bde0a14ca04a354eecd0d2588"
+    },
+    "web/style.css": {
+      "bytes": 12208,
+      "sha256": "1cd761caa735ce8406c8942f6f6fd4714d840c05df51d8dac533c25344c52615"
+    },
+    "references/manifest.json": {
+      "bytes": 2969,
+      "sha256": "d9f5f43f7dfeb4b84496705d01aabd8fee2f8d98489ba7e1de715d915885c71f"
+    }
+  }
+}

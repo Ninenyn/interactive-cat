@@ -1,0 +1,20 @@
+
+> jew-and-bo-model-studio@0.1.0 test
+> node --test tests/*.test.mjs
+
+✔ Jew nose is part of the same shared-index skin with a shared muzzle boundary (3.703125ms)
+✔ Jew mouth and philtrum actual mesh thickness straddles the realized face (11.164792ms)
+✔ Jew exposed eye triangle interiors and edges stay above the actual skull (62.729625ms)
+✔ Jew continuous body has four individually planted paw contact patches (2.298ms)
+✔ Bo continuous body has four individually planted paw contact patches (2.527417ms)
+✔ Bo lower forelegs have a central foreground clearance at three heights (10.056375ms)
+✔ Jew is a portable closed polygon mesh with usable triangles (23.584042ms)
+✔ Bo is a portable closed polygon mesh with usable triangles (2659.374416ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 8
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2761.441583

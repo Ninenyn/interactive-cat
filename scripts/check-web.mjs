@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 
-const dir='review/M1';await fs.mkdir(dir,{recursive:true});
+const dir='review/M1-anatomy';await fs.mkdir(dir,{recursive:true});
 const server=spawn(process.execPath,['scripts/serve.mjs'],{stdio:['ignore','pipe','pipe']});
 await new Promise((resolve,reject)=>{server.stdout.on('data',d=>{if(d.toString().includes('ready'))resolve();});server.once('error',reject);server.once('exit',code=>{if(code!==null)reject(new Error('Server exited '+code));});});
 const browser=await chromium.launch({channel:'chrome'});
@@ -22,11 +22,13 @@ try{
    await page.evaluate(v=>window.__studio.setView(v),view);await page.waitForTimeout(200);
    await page.screenshot({path:dir+'/'+pet+'-'+view+'.png'});
   }
+  await page.evaluate(()=>{window.__studio.setView('side');window.__studio.applySurface('wire');});await page.waitForTimeout(200);await page.screenshot({path:dir+'/'+pet+'-side-wire.png'});await page.evaluate(()=>window.__studio.applySurface('clay'));
+  await page.evaluate(()=>window.__studio.focusFace('side'));await page.waitForTimeout(200);await page.screenshot({path:dir+'/'+pet+'-face-side.png'});
   await page.evaluate(()=>window.__studio.setView('hero'));
   const source=await page.evaluate(()=>JSON.stringify(window.__studio.source()));
   const info=await page.evaluate(()=>window.__studio.info());
   const exportInfo=await page.evaluate(()=>window.__studio.verifyExport());
-  assert.equal(exportInfo.magic,0x46546c67);assert.equal(exportInfo.meshes,info.parts);assert.ok(exportInfo.bytes>1000);
+  assert.equal(exportInfo.magic,0x46546c67);assert.equal(exportInfo.meshes,info.exportPrimitives);assert.ok(exportInfo.bytes>1000);
   const base64=await page.evaluate(async()=>{
    const buffer=await window.__studio.exportGLB();window.__qaGLB=buffer;
    let s='';const bytes=new Uint8Array(buffer);for(let i=0;i<bytes.length;i+=32768)s+=String.fromCharCode(...bytes.subarray(i,i+32768));return btoa(s);
@@ -54,7 +56,7 @@ try{
  await page.locator('[data-surface="wire"]').click();await page.locator('[data-surface="clay"]').click();
  await page.locator('#open-reference').click();assert.ok(await page.locator('#reference-dialog').isVisible());await page.keyboard.press('Escape');
  const download=page.waitForEvent('download');await page.locator('#export-glb').click();const actualDownload=await download;assert.ok(actualDownload.suggestedFilename().endsWith('.glb'));
- report.checks.push('source mesh JSON reload','vertex edit and undo','GLB export and fresh GLB-only render','export does not mutate source','surface and camera controls','reference dialog','user GLB download');
+ report.checks.push('source mesh JSON reload','vertex edit and undo','GLB export and fresh GLB-only render','export does not mutate source','surface, full-body and face camera controls','reference dialog','user GLB download');
  await page.evaluate(()=>document.querySelector('.toast').classList.remove('visible'));
  await page.setViewportSize({width:390,height:844});
  for(const pet of ['jew','bo']){
