@@ -7,8 +7,8 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 const host=$('#canvas-host'), stage=$('.stage');
 const meta={
- jew:{title:'Jew',subtitle:'แมวยืนสี่ขา · โครงสีเทา',reference:'โครงแมวเต็มตัว',view:'STAND / ANATOMY',focus:['หัว ปาก และจมูกเป็นผิวต่อเนื่อง','แนวหลัง อก และท้องตามภาพเต็มตัว','สี่ขา ข้อขาหลัง และอุ้งเท้ารับพื้น']},
- bo:{title:'Bo',subtitle:'โกลเด้นท่านั่ง · โครงสีเทา',reference:'โครงโกลเด้นเต็มตัว',view:'SIT / ANATOMY',focus:['สัดส่วนหัวต่ออกตามภาพเต็มตัว','แนวไหล่ ศอก ข้อมือ และขาหน้า','สะโพกพับ ขาหลัง และอุ้งเท้ารับพื้น']}
+ jew:{title:'Jew',subtitle:'แมวซน · โครงสีเทา',reference:'โครงแมวเต็มตัว',view:'STAND / ANATOMY',focus:['หัวกว้าง แก้มอิ่ม และตาหรี่ตามแบบ','จมูกและปากแนบกับผิวใบหน้า','อก ขา อุ้งเท้า และหางต่อเนื่องทุกท่า']},
+ bo:{title:'Bo',subtitle:'ลูกโกลเด้น · โครงสีเทา',reference:'โครงโกลเด้นเต็มตัว',view:'SIT / ANATOMY',focus:['หัวลูกสุนัข ปากสั้นกว้าง และหูตก','แนวไหล่ ศอก และขาหน้าเป็นธรรมชาติ','ระนาบอก สะโพก และอุ้งเท้าชัดเจน']}
 };
 let renderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});}
@@ -44,7 +44,10 @@ const transform=new TransformControls(camera,renderer.domElement);transform.setM
 transform.addEventListener('dragging-changed',e=>{controls.enabled=!e.value;});
 
 let pet='jew',model=null,modelRoot=null,importedRoot=null,manifest=null;
-let referenceMode='anatomy';
+const defaultPose={jew:'stand',bo:'sit'},poseNames={stand:'ยืน',sit:'นั่ง',walk:'จังหวะเดิน'};
+let pose='stand',angle=null,referenceMode='edge-study';
+const meshKey=(character=pet,state=pose)=>character+'-'+state;
+const assetRecord=()=>manifest?.poses?.[pet]?.[pose]||manifest?.assets?.[meshKey()]||(pose===defaultPose[pet]?manifest?.assets?.[pet]:null);
 let surface='clay',currentView='hero',editing=false,selection=null,undo=[],request=0,edited=false;
 const loaded=new Map();
 const partMeshes=new Map();
@@ -95,7 +98,7 @@ function rebuildPoints(){
   point.position.copy(modelRoot.position);point.visible=editing;point.userData.partIndex=i;pointGroup.add(point);
  }
 }
-function frameModel(direction,focusBox){
+function frameModel(direction,focusBox,consistentTurntable=false){
  const ratio=host.clientWidth/host.clientHeight||1;
  if(!modelRoot){const h=4.5;camera.left=-h*ratio/2;camera.right=h*ratio/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();return;}
  const box=focusBox||new THREE.Box3().setFromObject(modelRoot),center=box.getCenter(new THREE.Vector3());
@@ -103,66 +106,92 @@ function frameModel(direction,focusBox){
  camera.position.copy(center).addScaledVector(dir,10);camera.lookAt(center);camera.updateMatrixWorld(true);
  const inverse=camera.quaternion.clone().invert();let loX=Infinity,hiX=-Infinity,loY=Infinity,hiY=-Infinity;
  for(const x of [box.min.x,box.max.x])for(const y of [box.min.y,box.max.y])for(const z of [box.min.z,box.max.z]){const v=new THREE.Vector3(x,y,z).sub(center).applyQuaternion(inverse);loX=Math.min(loX,v.x);hiX=Math.max(hiX,v.x);loY=Math.min(loY,v.y);hiY=Math.max(hiY,v.y);}
- const h=Math.max((hiY-loY)/.68,(hiX-loX)/(ratio*.80),2);
+ const width=consistentTurntable?Math.hypot(box.max.x-box.min.x,box.max.z-box.min.z):hiX-loX;
+ const h=Math.max((hiY-loY)/.68,width/(ratio*.80),2);
  const screenUp=new THREE.Vector3(0,1,0).applyQuaternion(camera.quaternion);
  controls.target.copy(center).addScaledVector(screenUp,-h*.045);camera.position.copy(controls.target).addScaledVector(dir,10);camera.zoom=1;
  camera.left=-h*ratio/2;camera.right=h*ratio/2;camera.top=h/2;camera.bottom=-h/2;camera.updateProjectionMatrix();controls.update();
 }
 function focusFace(view='side'){
+ angle=null;$('#angle-select').value='free';
  const box=new THREE.Box3();for(const mesh of partMeshes.values())if(/(skull|head|muzzle|nose|eye|ear|mouth|philtrum)/i.test(mesh.name)&&!/welded standing skin/.test(mesh.name))box.union(new THREE.Box3().setFromObject(mesh));
  if(box.isEmpty())return;box.expandByScalar(.10);controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');currentView='face-'+view;frameModel(view==='side'?[9,0,0]:[5.5,1.8,8],box);
 }
 $('#face-closeup').onclick=()=>focusFace('side');
 function setView(view){
- currentView=view;controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');
+ currentView=view;angle=null;$('#angle-select').value='free';controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');
  const positions={hero:pet==='jew'?[8,2.6,5]:[5.5,2.5,8],front:[0,0,9],side:[9,0,0],back:[0,0,-9]};
  frameModel(positions[view]||positions.hero);
  $$('[data-view]').forEach(b=>{const yes=b.dataset.view===view;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
 }
-function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);frameModel();}
+function setAngle(degrees){
+ if(!Number.isFinite(Number(degrees)))throw new Error('มุมกล้องไม่ถูกต้อง');
+ angle=((Number(degrees)%360)+360)%360;currentView='angle-'+angle;controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');
+ const damping=controls.enableDamping;controls.enableDamping=false;controls.update();controls.enableDamping=damping;
+ const theta=THREE.MathUtils.degToRad(angle);frameModel([Math.sin(theta),0,Math.cos(theta)],undefined,true);
+ $('#angle-select').value=[0,45,90,135,180,225,270,315].includes(angle)?String(angle):'free';
+ $$('[data-view]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});
+}
+function resize(){const {width,height}=host.getBoundingClientRect();if(!width||!height)return;renderer.setSize(width,height);if(angle!==null)setAngle(angle);else frameModel();}
 new ResizeObserver(resize).observe(host);
+function refreshEdges(mesh){
+ for(const child of [...mesh.children])if(child.userData.edgeStudy)disposeTree(child);
+ if(surface!=='edge')return;
+ const edges=new THREE.LineSegments(new THREE.WireframeGeometry(mesh.geometry),new THREE.LineBasicMaterial({color:0x4a4135,depthTest:true,depthWrite:false,toneMapped:false}));
+ edges.name=mesh.name+'-study-edges';edges.userData.edgeStudy=true;edges.renderOrder=1;mesh.add(edges);
+}
 function applySurface(next){
+ if(!['clay','edge','wire','silhouette'].includes(next))throw new Error('พื้นผิวไม่ถูกต้อง');
  surface=next;
  partMeshes.forEach(mesh=>{
   disposeMaterial(mesh.material);
   if(next==='silhouette')mesh.material=new THREE.MeshBasicMaterial({color:0x37312a});
   else if(next==='wire')mesh.material=new THREE.MeshBasicMaterial({color:0x756149,wireframe:true});
-  else{const palette=materials();mesh.material=clayMaterialFor(mesh,palette);Object.values(palette).forEach(m=>m.dispose());}
+  else{const palette=materials();mesh.material=clayMaterialFor(mesh,palette);Object.values(palette).forEach(m=>m.dispose());if(next==='edge')for(const material of Array.isArray(mesh.material)?mesh.material:[mesh.material]){material.polygonOffset=true;material.polygonOffsetFactor=1;material.polygonOffsetUnits=1;}}
+  refreshEdges(mesh);
  });
  floor.visible=next!=='wire';
  $$('[data-surface]').forEach(b=>{const yes=b.dataset.surface===next;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
 }
-function updateStats(){const verts=model.parts.reduce((n,p)=>n+p.positions.length/3,0),tris=model.parts.reduce((n,p)=>n+p.indices.length/3,0);$('#mesh-count').textContent=verts.toLocaleString()+' vertices · '+tris.toLocaleString()+' faces';$('#source-version').textContent=edited?'M1 · ฉบับแก้ไข':'M1 · '+(manifest?.assets[pet]?.sha256.slice(0,7)||'v1');}
-async function choosePet(next){
- const id=++request;$('#load-state').classList.remove('hidden');
+function updateStats(){const verts=model.parts.reduce((n,p)=>n+p.positions.length/3,0),tris=model.parts.reduce((n,p)=>n+p.indices.length/3,0);$('#mesh-count').textContent=verts.toLocaleString()+' vertices · '+tris.toLocaleString()+' faces';$('#source-version').textContent=edited?'M1 · ฉบับแก้ไข':'M1 · '+(assetRecord()?.sha256?.slice(0,7)||'v1');}
+function updatePoseUI(){
+ $('#pose-select').value=pose;$('#pet-subtitle').textContent=meta[pet].subtitle+' · '+poseNames[pose];
+ $('#pose-note').textContent='ท่าโพสสำหรับตรวจรูปทรง · ยังไม่ใช่แอนิเมชัน';
+}
+async function loadPose(character,state,{defaultAsset=false}={}){
+ if(!meta[character]||!Object.hasOwn(poseNames,state))throw new Error('ไม่พบท่าโพส');
+ const id=++request,key=meshKey(character,state);$('#load-state').classList.remove('hidden');$('#load-state').textContent='กำลังเตรียมโมเดล…';
  try{
-  if(!loaded.has(next))loaded.set(next,await readJSON('/models/'+next+'.mesh.json'));
+  if(!loaded.has(key))loaded.set(key,await readJSON('/models/'+(defaultAsset?character:key)+'.mesh.json'));
   if(id!==request)return;
-  pet=next;edited=false;undo=[];$('#undo-edit').disabled=true;$('#draft-note').textContent='';
-  buildModel(loaded.get(next));setView('hero');
-  const m=meta[pet];$('#pet-title').textContent=m.title;$('#pet-subtitle').textContent=m.subtitle;$('#pet-number').textContent=pet==='jew'?'01':'02';
-  referenceMode='anatomy';updateReference();
+  pet=character;pose=state;edited=false;undo=[];$('#undo-edit').disabled=true;$('#draft-note').textContent='';
+  buildModel(loaded.get(key));if(angle!==null)setAngle(angle);else setView('hero');
+  const m=meta[pet];$('#pet-title').textContent=m.title;$('#pet-number').textContent=pet==='jew'?'01':'02';updatePoseUI();updateReference();
   $('#focus-list').replaceChildren(...m.focus.map(t=>{const li=document.createElement('li');li.textContent=t;return li;}));
   $$('[data-pet]').forEach(b=>{const yes=b.dataset.pet===pet;b.classList.toggle('active',yes);b.setAttribute('aria-pressed',String(yes));});
   $('#load-state').classList.add('hidden');
- }catch(error){$('#load-state').textContent='เปิดโมเดลไม่สำเร็จ กรุณาโหลดหน้าใหม่';console.error(error);}
+ }catch(error){if(id===request){$('#load-state').textContent='เปิดท่าโพสไม่สำเร็จ กรุณาลองเลือกใหม่';$('#pose-select').value=pose;}console.error(error);throw error;}
 }
+async function choosePet(next){return loadPose(next,defaultPose[next],{defaultAsset:true});}
+async function setPose(next){return loadPose(pet,next);}
 function updateReference(){
- const m=meta[pet],anatomy=referenceMode==='anatomy',title=anatomy?m.reference:(pet==='jew'?'Mischief Study':'Concept 01');
- $('#reference-name').textContent=title;$('#reference-view').textContent=anatomy?m.view:'IDENTITY / COLOR';$('#dialog-title').textContent=m.title+' — '+title;
- for(const img of [$('#reference-image'),$('#reference-large')]){img.src='/references/'+pet+(anatomy?'-anatomy':'')+'.png';img.alt=m.title+' '+title+' ภาพอ้างอิง';}
- $$('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.reference===referenceMode)));
+ const m=meta[pet],anatomy=referenceMode==='anatomy',edge=referenceMode==='edge-study',title=edge?'Edge study · ภาพแนวทาง':anatomy?m.reference:(pet==='jew'?'Mischief Study':'Concept 01');
+ $('#reference-name').textContent=title;$('#reference-view').textContent=edge?'CONCEPT':anatomy?m.view:'IDENTITY / COLOR';$('#dialog-title').textContent=m.title+' — '+title;
+ $('#reference-note').textContent=edge?'ภาพแนวทางการจัดระนาบ · ดู mesh จริงในพื้นที่ 3D':'ภาพอ้างอิงสำหรับตรวจรูปทรงและบุคลิก';
+ for(const img of [$('#reference-image'),$('#reference-large')]){img.src='/references/'+pet+(edge?'-edge-study':anatomy?'-anatomy':'')+'.png';img.alt=m.title+' '+title+' ภาพอ้างอิง';}
+$$('[data-reference]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.reference===referenceMode)));
 }
 $$('[data-reference]').forEach(b=>b.onclick=()=>{referenceMode=b.dataset.reference;updateReference();});
 function toast(message){const e=$('#toast');e.textContent=message;e.classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.classList.remove('visible'),3500);}
 function download(data,name,type){const url=URL.createObjectURL(new Blob([data],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),10000);}
-function getSource(){const value=structuredClone(model);value.metadata={...value.metadata,reviewStatus:'M1-unreviewed',browserEdited:edited,baseMeshHash:manifest?.assets[pet]?.sha256||null};return value;}
+function getSource(){const value=structuredClone(model);value.metadata={...value.metadata,reviewStatus:'M1-unreviewed',pose,browserEdited:edited,baseMeshHash:assetRecord()?.sha256||null};return value;}
 async function exportGLB(){
  if(!modelRoot)throw new Error('โมเดลยังไม่พร้อม');
  const clone=modelRoot.clone(true),palette=materials();
- clone.name=pet+'-M1-clay';clone.visible=true;
+ clone.name=pet+'-'+pose+'-M1-clay';clone.visible=true;
+ const overlays=[];clone.traverse(o=>{if(o.userData.edgeStudy)overlays.push(o);});for(const overlay of overlays)overlay.removeFromParent();
  clone.traverse(o=>{if(!o.isMesh)return;o.geometry=o.geometry.clone();o.material=clayMaterialFor(o,palette);o.castShadow=false;o.receiveShadow=false;});
- clone.userData={stage:'M1',approval:'pending',pet,sourceHash:manifest?.assets[pet]?.sha256||null,browserEdited:edited};
+ clone.userData={stage:'M1',approval:'pending',pet,pose,sourceHash:assetRecord()?.sha256||null,browserEdited:edited};
  try{return await new GLTFExporter().parseAsync(clone,{binary:true,onlyVisible:true});}
  finally{disposeTree(clone);Object.values(palette).forEach(m=>m.dispose());}
 }
@@ -184,7 +213,7 @@ function moveVertex(xyz){
  const {part,index}=selection,p=model.parts[part];p.positions.splice(index*3,3,...xyz);
  const mesh=partMeshes.get(part),g=mesh.geometry,map=mesh.userData.renderToSource;if(map){for(let n=0;n<map.length;n++)if(map[n]===index)g.attributes.position.setXYZ(n,...xyz);}else g.attributes.position.setXYZ(index,...xyz);g.attributes.position.needsUpdate=true;g.computeVertexNormals();g.computeBoundingSphere();
  const point=pointGroup.children.find(o=>o.userData.partIndex===part);point.geometry.attributes.position.setXYZ(index,...xyz);point.geometry.attributes.position.needsUpdate=true;
- edited=true;updateStats();$('#draft-note').textContent='แก้ไขแล้ว · บันทึก JSON เพื่อเก็บฉบับนี้ก่อนเปลี่ยนตัวละคร';
+ refreshEdges(mesh);edited=true;updateStats();$('#draft-note').textContent='แก้ไขแล้ว · บันทึก JSON เพื่อเก็บฉบับนี้ก่อนเปลี่ยนท่าหรือตัวละคร';
 }
 transform.addEventListener('mouseDown',remember);
 transform.addEventListener('objectChange',()=>{if(!selection)return;const p=partMeshes.get(selection.part).worldToLocal(marker.position.clone());moveVertex(p.toArray());for(const [n,axis]of ['x','y','z'].entries())$('#vertex-'+axis).value=p.toArray()[n].toFixed(3);});
@@ -200,26 +229,29 @@ renderer.domElement.addEventListener('pointerup',e=>{
 });
 $('#edit-mode').addEventListener('change',e=>{editing=e.target.checked;for(const p of pointGroup.children)p.visible=editing;if(!editing)clearSelection();controls.autoRotate=false;$('#turntable').setAttribute('aria-pressed','false');});
 $('#undo-edit').onclick=()=>{const action=undo.pop();if(!action)return;selectVertex(action.part,action.index);moveVertex(action.position);selectVertex(action.part,action.index);$('#undo-edit').disabled=undo.length===0;};
-$('#reset-mesh').onclick=()=>{edited=false;undo=[];buildModel(loaded.get(pet));$('#undo-edit').disabled=true;$('#draft-note').textContent='';toast('กลับไปโครงต้นฉบับแล้ว');};
-$$('[data-pet]').forEach(b=>b.onclick=()=>{if(b.dataset.pet===pet)return;if(edited)download(JSON.stringify(getSource()),pet+'-draft.mesh.json','application/json');choosePet(b.dataset.pet);});
+$('#reset-mesh').onclick=()=>{edited=false;undo=[];buildModel(loaded.get(meshKey()));$('#undo-edit').disabled=true;$('#draft-note').textContent='';toast('กลับไปโครงต้นฉบับแล้ว');};
+$$('[data-pet]').forEach(b=>b.onclick=()=>{if(b.dataset.pet===pet)return;if(edited)download(JSON.stringify(getSource()),pet+'-draft.mesh.json','application/json');choosePet(b.dataset.pet).catch(()=>{});});
+$('#pose-select').onchange=async e=>{if(edited)download(JSON.stringify(getSource()),pet+'-'+pose+'-draft.mesh.json','application/json');try{await setPose(e.target.value);}catch{}};
+$('#angle-select').onchange=e=>{if(e.target.value!=='free')setAngle(Number(e.target.value));};
+controls.addEventListener('start',()=>{angle=null;currentView='orbit';$('#angle-select').value='free';$$('[data-view]').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-pressed','false');});});
 $$('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 $$('[data-surface]').forEach(b=>b.onclick=()=>applySurface(b.dataset.surface));
-$('#turntable').onclick=()=>{controls.autoRotate=!controls.autoRotate;$('#turntable').setAttribute('aria-pressed',String(controls.autoRotate));};
+$('#turntable').onclick=()=>{angle=null;currentView='turntable';$('#angle-select').value='free';controls.autoRotate=!controls.autoRotate;$('#turntable').setAttribute('aria-pressed',String(controls.autoRotate));};
 $('#reset-view').onclick=()=>setView('hero');
 $('#fullscreen').onclick=async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else if(stage.requestFullscreen)await stage.requestFullscreen();else toast('เบราว์เซอร์นี้ไม่รองรับโหมดเต็มจอ');}catch{toast('เปิดเต็มจอไม่ได้ในเบราว์เซอร์นี้');}};
 const dialog=$('#reference-dialog');$('#open-reference').onclick=()=>dialog.showModal();$('#close-reference').onclick=()=>dialog.close();dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.close();});
-$('#export-glb').onclick=async()=>{const b=$('#export-glb');b.disabled=true;try{download(await exportGLB(),pet+'-m1'+(edited?'-edited':'')+'.glb','model/gltf-binary');toast('บันทึกโมเดล GLB แล้ว');}catch(e){console.error(e);toast('ส่งออกไม่สำเร็จ กรุณาลองอีกครั้ง');}finally{b.disabled=false;}};
-$('#save-json').onclick=()=>{download(JSON.stringify(getSource()),pet+'-m1.mesh.json','application/json');toast('บันทึกจุดยอดและพื้นผิวของโมเดลแล้ว');};
+$('#export-glb').onclick=async()=>{const b=$('#export-glb');b.disabled=true;try{download(await exportGLB(),pet+'-'+pose+'-m1'+(edited?'-edited':'')+'.glb','model/gltf-binary');toast('บันทึกโมเดล GLB แล้ว');}catch(e){console.error(e);toast('ส่งออกไม่สำเร็จ กรุณาลองอีกครั้ง');}finally{b.disabled=false;}};
+$('#save-json').onclick=()=>{download(JSON.stringify(getSource()),pet+'-'+pose+'-m1.mesh.json','application/json');toast('บันทึกจุดยอดและพื้นผิวของโมเดลแล้ว');};
 $('#import-json').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{if(file.size>20_000_000)throw new Error('ไฟล์ใหญ่เกินไป');const data=validateMesh(JSON.parse(await file.text()));buildModel(data);edited=true;undo=[];$('#undo-edit').disabled=true;$('#draft-note').textContent='เปิดฉบับร่างจากไฟล์แล้ว';updateStats();toast('เปิด mesh JSON แล้ว');}catch(err){toast(err.message);}e.target.value='';};
-$('#save-image').onclick=()=>{renderer.render(scene,camera);const c=document.createElement('canvas');c.width=renderer.domElement.width;c.height=renderer.domElement.height;const context=c.getContext('2d');context.fillStyle='#ece4d9';context.fillRect(0,0,c.width,c.height);context.drawImage(renderer.domElement,0,0);c.toBlob(blob=>download(blob,pet+'-M1-'+currentView+'.png','image/png'));};
+$('#save-image').onclick=()=>{renderer.render(scene,camera);const c=document.createElement('canvas');c.width=renderer.domElement.width;c.height=renderer.domElement.height;const context=c.getContext('2d');context.fillStyle='#ece4d9';context.fillRect(0,0,c.width,c.height);context.drawImage(renderer.domElement,0,0);c.toBlob(blob=>download(blob,pet+'-'+pose+'-M1-'+currentView+'.png','image/png'));};
 const reduced=matchMedia('(prefers-reduced-motion: reduce)');if(reduced.matches)controls.enableDamping=false;
 function frame(){requestAnimationFrame(frame);if(document.hidden)return;controls.update();renderer.render(scene,camera);}frame();resize();setView('hero');
 try{manifest=await readJSON('/models/manifest.json');await choosePet('jew');}
 catch(e){console.error(e);$('#load-state').textContent='เปิดข้อมูลโมเดลไม่สำเร็จ กรุณาโหลดหน้าใหม่';}
 window.__studio={
- ready:()=>!!modelRoot,choosePet,setView,focusFace,applySurface,source:getSource,exportGLB,showImported,showSource,selectVertex,
+ ready:()=>!!modelRoot,choosePet,setPose,setAngle,setView,focusFace,applySurface,source:getSource,exportGLB,showImported,showSource,selectVertex,
  setVertex:xyz=>{remember();moveVertex(xyz);selectVertex(selection.part,selection.index);},
  capture:()=>{renderer.render(scene,camera);return renderer.domElement.toDataURL('image/png');},
- info:()=>({pet,stage:'M1',approval:'pending',edited,sourceHash:manifest?.assets[pet]?.sha256,parts:model?.parts.length,exportPrimitives:model?.parts.reduce((n,p)=>n+(p.materialGroups?.length||1),0),triangles:model?.parts.reduce((n,p)=>n+p.indices.length/3,0),camera:camera.position.toArray(),target:controls.target.toArray(),viewport:{width:host.clientWidth,height:host.clientHeight,dpr:renderer.getPixelRatio()},renderer:THREE.REVISION}),
+ info:()=>({pet,pose,angle,surface,currentView,stage:'M1',approval:'pending',edited,sourceHash:assetRecord()?.sha256,parts:model?.parts.length,exportPrimitives:model?.parts.reduce((n,p)=>n+(p.materialGroups?.length||1),0),triangles:model?.parts.reduce((n,p)=>n+p.indices.length/3,0),camera:camera.position.toArray(),target:controls.target.toArray(),frustum:{left:camera.left,right:camera.right,top:camera.top,bottom:camera.bottom,zoom:camera.zoom},edgeOverlays:[...partMeshes.values()].reduce((n,m)=>n+m.children.filter(c=>c.userData.edgeStudy).length,0),viewport:{width:host.clientWidth,height:host.clientHeight,dpr:renderer.getPixelRatio()},renderer:THREE.REVISION}),
  async verifyExport(){const buffer=await exportGLB();const imported=await new GLTFLoader().parseAsync(buffer,'');let count=0,vertices=0;imported.scene.traverse(o=>{if(o.isMesh){count++;vertices+=o.geometry.attributes.position.count;}});const magic=new DataView(buffer).getUint32(0,true);disposeTree(imported.scene);return {bytes:buffer.byteLength,magic,meshes:count,vertices};}
 };

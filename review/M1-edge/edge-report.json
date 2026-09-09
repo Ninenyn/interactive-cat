@@ -1,0 +1,1866 @@
+{
+  "stage": "M1-edge",
+  "artApproval": "pending",
+  "evidence": "ACTUAL WEB MESH",
+  "physicalDeviceTested": false,
+  "poseMeaning": "Authored static pose studies; no animation rig claimed",
+  "angles": [
+    0,
+    45,
+    90,
+    135,
+    180,
+    225,
+    270,
+    315
+  ],
+  "poses": [
+    "stand",
+    "sit",
+    "walk"
+  ],
+  "assets": {
+    "jew": {
+      "stand": {
+        "pet": "jew",
+        "pose": "stand",
+        "angle": null,
+        "surface": "edge",
+        "currentView": "hero",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+        "parts": 10,
+        "exportPrimitives": 12,
+        "triangles": 1620,
+        "camera": [
+          8.222547376537191,
+          3.7108073728895743,
+          5.139092110335745
+        ],
+        "target": [
+          0.04735618340431426,
+          1.0538702351213882,
+          0.029597614627696417
+        ],
+        "frustum": {
+          "left": -3.0042002703074817,
+          "right": 3.0042002703074817,
+          "top": 2.3353819619543565,
+          "bottom": -2.3353819619543565,
+          "zoom": 1
+        },
+        "edgeOverlays": 10,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "9caa32f109eae43909161fa63aaebfd68bba2adccf828c932b1388570f529b26",
+        "glbBytes": 145664,
+        "glbPrimitives": 12,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "jew-stand-glb-import.png",
+        "importScreenshotHash": "40c9ad018a2ebefd70a9c92c82e39e4c10430483a781d0e8567a8cfc5fd5f7a4"
+      },
+      "sit": {
+        "pet": "jew",
+        "pose": "sit",
+        "angle": 45,
+        "surface": "edge",
+        "currentView": "angle-45",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+        "parts": 10,
+        "exportPrimitives": 12,
+        "triangles": 1620,
+        "camera": [
+          7.071067811865475,
+          1.1465955850709346,
+          7.0710678118654755
+        ],
+        "target": [
+          0,
+          1.146595585070934,
+          0
+        ],
+        "frustum": {
+          "left": -2.4999378555696334,
+          "right": 2.4999378555696334,
+          "top": 1.943382347577854,
+          "bottom": -1.943382347577854,
+          "zoom": 1
+        },
+        "edgeOverlays": 10,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "41684fe0eff28ad23155ec2efc4cb9237e8a38e7b1c2c862ed41c450a5008337",
+        "glbBytes": 145672,
+        "glbPrimitives": 12,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "jew-sit-glb-import.png",
+        "importScreenshotHash": "f33ca5febcc9431a8da77c0597d6ac02ec53617f4c328b66945a6596886184db"
+      },
+      "walk": {
+        "pet": "jew",
+        "pose": "walk",
+        "angle": 45,
+        "surface": "edge",
+        "currentView": "angle-45",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+        "parts": 10,
+        "exportPrimitives": 12,
+        "triangles": 1620,
+        "camera": [
+          7.071067811865475,
+          1.0901985800318317,
+          7.0710678118654755
+        ],
+        "target": [
+          0,
+          1.090198580031831,
+          0
+        ],
+        "frustum": {
+          "left": -2.3769747030215775,
+          "right": 2.3769747030215775,
+          "top": 1.8477942034437813,
+          "bottom": -1.8477942034437813,
+          "zoom": 1
+        },
+        "edgeOverlays": 10,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "b46779db670dee1f9252d98481a65222d5fedf50b1738dbbb3a6447bad1b7ec7",
+        "glbBytes": 145676,
+        "glbPrimitives": 12,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "jew-walk-glb-import.png",
+        "importScreenshotHash": "de6938deee55aa75b66c2903ece84ba2c3ef8c02aa68b9de6e5fabb2568b0231"
+      }
+    },
+    "bo": {
+      "stand": {
+        "pet": "bo",
+        "pose": "stand",
+        "angle": 45,
+        "surface": "edge",
+        "currentView": "angle-45",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+        "parts": 14,
+        "exportPrimitives": 14,
+        "triangles": 1776,
+        "camera": [
+          7.071067811865475,
+          1.302733901668998,
+          7.0710678118654755
+        ],
+        "target": [
+          0,
+          1.3027339016689974,
+          0
+        ],
+        "frustum": {
+          "left": -2.840368338165873,
+          "right": 2.840368338165873,
+          "top": 2.208023562150843,
+          "bottom": -2.208023562150843,
+          "zoom": 1
+        },
+        "edgeOverlays": 14,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "cffdd31a520e60656de4ae168e0a0593f246914482f6b0706cd82d70654ee4dd",
+        "glbBytes": 143516,
+        "glbPrimitives": 14,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "bo-stand-glb-import.png",
+        "importScreenshotHash": "f23db84e52f64d2ab4ab685d9ee64ee3825be03f6b715aff3a20b84324824e66"
+      },
+      "sit": {
+        "pet": "bo",
+        "pose": "sit",
+        "angle": 45,
+        "surface": "edge",
+        "currentView": "angle-45",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+        "parts": 14,
+        "exportPrimitives": 14,
+        "triangles": 1776,
+        "camera": [
+          7.071067811865475,
+          1.302733901668998,
+          7.0710678118654755
+        ],
+        "target": [
+          0,
+          1.3027339016689974,
+          0
+        ],
+        "frustum": {
+          "left": -2.840368338165873,
+          "right": 2.840368338165873,
+          "top": 2.208023562150843,
+          "bottom": -2.208023562150843,
+          "zoom": 1
+        },
+        "edgeOverlays": 14,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "879cf06dbb3b7465b70eb04e75da49736bc79aef217ad4bd4e9b50d7c2a45c89",
+        "glbBytes": 143512,
+        "glbPrimitives": 14,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "bo-sit-glb-import.png",
+        "importScreenshotHash": "990c4a553f2d2846a8e8602e85b74cbb57fae4cc37bcde3e96c1741ed48512cc"
+      },
+      "walk": {
+        "pet": "bo",
+        "pose": "walk",
+        "angle": 45,
+        "surface": "edge",
+        "currentView": "angle-45",
+        "stage": "M1",
+        "approval": "pending",
+        "edited": false,
+        "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+        "parts": 14,
+        "exportPrimitives": 14,
+        "triangles": 1776,
+        "camera": [
+          7.071067811865475,
+          1.302733901668998,
+          7.0710678118654755
+        ],
+        "target": [
+          0,
+          1.3027339016689974,
+          0
+        ],
+        "frustum": {
+          "left": -2.840368338165873,
+          "right": 2.840368338165873,
+          "top": 2.208023562150843,
+          "bottom": -2.208023562150843,
+          "zoom": 1
+        },
+        "edgeOverlays": 14,
+        "viewport": {
+          "width": 1096,
+          "height": 852,
+          "dpr": 1
+        },
+        "renderer": "185",
+        "glbHash": "141f66f45b885741e42013484d21b79824bd3d3acab0373f8b4eb4d07cf6595a",
+        "glbBytes": 143512,
+        "glbPrimitives": 14,
+        "allGLBPrimitivesTriangles": true,
+        "importFilename": "bo-walk-glb-import.png",
+        "importScreenshotHash": "e37fb684946fd2f4a57036315afbc0e7fadf3a4da810e9b82002876d863fffb4"
+      }
+    }
+  },
+  "frames": [
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 0,
+      "filename": "jew-stand-edge-000.png",
+      "sha256": "e61ec5ff5e52f36750d742e64a7b0a56c4eddc32fea05791ad60bbade21fdfac",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        0,
+        1.0901985800318317,
+        10
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 45,
+      "filename": "jew-stand-edge-045.png",
+      "sha256": "7c9276d3bf6c54e3447e432e328121d054c281a61d047525c9e89610d1778f50",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        7.071067811865475,
+        1.0901985800318317,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 90,
+      "filename": "jew-stand-edge-090.png",
+      "sha256": "7afcf79e140243eaa09615d602804fb63688ec2c3ff7aea3021824f0d476d452",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        10,
+        1.0901985800318317,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 135,
+      "filename": "jew-stand-edge-135.png",
+      "sha256": "dcc247c13af4d977e8250719382b692cdcc21dc00ea4b54def302e8efc79f952",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        7.0710678118654755,
+        1.0901985800318317,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 180,
+      "filename": "jew-stand-edge-180.png",
+      "sha256": "d574b772f7190938e68f134636e7e48f2971a0599914aef70a20b03342e70b0b",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        1.2246467991473533e-15,
+        1.0901985800318317,
+        -10
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 225,
+      "filename": "jew-stand-edge-225.png",
+      "sha256": "b2e678c8741dfd5bbf2f7cadb601bc126acbb60baf04340a36dff053260e8846",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865474,
+        1.0901985800318317,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 270,
+      "filename": "jew-stand-edge-270.png",
+      "sha256": "c36f6fbe87d0f6288f3a9d470c723e73fe66c78c5c235f52a8d00e450efd98d4",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        -10,
+        1.0901985800318317,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": 315,
+      "filename": "jew-stand-edge-315.png",
+      "sha256": "f91aad7a094645edc9bb8a6d1fcd1ab583dad24f2140ab0e4f239b59fdccb594",
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865477,
+        1.0901985800318317,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 0,
+      "filename": "jew-sit-edge-000.png",
+      "sha256": "4e9b7b61f3758e0400e401729248fda11683b189a9142757ee0fe68a55c74a80",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        0,
+        1.1465955850709346,
+        10
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 45,
+      "filename": "jew-sit-edge-045.png",
+      "sha256": "7a1552959dbf830fd4bf834c9924ad80d3dcdc5e58cea11be37cabb0fc4a162b",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        7.071067811865475,
+        1.1465955850709346,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 90,
+      "filename": "jew-sit-edge-090.png",
+      "sha256": "99ad204f268b4be0906d423611bea2cace0576457c0c27dd0e9ee763f349b99f",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        10,
+        1.1465955850709346,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 135,
+      "filename": "jew-sit-edge-135.png",
+      "sha256": "07e49920b244145c49499ffee060ac868913cf38125db537260d42353ee05229",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        7.0710678118654755,
+        1.1465955850709346,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 180,
+      "filename": "jew-sit-edge-180.png",
+      "sha256": "fd9cb652020ab2e6c3f1a4b5f01d88055ac68749e5e0a757894cec70643191c2",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        1.2246467991473533e-15,
+        1.1465955850709346,
+        -10
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 225,
+      "filename": "jew-sit-edge-225.png",
+      "sha256": "b11a62ef3280d039cb6f45f1b13f0f2c9b8fc9faf537fe3c908219a6d20269c6",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865474,
+        1.1465955850709346,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 270,
+      "filename": "jew-sit-edge-270.png",
+      "sha256": "ba3b416f173997b170c73ec686b2cb85ae1897abccfea6a7b61d433e696f187f",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        -10,
+        1.1465955850709346,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "sit",
+      "angle": 315,
+      "filename": "jew-sit-edge-315.png",
+      "sha256": "af2d8290efb5cf6dd1a259ed0a54b76aa478f82c2017581784795d286a8305cb",
+      "sourceHash": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865477,
+        1.1465955850709346,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.146595585070934,
+        0
+      ],
+      "frustum": {
+        "left": -2.4999378555696334,
+        "right": 2.4999378555696334,
+        "top": 1.943382347577854,
+        "bottom": -1.943382347577854,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 0,
+      "filename": "jew-walk-edge-000.png",
+      "sha256": "3a27712a535b4945681f0f15eeee069ea9d150bd6ae1d58876f47fe9bffff2e1",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        0,
+        1.0901985800318317,
+        10
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 45,
+      "filename": "jew-walk-edge-045.png",
+      "sha256": "8fdf174251d3e0c073c0a5ff9c2f3a60b1396c91d8d316c19a01476ab7c86db9",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        7.071067811865475,
+        1.0901985800318317,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 90,
+      "filename": "jew-walk-edge-090.png",
+      "sha256": "afd1bd4b59a26d69fe7555feff6a62c08f06da1389cc29b809e9467d6247abdd",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        10,
+        1.0901985800318317,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 135,
+      "filename": "jew-walk-edge-135.png",
+      "sha256": "1bb9caf7d1de01d81cf162462c46559b888e6bf723b60c86beb7bdfcb3703698",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        7.0710678118654755,
+        1.0901985800318317,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 180,
+      "filename": "jew-walk-edge-180.png",
+      "sha256": "6bf14d53912f7485592f4b2fc2d3e47b876316415496fdf9c942a1ce091c281d",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        1.2246467991473533e-15,
+        1.0901985800318317,
+        -10
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 225,
+      "filename": "jew-walk-edge-225.png",
+      "sha256": "f066be992d3c27fdef0f880488d8c53008555970bba8abbdc6d5a2227dc5e5a8",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865474,
+        1.0901985800318317,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 270,
+      "filename": "jew-walk-edge-270.png",
+      "sha256": "52fe7729c7e61ba5b6af4e3a3ca544c6cd596f5fcb11f1668414bd50006e1a9f",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        -10,
+        1.0901985800318317,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "jew",
+      "pose": "walk",
+      "angle": 315,
+      "filename": "jew-walk-edge-315.png",
+      "sha256": "901ab51a4b3ad9a4959e64e9d7f9e99cb86e83ac695cfd68bc967def15d775d4",
+      "sourceHash": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb",
+      "triangles": 1620,
+      "camera": [
+        -7.071067811865477,
+        1.0901985800318317,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.090198580031831,
+        0
+      ],
+      "frustum": {
+        "left": -2.3769747030215775,
+        "right": 2.3769747030215775,
+        "top": 1.8477942034437813,
+        "bottom": -1.8477942034437813,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 0,
+      "filename": "bo-stand-edge-000.png",
+      "sha256": "4fe479f959ff2b66787b9fbc1b74ef29f6c1beae07b632050314f0cdd77d6415",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        0,
+        1.302733901668998,
+        10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 45,
+      "filename": "bo-stand-edge-045.png",
+      "sha256": "271d3f6fbc2beea31317a62dff917ca817bad925640a20739a67c8e10d9ab93c",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        7.071067811865475,
+        1.302733901668998,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 90,
+      "filename": "bo-stand-edge-090.png",
+      "sha256": "19a2f488193c3fae339f66f841e206fb6d28095b3edb14e488506987a2d01cde",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        10,
+        1.302733901668998,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 135,
+      "filename": "bo-stand-edge-135.png",
+      "sha256": "700083800640c6f7c2fa106f81b357d6ebebc81cff10c203c4cc748eff4f17f0",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        7.0710678118654755,
+        1.302733901668998,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 180,
+      "filename": "bo-stand-edge-180.png",
+      "sha256": "cfeefb46fff5d0d11c0ea939c932ea435c21a9a6e29d7ee906d39aad71b21980",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        1.2246467991473533e-15,
+        1.302733901668998,
+        -10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 225,
+      "filename": "bo-stand-edge-225.png",
+      "sha256": "d2ccc628bb2b0e45856fdd0e35e22a60f4b3e9d1f9103108396f8ed8840f593e",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865474,
+        1.302733901668998,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 270,
+      "filename": "bo-stand-edge-270.png",
+      "sha256": "ab086f22aef4402c1a86fca95ec34106fd8f4c9fea11cc5771ac4546321a311c",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        -10,
+        1.302733901668998,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "stand",
+      "angle": 315,
+      "filename": "bo-stand-edge-315.png",
+      "sha256": "f19e536149cac1459bfc16ba47b2867f41e0b12c45249bf82a34beb83494ac8a",
+      "sourceHash": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865477,
+        1.302733901668998,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 0,
+      "filename": "bo-sit-edge-000.png",
+      "sha256": "7a953ebb6b301ceed54fd93b6f6df6020e03a1a303ee9eb4f45479d17a7e8cef",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        0,
+        1.302733901668998,
+        10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 45,
+      "filename": "bo-sit-edge-045.png",
+      "sha256": "afb965e99e2883bee16ea407789c8f96c0188084c45c4395d153bb6544c5202f",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        7.071067811865475,
+        1.302733901668998,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 90,
+      "filename": "bo-sit-edge-090.png",
+      "sha256": "c64da41ae3af508615e8d5dbdc66bb997c8b9762615fc7ad7c6ae356757461f4",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        10,
+        1.302733901668998,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 135,
+      "filename": "bo-sit-edge-135.png",
+      "sha256": "8bbae2f65b118e8b1dbfaabdaf99e4005c70603fadd60c0066112060bd124490",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        7.0710678118654755,
+        1.302733901668998,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 180,
+      "filename": "bo-sit-edge-180.png",
+      "sha256": "33d880a89692d65371ad1a81a938a673aaff69f535963e976ea0b5d2a91c5366",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        1.2246467991473533e-15,
+        1.302733901668998,
+        -10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 225,
+      "filename": "bo-sit-edge-225.png",
+      "sha256": "a82feb7c11632a6df5714c557146e15eb0d34a2a907380032ee7ed96008889f4",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865474,
+        1.302733901668998,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 270,
+      "filename": "bo-sit-edge-270.png",
+      "sha256": "596fe562ee63d4af430ae2100bfb9111066fbf46b753bf17f53653aa84bc2bd7",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        -10,
+        1.302733901668998,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": 315,
+      "filename": "bo-sit-edge-315.png",
+      "sha256": "6125131333b97c1f6c77917491f99e6bc192bc01aa69bd67105b85abcfe72766",
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865477,
+        1.302733901668998,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 0,
+      "filename": "bo-walk-edge-000.png",
+      "sha256": "cc901c1be5eb5ecaa7d7f0830431b4ea7eb91b76ce871c70979048a262fca321",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        0,
+        1.302733901668998,
+        10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 45,
+      "filename": "bo-walk-edge-045.png",
+      "sha256": "7663587c3ae98441bff502a5d43446cc9bb65661cbb0e7281099b6993ddb5d3a",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        7.071067811865475,
+        1.302733901668998,
+        7.0710678118654755
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 90,
+      "filename": "bo-walk-edge-090.png",
+      "sha256": "f8726ad523c3a98548fa1de01d41db7233ef7a9d66506f19b34a1435744859eb",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        10,
+        1.302733901668998,
+        6.123233995736766e-16
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 135,
+      "filename": "bo-walk-edge-135.png",
+      "sha256": "a27270f327b6ec3b826e946ca82e8559f160dab65a979d09512a897b1de59892",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        7.0710678118654755,
+        1.302733901668998,
+        -7.071067811865475
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 180,
+      "filename": "bo-walk-edge-180.png",
+      "sha256": "51e4c85994ad6f506346836205d86f6caaaaff4863da773fb05a59728ac53c6b",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        1.2246467991473533e-15,
+        1.302733901668998,
+        -10
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 225,
+      "filename": "bo-walk-edge-225.png",
+      "sha256": "ad2bc461a1d9cd8b7f559572eb12884a8bb5e07719c8f8df3998f861fad563e2",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865474,
+        1.302733901668998,
+        -7.071067811865479
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 270,
+      "filename": "bo-walk-edge-270.png",
+      "sha256": "fe7e355c8dee90923db4d909a099393ded4668d4595f5a52841291e55c5d3e9d",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        -10,
+        1.302733901668998,
+        -1.6081226496766366e-15
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    },
+    {
+      "pet": "bo",
+      "pose": "walk",
+      "angle": 315,
+      "filename": "bo-walk-edge-315.png",
+      "sha256": "d96f55c6e8656cc955b1378b4142e027fddf43353910c517aa52b37e1b8333db",
+      "sourceHash": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703",
+      "triangles": 1776,
+      "camera": [
+        -7.071067811865477,
+        1.302733901668998,
+        7.071067811865474
+      ],
+      "target": [
+        0,
+        1.3027339016689974,
+        0
+      ],
+      "frustum": {
+        "left": -2.840368338165873,
+        "right": 2.840368338165873,
+        "top": 2.208023562150843,
+        "bottom": -2.208023562150843,
+        "zoom": 1
+      },
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      }
+    }
+  ],
+  "boards": [
+    {
+      "pet": "jew",
+      "type": "turnaround",
+      "filename": "jew-turnaround.png",
+      "sha256": "d9b2b7c1fca75fef5890e576275770b830912e3eb8f15ea1f8c21492cdf895fc",
+      "frameFiles": [
+        "jew-stand-edge-000.png",
+        "jew-stand-edge-045.png",
+        "jew-stand-edge-090.png",
+        "jew-stand-edge-135.png",
+        "jew-stand-edge-180.png",
+        "jew-stand-edge-225.png",
+        "jew-stand-edge-270.png",
+        "jew-stand-edge-315.png"
+      ],
+      "source": "Layout of actual WebGL screenshots only"
+    },
+    {
+      "pet": "jew",
+      "type": "poses",
+      "filename": "jew-poses.png",
+      "sha256": "ef3123aa56b038062c37c143cc8c21a2c0529c6699415307f1220f8a2910d335",
+      "frameFiles": [
+        "jew-stand-edge-000.png",
+        "jew-stand-edge-045.png",
+        "jew-stand-edge-090.png",
+        "jew-sit-edge-000.png",
+        "jew-sit-edge-045.png",
+        "jew-sit-edge-090.png",
+        "jew-walk-edge-000.png",
+        "jew-walk-edge-045.png",
+        "jew-walk-edge-090.png"
+      ],
+      "source": "Layout of actual WebGL screenshots only"
+    },
+    {
+      "pet": "bo",
+      "type": "turnaround",
+      "filename": "bo-turnaround.png",
+      "sha256": "e97d36dcc8d3a0d365522bd8d50704deb78b838418c380570b6d0890b2ea1ad9",
+      "frameFiles": [
+        "bo-sit-edge-000.png",
+        "bo-sit-edge-045.png",
+        "bo-sit-edge-090.png",
+        "bo-sit-edge-135.png",
+        "bo-sit-edge-180.png",
+        "bo-sit-edge-225.png",
+        "bo-sit-edge-270.png",
+        "bo-sit-edge-315.png"
+      ],
+      "source": "Layout of actual WebGL screenshots only"
+    },
+    {
+      "pet": "bo",
+      "type": "poses",
+      "filename": "bo-poses.png",
+      "sha256": "c5f7f34c924e812e19b9b8c07d6c467d4645c2aa7673ddcc23697c2594b4540a",
+      "frameFiles": [
+        "bo-stand-edge-000.png",
+        "bo-stand-edge-045.png",
+        "bo-stand-edge-090.png",
+        "bo-sit-edge-000.png",
+        "bo-sit-edge-045.png",
+        "bo-sit-edge-090.png",
+        "bo-walk-edge-000.png",
+        "bo-walk-edge-045.png",
+        "bo-walk-edge-090.png"
+      ],
+      "source": "Layout of actual WebGL screenshots only"
+    }
+  ],
+  "checks": [
+    "48 real WebGL triangle-edge captures: 8 azimuth angles × 3 authored poses × 2 pets",
+    "6 manifest-bound source hashes",
+    "6 GLB export/fresh import checks while diagnostic edges visible",
+    "GLB contains triangles only, no diagnostic edge nodes",
+    "GLB export/reimport does not mutate source",
+    "4 actual-mesh contact sheets"
+  ],
+  "capturePresentation": "Only HTML stage labels and controls hidden; canvas layout, mesh, camera and lighting unchanged",
+  "manifestHash": "5a673ec8f2f68dfe5082895c2c2d2d530d72b2c59262f854da67c4415bcdf640",
+  "status": "PASS",
+  "browserVersion": "152.0.7977.84"
+}

@@ -1,0 +1,8 @@
+> node --test tests/*.test.mjs
+
+✔ Jew nose is part of the same shared-index skin with a shared muzzle boundary (6.442833ms)
+✔ Jew mouth and philtrum actual mesh thickness straddles the realized face (14.353958ms)
+✔ Jew exposed eye triangle interiors and edges stay above the actual skull (59.091667ms)
+✔ Jew continuous body has four individually planted paw contact patches (2.537917ms)
+✔ Bo continuous body has four individually planted paw contact patches (1.60925ms)
+✔ Bo lower forelegs have a central foreground clearance at three heights (4

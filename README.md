@@ -1,6 +1,6 @@
 # Jew & Bo — Model Studio
 
-[Open the full-body anatomy review web app](https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app). Vercel preview protection requires a project-authorized Vercel login.
+The M1 edge-study revision is ready for preview publication. See status.json for deployment tracking.
 
 The current implementation is a Blender-free M1 review web app for two original clay character meshes. It provides orbit/zoom, hero/front/side/back views, silhouette and wireframe, original reference images, vertex editing/undo, editable mesh JSON save/reload, GLB export and PNG capture. The art remains unapproved.
 
@@ -31,3 +31,7 @@ The local studio serves `dist/` on port 3212. Browser QA uses the installed Goog
 - `web/`: review UI and renderer.
 
 This stage does not implement the full companion behavior or final materials/rig. Previous rejected assets remain outside the active project and are not reused.
+
+## 360-degree edge study
+
+Read docs/EDGE_STUDY_REVISION.md for the latest authority. The viewer includes stand/sit/walk static poses, eight fixed camera angles and depth-tested triangle edges. Open /studies.html for generated guides next to actual web-mesh turnaround and pose sheets. Art approval remains pending. Run node scripts/check-edge-study.mjs to regenerate the actual evidence, then copy the four contact-sheet PNGs from review/M1-edge into web/studies before deployment.

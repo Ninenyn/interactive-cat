@@ -69,9 +69,10 @@ for(const [name,asset,body] of [['Jew',jew,jewSkin],['Bo',bo,boBody]])test(name+
 
 test('Bo lower forelegs have a central foreground clearance at three heights',()=>{
  const H=height(bo);
- for(const fraction of [.15,.23,.32]){const y=H*fraction,left=depthHits(boBody,-.1*H,y).at(-1),right=depthHits(boBody,.1*H,y).at(-1),center=depthHits(boBody,0,y).at(-1);assert.ok([left,right,center].every(Number.isFinite));
-  const front=Math.min(left,right),gap=front-center;assert.ok(gap>.015*H,'lower forelegs must project clear of central torso, at height '+fraction);
-  const sliceZ=center+gap*.5;
-  for(const x of [-.015,0,.015]){const hits=depthHits(boBody,x*H,y);assert.ok(hits.at(-1)<sliceZ,'foreground leg gap must contain air at x='+x);}
+ for(const fraction of [.15,.23,.32]){const y=H*fraction,left=depthHits(boBody,-.1*H,y).at(-1),right=depthHits(boBody,.1*H,y).at(-1),center=depthHits(boBody,0,y).at(-1);assert.ok([left,right].every(Number.isFinite),'both foreground legs must intersect the test rays');
+  const front=Math.min(left,right),gap=Number.isFinite(center)?front-center:Infinity;assert.ok(gap>.015*H,'lower forelegs must project clear of central torso, at height '+fraction);
+  // No center hit is valid open air beneath the raised abdomen.
+  const sliceZ=Number.isFinite(center)?center+gap*.5:front-.015*H;
+  for(const x of [-.015,0,.015]){const hits=depthHits(boBody,x*H,y);assert.ok(!hits.length||hits.at(-1)<sliceZ,'foreground leg gap must contain air at x='+x);}
  }
 });

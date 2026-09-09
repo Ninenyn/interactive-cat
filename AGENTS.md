@@ -2,6 +2,8 @@
 
 ## Authority
 
+LATEST EDGE-STUDY REVISION: Read docs/EDGE_STUDY_REVISION.md first. The 9 September user instruction supersedes the adult/small-head proportions below: match the latest cute edge study, create actual multi-angle evidence, and support authored stand/sit/walk studies. Previous anatomy notes remain historical for defect prevention.
+
 LATEST ANATOMY REVISION: Read docs/ANATOMY_REVISION.md first. The user's new standing full-body cat and seated full-body golden references supersede old chibi body proportions/poses. Jew now stands on four connected legs, Bo remains seated with natural chest/limb anatomy. Prior concept sheets govern identity/color only where compatible. The floating-face and limb defects are rejected, not approved art.
 
 The user's latest instructions and two attached character sheets define this rebuild. Read README.md, docs/BROWSER_PIPELINE.md, docs/PRODUCTION_PLAN.md, docs/ART_DIRECTION.md, docs/ACCEPTANCE.md, references/manifest.json, and status.json before starting a task.

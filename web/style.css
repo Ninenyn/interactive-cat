@@ -8,3 +8,15 @@
 
 
 @media(min-width:681px){.workspace{height:calc(100svh - 148px);min-height:690px}.stage{min-height:0;height:100%}.review-panel{min-height:0;overflow-y:auto}}
+
+
+/* The direction picker is separate from orbit controls to keep eight angles readable. */
+.angle-control{position:absolute;z-index:3;right:29px;bottom:29px;display:flex;align-items:center;gap:8px;font-size:9px;color:#8d8070}
+.angle-control select,.pose-label select{font:inherit;color:#594c3e;background:#faf7f1;border:1px solid #d6cabb;border-radius:5px;padding:8px;min-height:36px}
+.pose-section{padding-bottom:16px;margin-bottom:23px;border-bottom:1px solid var(--line)}
+.pose-label{display:flex;align-items:center;justify-content:space-between;gap:14px;font-size:11px;color:#837665}
+.pose-label select{min-width:150px;font-size:11px}.pose-section .tool-help{margin-bottom:0}
+.surface-swatch.edge{border:1px solid #92806a;background:repeating-linear-gradient(30deg,transparent 0 5px,#7e705e 5px 6px),repeating-linear-gradient(-30deg,#c9c0b3 0 5px,#7e705e 5px 6px)}
+.reference-toggle{flex-wrap:wrap}.reference-toggle button{padding:7px 9px}.reference-caption{gap:8px}.reference-caption strong{line-height:1.6}
+@media(min-width:681px) and (max-width:1100px){.angle-control{bottom:122px;right:18px}.surface-tabs{display:grid;grid-template-columns:1fr 1fr}}
+@media(max-width:680px){.pose-section{grid-column:1/-1;padding-bottom:18px;margin-bottom:22px}.pose-label select{min-width:190px}.angle-control{right:17px;top:74px;bottom:auto;flex-direction:column;align-items:flex-end;gap:4px;font-size:8px}.angle-control select{min-height:32px;font-size:9px;padding:6px}.surface-tabs{display:grid;grid-template-columns:1fr 1fr}.reference-toggle button{font-size:9px}}

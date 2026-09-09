@@ -1,0 +1,105 @@
+{
+  "stage": "M1",
+  "artApproval": "pending",
+  "physicalDeviceTested": false,
+  "checks": [
+    "source mesh JSON reload",
+    "vertex edit and undo",
+    "GLB export and fresh GLB-only render",
+    "export does not mutate source",
+    "surface, full-body and face camera controls",
+    "reference dialog",
+    "user GLB download",
+    "390px mobile viewport layout, not physical-phone testing"
+  ],
+  "assets": {
+    "jew": {
+      "pet": "jew",
+      "pose": "stand",
+      "angle": null,
+      "surface": "clay",
+      "currentView": "hero",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "parts": 10,
+      "exportPrimitives": 12,
+      "triangles": 1620,
+      "camera": [
+        8.222547376537191,
+        3.7108073728895743,
+        5.139092110335745
+      ],
+      "target": [
+        0.04735618340431426,
+        1.0538702351213882,
+        0.029597614627696417
+      ],
+      "frustum": {
+        "left": -3.0042002703074817,
+        "right": 3.0042002703074817,
+        "top": 2.3353819619543565,
+        "bottom": -2.3353819619543565,
+        "zoom": 1
+      },
+      "edgeOverlays": 0,
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 145664,
+      "magic": 1179937895,
+      "meshes": 12,
+      "vertices": 12092,
+      "glbHash": "9caa32f109eae43909161fa63aaebfd68bba2adccf828c932b1388570f529b26"
+    },
+    "bo": {
+      "pet": "bo",
+      "pose": "sit",
+      "angle": null,
+      "surface": "clay",
+      "currentView": "hero",
+      "stage": "M1",
+      "approval": "pending",
+      "edited": false,
+      "sourceHash": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "parts": 14,
+      "exportPrimitives": 14,
+      "triangles": 1776,
+      "camera": [
+        5.520766820860177,
+        3.758984216256931,
+        8.030206284887528
+      ],
+      "target": [
+        0.03446547226819575,
+        1.2652108759878495,
+        0.05013159602646654
+      ],
+      "frustum": {
+        "left": -3.4868534602802543,
+        "right": 3.4868534602802543,
+        "top": 2.710583164378446,
+        "bottom": -2.710583164378446,
+        "zoom": 1
+      },
+      "edgeOverlays": 0,
+      "viewport": {
+        "width": 1096,
+        "height": 852,
+        "dpr": 1
+      },
+      "renderer": "185",
+      "bytes": 143512,
+      "magic": 1179937895,
+      "meshes": 14,
+      "vertices": 4752,
+      "glbHash": "879cf06dbb3b7465b70eb04e75da49736bc79aef217ad4bd4e9b50d7c2a45c89"
+    }
+  },
+  "status": "PASS",
+  "browserVersion": "152.0.7977.84"
+}

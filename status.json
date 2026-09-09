@@ -1,14 +1,23 @@
 {
   "assetHashes": {
-    "bo": "9420b6c4c718b13af847ac2609cafae6684c848c3daca6113e6530d126a3a5e4",
-    "jew": "3d44a32bdf9fcb1cab1e4aa46276dc0ac68ce46187e3a795f2a8e4a484890885"
+    "jew": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+    "bo": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f"
   },
   "authoringPipeline": "offline_control_cages_and_editable_mesh_JSON",
   "blenderReadiness": "optional_not_installed",
-  "currentStage": "M1_anatomy_ready_for_review",
+  "currentStage": "M1_edge_ready_for_review",
   "date": "2026-09-09",
-  "deployed": true,
-  "deployment": {
+  "deployed": false,
+  "deployment": null,
+  "latestFeedback": "User requests cute edge-study proportions, 360-degree and multiple pose guides, and actual mesh implementation matching them.",
+  "mission": "REFERENCE_FIRST_CLEAN_REBUILD",
+  "newModelApproved": false,
+  "newModelCreated": true,
+  "nextArtDeliverable": "Review cute-form silhouette, face and all three poses against edge study before final colors and rig.",
+  "physicalPhoneTested": false,
+  "planning": "updated_for_user_authorized_browser_pipeline",
+  "previewPurpose": "Unapproved clay model review; companion behavior and final materials remain pending.",
+  "previousDeployment": {
     "access": "Vercel project login required",
     "environment": "preview",
     "id": "dpl_Dc7GHrDTR9e2XqFpAzptuk1XxeV6",
@@ -18,34 +27,28 @@
     "url": "https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app",
     "liveVerification": "PASS: authenticated live manifest and actual Jew/Bo mesh bytes match tested SHA-256 hashes."
   },
-  "latestFeedback": "Rejected floating Jew nose/mouth and Bo limb proportions; new full-body anatomical references govern.",
-  "mission": "REFERENCE_FIRST_CLEAN_REBUILD",
-  "newModelApproved": false,
-  "newModelCreated": true,
-  "nextArtDeliverable": "User review of standing Jew and seated Bo anatomy, then M2 facial refinement.",
-  "physicalPhoneTested": false,
-  "planning": "updated_for_user_authorized_browser_pipeline",
-  "previewPurpose": "Unapproved clay model review; companion behavior and final materials remain pending.",
-  "previousDeployment": {
-    "access": "Vercel project login required",
-    "environment": "preview",
-    "id": "dpl_8EE8s2J2AwQZMCruPvGUWPMUTdPm",
-    "liveVerification": "Authenticated deployed asset manifest matches both tested mesh SHA-256 hashes; anonymous browser follows Vercel login.",
-    "productionPromoted": false,
-    "sourceCommit": "b744de9fb0d1a32727c48a0bc9f065a2e8ff9218",
-    "state": "READY",
-    "url": "https://jew-and-gxvp2xlwf-ninenyns-projects.vercel.app"
-  },
   "projectContentsCleared": true,
-  "pushed": true,
+  "pushed": false,
   "recoveryBaseline": "9ae46c69846d365bce8e5b3125c6210ae5f1e059",
   "recoveryBranch": "recovery/pre-clean-20260908",
   "recoveryPath": "/Users/2521167383/Documents/black-retriver-recovery-20260908-0750",
   "referenceFilesOnMachineB": "staged_and_sha256_verified",
   "referenceInspection": "completed",
   "renderExportPipeline": "PASS_Threejs_GLB_export_fresh_import",
-  "reviewManifest": "review/M1-anatomy/manifest.json",
-  "sourceCommit": "003b37518fc7c572b450ca6a599c051314a2f794",
-  "technicalChecks": "PASS: 8 geometry tests; browser review, editing/undo and GLB export/fresh import",
-  "workingBranch": "rebuild/reference-first-20260908"
+  "reviewManifest": "review/M1-edge/manifest.json",
+  "sourceCommit": null,
+  "technicalChecks": "PASS: 12 geometry tests, browser interaction/mobile viewport, 48 actual edge views, 6 GLB pose export/reimports",
+  "workingBranch": "rebuild/reference-first-20260908",
+  "poseAssetHashes": {
+    "jew": {
+      "stand": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "sit": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "walk": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb"
+    },
+    "bo": {
+      "stand": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "sit": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "walk": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703"
+    }
+  }
 }

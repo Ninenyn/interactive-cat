@@ -24,5 +24,6 @@ for(const [name,create] of [['Jew',createJew],['Bo',createBo]])test(name+' is a 
   }
   for(const e of edges.values()){assert.equal(e.count,2,'closed edge: '+part.name);assert.equal(e.winding,0,'consistent face winding: '+part.name);}
  }
- assert.ok(Math.abs(minY)<.06);assert.ok(maxY>2.7&&maxY<3.5);
+ assert.ok(Math.abs(minY)<.06);// Scene-scale bounds, not the superseded adult-model height.
+ assert.ok(maxY>2&&maxY<3.5,'compact character fits the studio scene scale');
 });

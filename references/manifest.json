@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "decisionDate": "2026-09-08",
+  "decisionDate": "2026-09-09",
   "source": "User attachments in the clean-slate instruction",
   "visuallyInspectedInConversation": true,
   "stagedOnMachineB": true,
@@ -83,5 +83,34 @@
         "issue": "Bo angular foreleg and torso anatomy"
       }
     ]
+  },
+  "edgeStudyRevision": {
+    "date": "2026-09-09",
+    "authority": "User requested latest cute low-polygon form study, 360 views, multiple poses and actual code changes. Supersedes prior adult/small-head proportions.",
+    "artApproval": "pending",
+    "generatedGuides": [
+      {
+        "pet": "jew",
+        "targetPath": "references/edge-study/jew-edge-study.png",
+        "bytes": 1870165,
+        "sha256": "92d1f4916bbe2c2549b1408bc930f089d664d06abbce70a607113b3b49c36c72",
+        "kind": "generated artistic guide; not topology data"
+      },
+      {
+        "pet": "bo",
+        "targetPath": "references/edge-study/bo-edge-study.png",
+        "bytes": 1799228,
+        "sha256": "be41ea030f3609b7a231424257ad7ce07eb9cb2e8338e3c0134b1c8cab086185",
+        "kind": "generated artistic guide; not topology data"
+      }
+    ],
+    "actualEvidence": "review/M1-edge/edge-report.json",
+    "poseScope": [
+      "stand",
+      "sit",
+      "walk"
+    ],
+    "conceptOnlyPose": "play bow",
+    "angleCaveat": "Generated panel camera labels are approximate; Jew FRONT panel is oblique. Actual rendered studies use calibrated 45-degree increments."
   }
 }

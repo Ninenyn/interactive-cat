@@ -1,3 +1,5 @@
+Latest revision: see [EDGE_STUDY_REVISION.md](EDGE_STUDY_REVISION.md) for the 9 September user-authorized cute proportions, 360° studies and static pose implementation. This supersedes conflicting earlier anatomy proportions.
+
 # แผนเริ่มใหม่ black-retriver — Jew & Bo
 
 **แก้ตาม feedback ล่าสุด:** ใช้ [ANATOMY_REVISION.md](ANATOMY_REVISION.md) เป็นเกณฑ์รูปทรงปัจจุบัน: Jew ยืนสี่ขาตามภาพแมวเต็มตัว และ Bo นั่งตามภาพโกลเด้นเต็มตัว สัดส่วน chibi/ท่านั่ง Jew ในแผนเดิมถูกแทนที่แล้ว ภาพบุคลิกเดิมใช้สำหรับ identity และสีเท่านั้น

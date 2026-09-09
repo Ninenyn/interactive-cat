@@ -4,7 +4,7 @@ import fs from 'node:fs/promises';
 import crypto from 'node:crypto';
 import assert from 'node:assert/strict';
 
-const dir='review/M1-anatomy';await fs.mkdir(dir,{recursive:true});
+const dir='review/M1-edge';await fs.mkdir(dir,{recursive:true});
 const server=spawn(process.execPath,['scripts/serve.mjs'],{stdio:['ignore','pipe','pipe']});
 await new Promise((resolve,reject)=>{server.stdout.on('data',d=>{if(d.toString().includes('ready'))resolve();});server.once('error',reject);server.once('exit',code=>{if(code!==null)reject(new Error('Server exited '+code));});});
 const browser=await chromium.launch({channel:'chrome'});

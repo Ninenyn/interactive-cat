@@ -1,0 +1,454 @@
+{
+  "stage": "M1-edge",
+  "state": "ready_for_review",
+  "artApproval": "pending",
+  "createdAt": "2026-09-09T03:00:40.835Z",
+  "owners": {
+    "jew": "jew_edge_mesh",
+    "bo": "bo_edge_mesh",
+    "renderer": "edge_studio_ui",
+    "qa": "edge_render_qa",
+    "integration": "root"
+  },
+  "poseScope": "Authored static stand/sit/walk, same topology per pet; not a finished rig",
+  "conceptLimitations": "Generated guide angles are approximate; concealed geometry inferred. Exact triangle positions and camera angles come from actual mesh captures.",
+  "evidence": "48 actual WebGL edge frames, 4 contact sheets, 6 pose GLBs with fresh imports",
+  "files": {
+    "art/source/jew.mjs": {
+      "bytes": 15954,
+      "sha256": "5ca47a74cfb5fefe00f4a235c2bd61d987c338b9e850a6742bb3ab3364903934"
+    },
+    "art/source/bo.mjs": {
+      "bytes": 18647,
+      "sha256": "e875a1c21682a014092a6b0dfeaf02242cc6e32037441062f8ae6e09a30559bd"
+    },
+    "web/studio.js": {
+      "bytes": 28551,
+      "sha256": "322ed33e93cee85d88ea19826ae6553e2d1f8f456a1f01de8d74a9a18809bad1"
+    },
+    "web/index.html": {
+      "bytes": 9492,
+      "sha256": "3b7f509b973f7a43f985ec180cbd984a3920187d631cf3a3ae0e0f9cd0030d96"
+    },
+    "web/style.css": {
+      "bytes": 13770,
+      "sha256": "aa6aded916fce78233d454a707fc1cd1b838a2a68db268edd8da29b83f064401"
+    },
+    "web/studies.html": {
+      "bytes": 5496,
+      "sha256": "c9826888e430807b0e79ee3347abf8013e7334e082a8e3203674482f975d817e"
+    },
+    "scripts/build-web.mjs": {
+      "bytes": 3875,
+      "sha256": "73e857ac1f4901d3b71a21b35b1615e338a44c7fc9b2b8f7fecbccfdcb90b98a"
+    },
+    "scripts/check-edge-study.mjs": {
+      "bytes": 9957,
+      "sha256": "00007f76d87e7c6e56cc6e012b0d6b93a56ad5abb7e62a408d65ed03834c02a1"
+    },
+    "tests/anatomy-regression.test.mjs": {
+      "bytes": 6822,
+      "sha256": "46437807b1c3c4dde2b7c8f3d494f1bb06b75aad2e8ae8168abbe07df3fb0a0b"
+    },
+    "tests/edge-poses.test.mjs": {
+      "bytes": 3512,
+      "sha256": "b34f4dbb455664c4ca256aa55ba1fdae7e01b2344ea65b3923084470392fb5ae"
+    },
+    "tests/mesh-contract.test.mjs": {
+      "bytes": 2122,
+      "sha256": "842979d89cec8f9ec3d409726a6b1c586ba9237dd9c2d9aad57afb0b63e220f4"
+    },
+    "references/manifest.json": {
+      "bytes": 4127,
+      "sha256": "eb6ab37a0285c30c8db8d972cba537cbbc9ba0cff5fad433d62492ac89c2dfa0"
+    },
+    "docs/EDGE_STUDY_REVISION.md": {
+      "bytes": 3429,
+      "sha256": "b45d2c1cd7af11504b2ed3c95b560360b56d0e9618aca125ba91e2f9f61702af"
+    },
+    "art/meshes/jew.mesh.json": {
+      "bytes": 46392,
+      "sha256": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280"
+    },
+    "references/edge-study/jew-edge-study.png": {
+      "bytes": 1870165,
+      "sha256": "92d1f4916bbe2c2549b1408bc930f089d664d06abbce70a607113b3b49c36c72"
+    },
+    "art/meshes/jew-stand.mesh.json": {
+      "bytes": 46392,
+      "sha256": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280"
+    },
+    "art/meshes/jew-sit.mesh.json": {
+      "bytes": 46343,
+      "sha256": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7"
+    },
+    "art/meshes/jew-walk.mesh.json": {
+      "bytes": 47947,
+      "sha256": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb"
+    },
+    "art/meshes/bo.mesh.json": {
+      "bytes": 41791,
+      "sha256": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f"
+    },
+    "references/edge-study/bo-edge-study.png": {
+      "bytes": 1799228,
+      "sha256": "be41ea030f3609b7a231424257ad7ce07eb9cb2e8338e3c0134b1c8cab086185"
+    },
+    "art/meshes/bo-stand.mesh.json": {
+      "bytes": 41745,
+      "sha256": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4"
+    },
+    "art/meshes/bo-sit.mesh.json": {
+      "bytes": 41791,
+      "sha256": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f"
+    },
+    "art/meshes/bo-walk.mesh.json": {
+      "bytes": 42100,
+      "sha256": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703"
+    },
+    "review/M1-edge/bo-M1.glb": {
+      "bytes": 143512,
+      "sha256": "879cf06dbb3b7465b70eb04e75da49736bc79aef217ad4bd4e9b50d7c2a45c89"
+    },
+    "review/M1-edge/bo-back.png": {
+      "bytes": 427197,
+      "sha256": "cfc98d0502d13b4ee92682a3616f16cead176828fc3111a119ce73e3b6c0de41"
+    },
+    "review/M1-edge/bo-face-side.png": {
+      "bytes": 384031,
+      "sha256": "7074c5e4721107ba2b71d0621b5d35b50bbb7c3073d78cb2f9bbd8376cea4117"
+    },
+    "review/M1-edge/bo-front.png": {
+      "bytes": 431367,
+      "sha256": "c12c0f8ba9f28eadb091bb54cbe9f308253d4db8336445344f13e976770af08b"
+    },
+    "review/M1-edge/bo-glb-import.png": {
+      "bytes": 434382,
+      "sha256": "370709eda76968f5ac9f3c29dcbb64b92367bb013dbb8beba60875d115669e10"
+    },
+    "review/M1-edge/bo-hero.png": {
+      "bytes": 434687,
+      "sha256": "8875eff20acb062c5e6ff623edaa2c5f259eea16afb581ad735d66943f215fd3"
+    },
+    "review/M1-edge/bo-mobile.png": {
+      "bytes": 237509,
+      "sha256": "09135b8673de3011ad8f0f4abe5aa860c9e438ff916fad6b3025a6fdd2e57605"
+    },
+    "review/M1-edge/bo-poses.png": {
+      "bytes": 898846,
+      "sha256": "c5f7f34c924e812e19b9b8c07d6c467d4645c2aa7673ddcc23697c2594b4540a"
+    },
+    "review/M1-edge/bo-side-wire.png": {
+      "bytes": 508980,
+      "sha256": "1e5337f0d9546b68a2192df6a5dd90b812374493bf4cd85a39fb4cf6c714660e"
+    },
+    "review/M1-edge/bo-side.png": {
+      "bytes": 431610,
+      "sha256": "bff15b10d4915923c80fbeb27ae8a098d9260c0d4eaa459739d7f9e7df938fbd"
+    },
+    "review/M1-edge/bo-sit-M1.glb": {
+      "bytes": 143512,
+      "sha256": "879cf06dbb3b7465b70eb04e75da49736bc79aef217ad4bd4e9b50d7c2a45c89"
+    },
+    "review/M1-edge/bo-sit-edge-000.png": {
+      "bytes": 282640,
+      "sha256": "7a953ebb6b301ceed54fd93b6f6df6020e03a1a303ee9eb4f45479d17a7e8cef"
+    },
+    "review/M1-edge/bo-sit-edge-045.png": {
+      "bytes": 279282,
+      "sha256": "afb965e99e2883bee16ea407789c8f96c0188084c45c4395d153bb6544c5202f"
+    },
+    "review/M1-edge/bo-sit-edge-090.png": {
+      "bytes": 273829,
+      "sha256": "c64da41ae3af508615e8d5dbdc66bb997c8b9762615fc7ad7c6ae356757461f4"
+    },
+    "review/M1-edge/bo-sit-edge-135.png": {
+      "bytes": 273446,
+      "sha256": "8bbae2f65b118e8b1dbfaabdaf99e4005c70603fadd60c0066112060bd124490"
+    },
+    "review/M1-edge/bo-sit-edge-180.png": {
+      "bytes": 272135,
+      "sha256": "33d880a89692d65371ad1a81a938a673aaff69f535963e976ea0b5d2a91c5366"
+    },
+    "review/M1-edge/bo-sit-edge-225.png": {
+      "bytes": 267484,
+      "sha256": "a82feb7c11632a6df5714c557146e15eb0d34a2a907380032ee7ed96008889f4"
+    },
+    "review/M1-edge/bo-sit-edge-270.png": {
+      "bytes": 270501,
+      "sha256": "596fe562ee63d4af430ae2100bfb9111066fbf46b753bf17f53653aa84bc2bd7"
+    },
+    "review/M1-edge/bo-sit-edge-315.png": {
+      "bytes": 279726,
+      "sha256": "6125131333b97c1f6c77917491f99e6bc192bc01aa69bd67105b85abcfe72766"
+    },
+    "review/M1-edge/bo-sit-glb-import.png": {
+      "bytes": 227028,
+      "sha256": "990c4a553f2d2846a8e8602e85b74cbb57fae4cc37bcde3e96c1741ed48512cc"
+    },
+    "review/M1-edge/bo-stand-M1.glb": {
+      "bytes": 143516,
+      "sha256": "cffdd31a520e60656de4ae168e0a0593f246914482f6b0706cd82d70654ee4dd"
+    },
+    "review/M1-edge/bo-stand-edge-000.png": {
+      "bytes": 276011,
+      "sha256": "4fe479f959ff2b66787b9fbc1b74ef29f6c1beae07b632050314f0cdd77d6415"
+    },
+    "review/M1-edge/bo-stand-edge-045.png": {
+      "bytes": 283508,
+      "sha256": "271d3f6fbc2beea31317a62dff917ca817bad925640a20739a67c8e10d9ab93c"
+    },
+    "review/M1-edge/bo-stand-edge-090.png": {
+      "bytes": 273437,
+      "sha256": "19a2f488193c3fae339f66f841e206fb6d28095b3edb14e488506987a2d01cde"
+    },
+    "review/M1-edge/bo-stand-edge-135.png": {
+      "bytes": 270918,
+      "sha256": "700083800640c6f7c2fa106f81b357d6ebebc81cff10c203c4cc748eff4f17f0"
+    },
+    "review/M1-edge/bo-stand-edge-180.png": {
+      "bytes": 272420,
+      "sha256": "cfeefb46fff5d0d11c0ea939c932ea435c21a9a6e29d7ee906d39aad71b21980"
+    },
+    "review/M1-edge/bo-stand-edge-225.png": {
+      "bytes": 269647,
+      "sha256": "d2ccc628bb2b0e45856fdd0e35e22a60f4b3e9d1f9103108396f8ed8840f593e"
+    },
+    "review/M1-edge/bo-stand-edge-270.png": {
+      "bytes": 271958,
+      "sha256": "ab086f22aef4402c1a86fca95ec34106fd8f4c9fea11cc5771ac4546321a311c"
+    },
+    "review/M1-edge/bo-stand-edge-315.png": {
+      "bytes": 284841,
+      "sha256": "f19e536149cac1459bfc16ba47b2867f41e0b12c45249bf82a34beb83494ac8a"
+    },
+    "review/M1-edge/bo-stand-glb-import.png": {
+      "bytes": 238294,
+      "sha256": "f23db84e52f64d2ab4ab685d9ee64ee3825be03f6b715aff3a20b84324824e66"
+    },
+    "review/M1-edge/bo-turnaround.png": {
+      "bytes": 607336,
+      "sha256": "e97d36dcc8d3a0d365522bd8d50704deb78b838418c380570b6d0890b2ea1ad9"
+    },
+    "review/M1-edge/bo-walk-M1.glb": {
+      "bytes": 143512,
+      "sha256": "141f66f45b885741e42013484d21b79824bd3d3acab0373f8b4eb4d07cf6595a"
+    },
+    "review/M1-edge/bo-walk-edge-000.png": {
+      "bytes": 279395,
+      "sha256": "cc901c1be5eb5ecaa7d7f0830431b4ea7eb91b76ce871c70979048a262fca321"
+    },
+    "review/M1-edge/bo-walk-edge-045.png": {
+      "bytes": 288266,
+      "sha256": "7663587c3ae98441bff502a5d43446cc9bb65661cbb0e7281099b6993ddb5d3a"
+    },
+    "review/M1-edge/bo-walk-edge-090.png": {
+      "bytes": 277511,
+      "sha256": "f8726ad523c3a98548fa1de01d41db7233ef7a9d66506f19b34a1435744859eb"
+    },
+    "review/M1-edge/bo-walk-edge-135.png": {
+      "bytes": 277296,
+      "sha256": "a27270f327b6ec3b826e946ca82e8559f160dab65a979d09512a897b1de59892"
+    },
+    "review/M1-edge/bo-walk-edge-180.png": {
+      "bytes": 275406,
+      "sha256": "51e4c85994ad6f506346836205d86f6caaaaff4863da773fb05a59728ac53c6b"
+    },
+    "review/M1-edge/bo-walk-edge-225.png": {
+      "bytes": 273491,
+      "sha256": "ad2bc461a1d9cd8b7f559572eb12884a8bb5e07719c8f8df3998f861fad563e2"
+    },
+    "review/M1-edge/bo-walk-edge-270.png": {
+      "bytes": 276592,
+      "sha256": "fe7e355c8dee90923db4d909a099393ded4668d4595f5a52841291e55c5d3e9d"
+    },
+    "review/M1-edge/bo-walk-edge-315.png": {
+      "bytes": 288630,
+      "sha256": "d96f55c6e8656cc955b1378b4142e027fddf43353910c517aa52b37e1b8333db"
+    },
+    "review/M1-edge/bo-walk-glb-import.png": {
+      "bytes": 236944,
+      "sha256": "e37fb684946fd2f4a57036315afbc0e7fadf3a4da810e9b82002876d863fffb4"
+    },
+    "review/M1-edge/edge-report.json": {
+      "bytes": 48191,
+      "sha256": "0656bcfb545c6da8118f0b6f15c552ab8de8105d508c6a49183c4073df95be5c"
+    },
+    "review/M1-edge/gallery-desktop.png": {
+      "bytes": 570341,
+      "sha256": "745cbcc873ccf4073ceaeaa62d8a19fd59e3b5c1c8de6649c7e88467e9b47f27"
+    },
+    "review/M1-edge/geometry-tests.txt": {
+      "bytes": 558,
+      "sha256": "c55945f4a182615af934f1093f64d2103083bda6dc6e967a74122816b7de6fb9"
+    },
+    "review/M1-edge/jew-M1.glb": {
+      "bytes": 145664,
+      "sha256": "9caa32f109eae43909161fa63aaebfd68bba2adccf828c932b1388570f529b26"
+    },
+    "review/M1-edge/jew-back.png": {
+      "bytes": 443055,
+      "sha256": "c077c9dd26d4ed45265d91da6227e0ddd8d145a725b7fabdd470b292544cab9a"
+    },
+    "review/M1-edge/jew-face-side.png": {
+      "bytes": 390026,
+      "sha256": "725392ac4fc245442b8ac286b0140ece57d45b1db7ddd4e10292bbbd43f7272f"
+    },
+    "review/M1-edge/jew-front.png": {
+      "bytes": 433830,
+      "sha256": "a19ebe5034bc22726eab59699d99a75e97c23ea7a175006d0d5b21effa335d02"
+    },
+    "review/M1-edge/jew-glb-import.png": {
+      "bytes": 436940,
+      "sha256": "0c98449d507f465679d74939f59c6464c2ff13a9e5a0d2ed7388596ef7224729"
+    },
+    "review/M1-edge/jew-hero.png": {
+      "bytes": 437727,
+      "sha256": "08a026e074c7e205914d2c39777a4297225806850efc7cb97a4024da3e61780c"
+    },
+    "review/M1-edge/jew-mobile.png": {
+      "bytes": 243507,
+      "sha256": "32200951114907404e3a747d59174c20a49a9a8288e591efd45e04cbe212ba75"
+    },
+    "review/M1-edge/jew-poses.png": {
+      "bytes": 887664,
+      "sha256": "ef3123aa56b038062c37c143cc8c21a2c0529c6699415307f1220f8a2910d335"
+    },
+    "review/M1-edge/jew-side-wire.png": {
+      "bytes": 520590,
+      "sha256": "2973d817d89471684b17de0113bb28ea65a6894a502812a98d9ffb5f9d7b7b10"
+    },
+    "review/M1-edge/jew-side.png": {
+      "bytes": 419597,
+      "sha256": "6025eb7a124f9dfe7865818e1631f9d976f32620bf11cf70eaaf51417ee9d772"
+    },
+    "review/M1-edge/jew-sit-M1.glb": {
+      "bytes": 145672,
+      "sha256": "41684fe0eff28ad23155ec2efc4cb9237e8a38e7b1c2c862ed41c450a5008337"
+    },
+    "review/M1-edge/jew-sit-edge-000.png": {
+      "bytes": 272364,
+      "sha256": "4e9b7b61f3758e0400e401729248fda11683b189a9142757ee0fe68a55c74a80"
+    },
+    "review/M1-edge/jew-sit-edge-045.png": {
+      "bytes": 284320,
+      "sha256": "7a1552959dbf830fd4bf834c9924ad80d3dcdc5e58cea11be37cabb0fc4a162b"
+    },
+    "review/M1-edge/jew-sit-edge-090.png": {
+      "bytes": 270909,
+      "sha256": "99ad204f268b4be0906d423611bea2cace0576457c0c27dd0e9ee763f349b99f"
+    },
+    "review/M1-edge/jew-sit-edge-135.png": {
+      "bytes": 279224,
+      "sha256": "07e49920b244145c49499ffee060ac868913cf38125db537260d42353ee05229"
+    },
+    "review/M1-edge/jew-sit-edge-180.png": {
+      "bytes": 280019,
+      "sha256": "fd9cb652020ab2e6c3f1a4b5f01d88055ac68749e5e0a757894cec70643191c2"
+    },
+    "review/M1-edge/jew-sit-edge-225.png": {
+      "bytes": 279451,
+      "sha256": "b11a62ef3280d039cb6f45f1b13f0f2c9b8fc9faf537fe3c908219a6d20269c6"
+    },
+    "review/M1-edge/jew-sit-edge-270.png": {
+      "bytes": 270481,
+      "sha256": "ba3b416f173997b170c73ec686b2cb85ae1897abccfea6a7b61d433e696f187f"
+    },
+    "review/M1-edge/jew-sit-edge-315.png": {
+      "bytes": 278607,
+      "sha256": "af2d8290efb5cf6dd1a259ed0a54b76aa478f82c2017581784795d286a8305cb"
+    },
+    "review/M1-edge/jew-sit-glb-import.png": {
+      "bytes": 216775,
+      "sha256": "f33ca5febcc9431a8da77c0597d6ac02ec53617f4c328b66945a6596886184db"
+    },
+    "review/M1-edge/jew-stand-M1.glb": {
+      "bytes": 145664,
+      "sha256": "9caa32f109eae43909161fa63aaebfd68bba2adccf828c932b1388570f529b26"
+    },
+    "review/M1-edge/jew-stand-edge-000.png": {
+      "bytes": 263992,
+      "sha256": "e61ec5ff5e52f36750d742e64a7b0a56c4eddc32fea05791ad60bbade21fdfac"
+    },
+    "review/M1-edge/jew-stand-edge-045.png": {
+      "bytes": 294268,
+      "sha256": "7c9276d3bf6c54e3447e432e328121d054c281a61d047525c9e89610d1778f50"
+    },
+    "review/M1-edge/jew-stand-edge-090.png": {
+      "bytes": 274420,
+      "sha256": "7afcf79e140243eaa09615d602804fb63688ec2c3ff7aea3021824f0d476d452"
+    },
+    "review/M1-edge/jew-stand-edge-135.png": {
+      "bytes": 286570,
+      "sha256": "dcc247c13af4d977e8250719382b692cdcc21dc00ea4b54def302e8efc79f952"
+    },
+    "review/M1-edge/jew-stand-edge-180.png": {
+      "bytes": 284824,
+      "sha256": "d574b772f7190938e68f134636e7e48f2971a0599914aef70a20b03342e70b0b"
+    },
+    "review/M1-edge/jew-stand-edge-225.png": {
+      "bytes": 286112,
+      "sha256": "b2e678c8741dfd5bbf2f7cadb601bc126acbb60baf04340a36dff053260e8846"
+    },
+    "review/M1-edge/jew-stand-edge-270.png": {
+      "bytes": 274317,
+      "sha256": "c36f6fbe87d0f6288f3a9d470c723e73fe66c78c5c235f52a8d00e450efd98d4"
+    },
+    "review/M1-edge/jew-stand-edge-315.png": {
+      "bytes": 296684,
+      "sha256": "f91aad7a094645edc9bb8a6d1fcd1ab583dad24f2140ab0e4f239b59fdccb594"
+    },
+    "review/M1-edge/jew-stand-glb-import.png": {
+      "bytes": 235559,
+      "sha256": "40c9ad018a2ebefd70a9c92c82e39e4c10430483a781d0e8567a8cfc5fd5f7a4"
+    },
+    "review/M1-edge/jew-turnaround.png": {
+      "bytes": 659534,
+      "sha256": "d9b2b7c1fca75fef5890e576275770b830912e3eb8f15ea1f8c21492cdf895fc"
+    },
+    "review/M1-edge/jew-walk-M1.glb": {
+      "bytes": 145676,
+      "sha256": "b46779db670dee1f9252d98481a65222d5fedf50b1738dbbb3a6447bad1b7ec7"
+    },
+    "review/M1-edge/jew-walk-edge-000.png": {
+      "bytes": 268093,
+      "sha256": "3a27712a535b4945681f0f15eeee069ea9d150bd6ae1d58876f47fe9bffff2e1"
+    },
+    "review/M1-edge/jew-walk-edge-045.png": {
+      "bytes": 300122,
+      "sha256": "8fdf174251d3e0c073c0a5ff9c2f3a60b1396c91d8d316c19a01476ab7c86db9"
+    },
+    "review/M1-edge/jew-walk-edge-090.png": {
+      "bytes": 282030,
+      "sha256": "afd1bd4b59a26d69fe7555feff6a62c08f06da1389cc29b809e9467d6247abdd"
+    },
+    "review/M1-edge/jew-walk-edge-135.png": {
+      "bytes": 290833,
+      "sha256": "1bb9caf7d1de01d81cf162462c46559b888e6bf723b60c86beb7bdfcb3703698"
+    },
+    "review/M1-edge/jew-walk-edge-180.png": {
+      "bytes": 288433,
+      "sha256": "6bf14d53912f7485592f4b2fc2d3e47b876316415496fdf9c942a1ce091c281d"
+    },
+    "review/M1-edge/jew-walk-edge-225.png": {
+      "bytes": 289807,
+      "sha256": "f066be992d3c27fdef0f880488d8c53008555970bba8abbdc6d5a2227dc5e5a8"
+    },
+    "review/M1-edge/jew-walk-edge-270.png": {
+      "bytes": 282111,
+      "sha256": "52fe7729c7e61ba5b6af4e3a3ca544c6cd596f5fcb11f1668414bd50006e1a9f"
+    },
+    "review/M1-edge/jew-walk-edge-315.png": {
+      "bytes": 300282,
+      "sha256": "901ab51a4b3ad9a4959e64e9d7f9e99cb86e83ac695cfd68bc967def15d775d4"
+    },
+    "review/M1-edge/jew-walk-glb-import.png": {
+      "bytes": 234452,
+      "sha256": "de6938deee55aa75b66c2903ece84ba2c3ef8c02aa68b9de6e5fabb2568b0231"
+    },
+    "review/M1-edge/report.json": {
+      "bytes": 2686,
+      "sha256": "30c904232ec6b26d4baac9a2d6c096a35040af4eb08e278c94a80f1069d34d65"
+    }
+  }
+}
