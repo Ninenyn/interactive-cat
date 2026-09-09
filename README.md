@@ -1,6 +1,6 @@
 # Jew & Bo — Model Studio
 
-The full-body anatomy revision is ready for preview deployment. The earlier preview is historical; see `status.json` for deployment tracking.
+[Open the full-body anatomy review web app](https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app). Vercel preview protection requires a project-authorized Vercel login.
 
 The current implementation is a Blender-free M1 review web app for two original clay character meshes. It provides orbit/zoom, hero/front/side/back views, silhouette and wireframe, original reference images, vertex editing/undo, editable mesh JSON save/reload, GLB export and PNG capture. The art remains unapproved.
 

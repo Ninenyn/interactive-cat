@@ -1,14 +1,24 @@
 {
   "assetHashes": {
-    "jew": "3d44a32bdf9fcb1cab1e4aa46276dc0ac68ce46187e3a795f2a8e4a484890885",
-    "bo": "9420b6c4c718b13af847ac2609cafae6684c848c3daca6113e6530d126a3a5e4"
+    "bo": "9420b6c4c718b13af847ac2609cafae6684c848c3daca6113e6530d126a3a5e4",
+    "jew": "3d44a32bdf9fcb1cab1e4aa46276dc0ac68ce46187e3a795f2a8e4a484890885"
   },
   "authoringPipeline": "offline_control_cages_and_editable_mesh_JSON",
   "blenderReadiness": "optional_not_installed",
   "currentStage": "M1_anatomy_ready_for_review",
   "date": "2026-09-09",
-  "deployed": false,
-  "deployment": null,
+  "deployed": true,
+  "deployment": {
+    "access": "Vercel project login required",
+    "environment": "preview",
+    "id": "dpl_Dc7GHrDTR9e2XqFpAzptuk1XxeV6",
+    "productionPromoted": false,
+    "sourceCommit": "003b37518fc7c572b450ca6a599c051314a2f794",
+    "state": "READY",
+    "url": "https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app",
+    "liveVerification": "PASS: authenticated live manifest and actual Jew/Bo mesh bytes match tested SHA-256 hashes."
+  },
+  "latestFeedback": "Rejected floating Jew nose/mouth and Bo limb proportions; new full-body anatomical references govern.",
   "mission": "REFERENCE_FIRST_CLEAN_REBUILD",
   "newModelApproved": false,
   "newModelCreated": true,
@@ -16,8 +26,18 @@
   "physicalPhoneTested": false,
   "planning": "updated_for_user_authorized_browser_pipeline",
   "previewPurpose": "Unapproved clay model review; companion behavior and final materials remain pending.",
+  "previousDeployment": {
+    "access": "Vercel project login required",
+    "environment": "preview",
+    "id": "dpl_8EE8s2J2AwQZMCruPvGUWPMUTdPm",
+    "liveVerification": "Authenticated deployed asset manifest matches both tested mesh SHA-256 hashes; anonymous browser follows Vercel login.",
+    "productionPromoted": false,
+    "sourceCommit": "b744de9fb0d1a32727c48a0bc9f065a2e8ff9218",
+    "state": "READY",
+    "url": "https://jew-and-gxvp2xlwf-ninenyns-projects.vercel.app"
+  },
   "projectContentsCleared": true,
-  "pushed": false,
+  "pushed": true,
   "recoveryBaseline": "9ae46c69846d365bce8e5b3125c6210ae5f1e059",
   "recoveryBranch": "recovery/pre-clean-20260908",
   "recoveryPath": "/Users/2521167383/Documents/black-retriver-recovery-20260908-0750",
@@ -25,18 +45,7 @@
   "referenceInspection": "completed",
   "renderExportPipeline": "PASS_Threejs_GLB_export_fresh_import",
   "reviewManifest": "review/M1-anatomy/manifest.json",
+  "sourceCommit": "003b37518fc7c572b450ca6a599c051314a2f794",
   "technicalChecks": "PASS: 8 geometry tests; browser review, editing/undo and GLB export/fresh import",
-  "workingBranch": "rebuild/reference-first-20260908",
-  "sourceCommit": null,
-  "latestFeedback": "Rejected floating Jew nose/mouth and Bo limb proportions; new full-body anatomical references govern.",
-  "previousDeployment": {
-    "environment": "preview",
-    "id": "dpl_8EE8s2J2AwQZMCruPvGUWPMUTdPm",
-    "productionPromoted": false,
-    "sourceCommit": "b744de9fb0d1a32727c48a0bc9f065a2e8ff9218",
-    "state": "READY",
-    "url": "https://jew-and-gxvp2xlwf-ninenyns-projects.vercel.app",
-    "access": "Vercel project login required",
-    "liveVerification": "Authenticated deployed asset manifest matches both tested mesh SHA-256 hashes; anonymous browser follows Vercel login."
-  }
+  "workingBranch": "rebuild/reference-first-20260908"
 }
