@@ -1,10 +1,10 @@
 # Jew & Bo — Model Studio
 
-The M1 edge-study revision is ready for preview publication. See status.json for deployment tracking.
+[Open the 360° comparison sheets](https://jew-and-8y3q99zmj-ninenyns-projects.vercel.app/studies.html) · [Open the 3D model studio](https://jew-and-8y3q99zmj-ninenyns-projects.vercel.app/). Requires a project-authorized Vercel login.
 
 The current implementation is a Blender-free M1 review web app for two original clay character meshes. It provides orbit/zoom, hero/front/side/back views, silhouette and wireframe, original reference images, vertex editing/undo, editable mesh JSON save/reload, GLB export and PNG capture. The art remains unapproved.
 
-The latest full-body references govern anatomy: Jew stands on four connected legs; Bo is a seated golden with revised shoulders, forelegs and paws. Jew's nose shares the facial skin and the mouth follows its surface. Read `docs/ANATOMY_REVISION.md` for this revision.
+The latest edge study governs cute character proportions: Jew stands on four connected legs; Bo is a seated golden with revised shoulders, forelegs and paws. Jew's nose shares the facial skin and the mouth follows its surface. Read `docs/EDGE_STUDY_REVISION.md` first for the latest cute-form authority and multi-pose implementation; `docs/ANATOMY_REVISION.md` is historical.
 
 The user authorizes a Blender-free browser pipeline. Read `docs/BROWSER_PIPELINE.md` first, then `docs/PRODUCTION_PLAN.md`, `docs/ART_DIRECTION.md` and `docs/ACCEPTANCE.md` for the stage and review requirements, subject to the latest anatomy amendment.
 

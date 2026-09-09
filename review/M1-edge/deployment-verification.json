@@ -1,0 +1,52 @@
+{
+  "status": "PASS",
+  "url": "https://jew-and-8y3q99zmj-ninenyns-projects.vercel.app",
+  "artApproval": "pending",
+  "checks": [
+    {
+      "path": "/models/jew-stand.mesh.json",
+      "sha256": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280"
+    },
+    {
+      "path": "/models/jew-sit.mesh.json",
+      "sha256": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7"
+    },
+    {
+      "path": "/models/jew-walk.mesh.json",
+      "sha256": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb"
+    },
+    {
+      "path": "/studies/jew-turnaround.png",
+      "sha256": "d9b2b7c1fca75fef5890e576275770b830912e3eb8f15ea1f8c21492cdf895fc"
+    },
+    {
+      "path": "/studies/jew-poses.png",
+      "sha256": "ef3123aa56b038062c37c143cc8c21a2c0529c6699415307f1220f8a2910d335"
+    },
+    {
+      "path": "/models/bo-stand.mesh.json",
+      "sha256": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4"
+    },
+    {
+      "path": "/models/bo-sit.mesh.json",
+      "sha256": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f"
+    },
+    {
+      "path": "/models/bo-walk.mesh.json",
+      "sha256": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703"
+    },
+    {
+      "path": "/studies/bo-turnaround.png",
+      "sha256": "e97d36dcc8d3a0d365522bd8d50704deb78b838418c380570b6d0890b2ea1ad9"
+    },
+    {
+      "path": "/studies/bo-poses.png",
+      "sha256": "c5f7f34c924e812e19b9b8c07d6c467d4645c2aa7673ddcc23697c2594b4540a"
+    },
+    {
+      "path": "/studies.html",
+      "sourceSha256": "c9826888e430807b0e79ee3347abf8013e7334e082a8e3203674482f975d817e",
+      "providerAppend": "verified Vercel preview feedback script only"
+    }
+  ]
+}

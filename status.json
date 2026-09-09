@@ -1,14 +1,24 @@
 {
   "assetHashes": {
-    "jew": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
-    "bo": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f"
+    "bo": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+    "jew": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280"
   },
   "authoringPipeline": "offline_control_cages_and_editable_mesh_JSON",
   "blenderReadiness": "optional_not_installed",
   "currentStage": "M1_edge_ready_for_review",
   "date": "2026-09-09",
-  "deployed": false,
-  "deployment": null,
+  "deployed": true,
+  "deployment": {
+    "access": "Vercel project login required",
+    "environment": "preview",
+    "id": "dpl_JBKuY6whbU8RM4Mpg2K7Zm1Qkg6y",
+    "productionPromoted": false,
+    "sourceCommit": "a3f045c7742a18556d028d702a6c4d6d46271384",
+    "state": "READY",
+    "studyUrl": "https://jew-and-8y3q99zmj-ninenyns-projects.vercel.app/studies.html",
+    "url": "https://jew-and-8y3q99zmj-ninenyns-projects.vercel.app",
+    "liveVerification": "PASS: deployed manifest, all six pose mesh files and four actual-mesh sheet PNGs match tested SHA-256. Gallery HTML matches source plus the verified Vercel preview feedback append."
+  },
   "latestFeedback": "User requests cute edge-study proportions, 360-degree and multiple pose guides, and actual mesh implementation matching them.",
   "mission": "REFERENCE_FIRST_CLEAN_REBUILD",
   "newModelApproved": false,
@@ -16,19 +26,31 @@
   "nextArtDeliverable": "Review cute-form silhouette, face and all three poses against edge study before final colors and rig.",
   "physicalPhoneTested": false,
   "planning": "updated_for_user_authorized_browser_pipeline",
+  "poseAssetHashes": {
+    "bo": {
+      "sit": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
+      "stand": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
+      "walk": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703"
+    },
+    "jew": {
+      "sit": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
+      "stand": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
+      "walk": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb"
+    }
+  },
   "previewPurpose": "Unapproved clay model review; companion behavior and final materials remain pending.",
   "previousDeployment": {
     "access": "Vercel project login required",
     "environment": "preview",
     "id": "dpl_Dc7GHrDTR9e2XqFpAzptuk1XxeV6",
+    "liveVerification": "PASS: authenticated live manifest and actual Jew/Bo mesh bytes match tested SHA-256 hashes.",
     "productionPromoted": false,
     "sourceCommit": "003b37518fc7c572b450ca6a599c051314a2f794",
     "state": "READY",
-    "url": "https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app",
-    "liveVerification": "PASS: authenticated live manifest and actual Jew/Bo mesh bytes match tested SHA-256 hashes."
+    "url": "https://jew-and-pg9e21ktc-ninenyns-projects.vercel.app"
   },
   "projectContentsCleared": true,
-  "pushed": false,
+  "pushed": true,
   "recoveryBaseline": "9ae46c69846d365bce8e5b3125c6210ae5f1e059",
   "recoveryBranch": "recovery/pre-clean-20260908",
   "recoveryPath": "/Users/2521167383/Documents/black-retriver-recovery-20260908-0750",
@@ -36,19 +58,18 @@
   "referenceInspection": "completed",
   "renderExportPipeline": "PASS_Threejs_GLB_export_fresh_import",
   "reviewManifest": "review/M1-edge/manifest.json",
-  "sourceCommit": null,
+  "sourceCommit": "a3f045c7742a18556d028d702a6c4d6d46271384",
   "technicalChecks": "PASS: 12 geometry tests, browser interaction/mobile viewport, 48 actual edge views, 6 GLB pose export/reimports",
-  "workingBranch": "rebuild/reference-first-20260908",
-  "poseAssetHashes": {
-    "jew": {
-      "stand": "a4c59e78c48a180ac939cfcf329dcb5754a190c841877cd111b6fa684de06280",
-      "sit": "9ba3a06577350abd8c0caaa464a5516fe841f3d99d7d1573c34ba9aa1f42b0e7",
-      "walk": "681c088dd70848c52399e2bb123668ce52aa18d4602d23385aa7d86713d5dfeb"
-    },
-    "bo": {
-      "stand": "92b19354f7a3affa525e671759b2960dd0d2794be87e15e73b97b96f6f1af2c4",
-      "sit": "8fcee2e9a791364294ad248367f9f5c046d3b60fe0b58d985b984817e2bb6f3f",
-      "walk": "806d199c05ea9f1077a6c69d4b0f2d3f8d500493463d4c53754a4b5f88874703"
-    }
-  }
+  "visualReview": {
+    "actualViews": 48,
+    "conceptOnlyPose": "play bow",
+    "scope": "Cute-form reference matching and facet arrangement remain artistic review; successful technical checks do not imply exact likeness.",
+    "state": "pending",
+    "staticPoses": [
+      "stand",
+      "sit",
+      "walk"
+    ]
+  },
+  "workingBranch": "rebuild/reference-first-20260908"
 }
